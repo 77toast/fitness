@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Meal Plan Tracker</title>
+<style>
+  :root {
+    --bg: #0f1210; --card: #171b18; --card-border: #262c26; --text: #eef0ea; --muted: #8a9086;
+    --accent: #9bc53d; --accent-dim: #5e7a2a; --warn: #d9853d;
+    --c-kcal: #e0b84a; --c-protein: #9bc53d; --c-carbs: #4a9bd9; --c-fat: #d9704a;
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; background:var(--bg); color:var(--text); padding:16px 16px 90px; }
+  header { max-width:560px; margin:0 auto 14px; }
+  h1 { font-size:22px; margin:0 0 4px; letter-spacing:-0.02em; }
+  .subline { color:var(--muted); font-size:14px; }
+
+  .tabs { max-width:560px; margin:0 auto 16px; display:flex; gap:6px; background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:4px; }
+  .tab-btn { flex:1; background:none; border:none; color:var(--muted); font-size:13px; font-weight:600; padding:9px 4px; border-radius:9px; cursor:pointer; }
+  .tab-btn.active { background:var(--accent); color:#0f1210; }
+  .badge { display:inline-block; background:var(--warn); color:#0f1210; font-size:10px; font-weight:700; border-radius:99px; padding:1px 6px; margin-left:4px; }
+
+  .view { max-width:560px; margin:0 auto; display:none; }
+  .view.active { display:block; }
+
+  .macro-panel { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px; margin-bottom:18px; }
+  .macro-panel-title { font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); margin-bottom:10px; }
+  .macro-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
+  .macro-row:last-child { margin-bottom:0; }
+  .macro-label { font-size:12px; color:var(--muted); width:52px; flex-shrink:0; }
+  .macro-bar-bg { flex:1; height:7px; background:var(--card-border); border-radius:99px; overflow:hidden; }
+  .macro-bar-fill { height:100%; border-radius:99px; transition:width 0.3s ease; }
+  .macro-val { font-size:12px; color:var(--text); width:92px; flex-shrink:0; text-align:right; font-variant-numeric:tabular-nums; }
+
+  .progress-wrap { margin:0 0 18px; }
+  .progress-bar { height:8px; background:var(--card-border); border-radius:99px; overflow:hidden; }
+  .progress-fill { height:100%; background:var(--accent); width:0%; transition:width 0.3s ease; }
+  .progress-label { font-size:13px; color:var(--muted); margin-top:6px; display:flex; justify-content:space-between; }
+
+  .meals { display:flex; flex-direction:column; gap:10px; }
+  .meal-card { background:var(--card); border:1px solid var(--card-border); border-radius:14px; overflow:hidden; transition:border-color 0.15s ease; }
+  .meal-card.done { border-color:var(--accent-dim); }
+  .meal-head { padding:14px 16px; display:flex; gap:12px; align-items:flex-start; cursor:pointer; }
+  .checkbox { width:24px; height:24px; border-radius:50%; border:2px solid var(--muted); flex-shrink:0; margin-top:2px; display:flex; align-items:center; justify-content:center; }
+  .meal-card.done .checkbox { background:var(--accent); border-color:var(--accent); }
+  .checkbox svg { width:14px; height:14px; opacity:0; }
+  .meal-card.done .checkbox svg { opacity:1; }
+  .meal-body { flex:1; min-width:0; }
+  .meal-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .meal-title { font-weight:600; font-size:15px; }
+  .meal-card.done .meal-title { color:var(--muted); text-decoration:line-through; text-decoration-color:var(--accent-dim); }
+  .meal-time { font-size:11px; color:var(--muted); white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em; }
+  .meal-macros-line { font-size:12px; color:var(--accent); margin-top:6px; font-weight:500; }
+  .meal-actions { display:flex; gap:14px; margin-top:9px; }
+  .link-btn { font-size:11px; color:var(--muted); background:none; border:none; padding:0; cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+
+  .recipe-panel { display:none; border-top:1px solid var(--card-border); padding:14px 16px 16px 52px; font-size:13px; }
+  .recipe-panel.open { display:block; }
+  .recipe-section h4 { font-size:12px; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent); margin:10px 0 6px; }
+  .recipe-section:first-child h4 { margin-top:0; }
+  .ing-row { display:flex; justify-content:space-between; align-items:center; padding:4px 0; color:var(--text); }
+  .stock-tag { font-size:10px; padding:2px 6px; border-radius:99px; font-weight:600; }
+  .stock-ok { background:var(--accent-dim); color:#d9f0b0; }
+  .stock-low { background:#4a2f18; color:var(--warn); }
+  ol.steps { margin:0; padding-left:18px; color:var(--text); }
+  ol.steps li { margin-bottom:6px; line-height:1.5; }
+
+  .switch-panel { display:none; border-top:1px solid var(--card-border); padding:12px 16px 14px 52px; }
+  .switch-panel.open { display:block; }
+  .switch-opt { display:flex; justify-content:space-between; align-items:center; padding:9px 10px; border-radius:10px; cursor:pointer; margin-bottom:4px; }
+  .switch-opt:active { background:#1d221e; }
+  .switch-opt-title { font-size:13px; }
+  .switch-opt-macro { font-size:11px; color:var(--muted); }
+
+  .reset-btn { display:block; margin:20px 0 0; width:100%; background:none; border:1px solid var(--card-border); color:var(--muted); padding:10px; border-radius:10px; font-size:13px; cursor:pointer; }
+
+  .pantry-item { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:8px; }
+  .pantry-name { font-size:14px; font-weight:500; }
+  .pantry-unit { font-size:11px; color:var(--muted); }
+  .stepper { display:flex; align-items:center; gap:10px; }
+  .step-btn { width:30px; height:30px; border-radius:8px; border:1px solid var(--card-border); background:#1d221e; color:var(--text); font-size:17px; display:flex; align-items:center; justify-content:center; cursor:pointer; }
+  .step-val { min-width:22px; text-align:center; font-size:14px; font-weight:600; }
+  .pantry-item.low { border-color:var(--warn); }
+
+  .add-row { display:flex; gap:8px; margin:14px 0 4px; }
+  .add-row input { flex:1; background:var(--card); border:1px solid var(--card-border); border-radius:10px; padding:10px 12px; color:var(--text); font-size:14px; }
+  .add-row button { background:var(--accent); color:#0f1210; border:none; border-radius:10px; padding:0 16px; font-weight:700; font-size:14px; cursor:pointer; }
+
+  .shop-section-label { font-size:12px; text-transform:uppercase; letter-spacing:0.04em; color:var(--muted); margin:18px 0 8px; }
+  .shop-item { background:var(--card); border:1px solid var(--card-border); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:10px; margin-bottom:8px; cursor:pointer; }
+  .shop-item.checked { opacity:0.5; }
+  .shop-item.checked .shop-name { text-decoration:line-through; }
+  .shop-check { width:20px; height:20px; border-radius:6px; border:2px solid var(--muted); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .shop-item.checked .shop-check { background:var(--accent); border-color:var(--accent); }
+  .shop-check svg { width:12px; height:12px; opacity:0; }
+  .shop-item.checked .shop-check svg { opacity:1; }
+  .shop-name { flex:1; font-size:14px; }
+  .shop-del { background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:4px 6px; }
+  .empty-note { color:var(--muted); font-size:13px; padding:6px 2px 0; }
+
+  footer { text-align:center; color:var(--muted); font-size:12px; margin-top:26px; max-width:560px; margin-left:auto; margin-right:auto; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Meal Tracker</h1>
+  <div class="subline" id="dateLabel"></div>
+</header>
+
+<div class="tabs">
+  <button class="tab-btn active" data-tab="today">Heute</button>
+  <button class="tab-btn" data-tab="pantry">Vorrat</button>
+  <button class="tab-btn" data-tab="shop">Liste <span class="badge" id="shopBadge" style="display:none;"></span></button>
+</div>
+
+<div class="view active" id="view-today">
+
+  <div class="macro-panel">
+    <div class="macro-panel-title">Gegessen / Tagesplan</div>
+    <div class="macro-row">
+      <span class="macro-label">Kcal</span>
+      <div class="macro-bar-bg"><div class="macro-bar-fill" id="bar-kcal" style="background:var(--c-kcal);"></div></div>
+      <span class="macro-val" id="val-kcal">0 / 0</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label">Protein</span>
+      <div class="macro-bar-bg"><div class="macro-bar-fill" id="bar-protein" style="background:var(--c-protein);"></div></div>
+      <span class="macro-val" id="val-protein">0 / 0g</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label">Carbs</span>
+      <div class="macro-bar-bg"><div class="macro-bar-fill" id="bar-carbs" style="background:var(--c-carbs);"></div></div>
+      <span class="macro-val" id="val-carbs">0 / 0g</span>
+    </div>
+    <div class="macro-row">
+      <span class="macro-label">Fett</span>
+      <div class="macro-bar-bg"><div class="macro-bar-fill" id="bar-fat" style="background:var(--c-fat);"></div></div>
+      <span class="macro-val" id="val-fat">0 / 0g</span>
+    </div>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    <div class="progress-label"><span id="progressText">0 / 5 Mahlzeiten</span></div>
+  </div>
+
+  <div class="meals" id="mealList"></div>
+  <button class="reset-btn" id="resetBtn">Heutigen Fortschritt zurücksetzen</button>
+</div>
+
+<div class="view" id="view-pantry">
+  <div class="shop-section-label">Was du zuhause hast</div>
+  <div id="pantryList"></div>
+  <div class="add-row">
+    <input type="text" id="pantryNewName" placeholder="Neue Zutat, z.B. Haferflocken">
+    <button id="pantryAddBtn">+</button>
+  </div>
+</div>
+
+<div class="view" id="view-shop">
+  <div class="shop-section-label">Wird knapp (automatisch)</div>
+  <div id="autoShopList"></div>
+  <div class="empty-note" id="autoShopEmpty" style="display:none;">Alles ausreichend auf Vorrat.</div>
+
+  <div class="shop-section-label">Extra Einträge</div>
+  <div id="manualShopList"></div>
+  <div class="add-row">
+    <input type="text" id="shopNewName" placeholder="Extra Item hinzufügen">
+    <button id="shopAddBtn">+</button>
+  </div>
+</div>
+
+<footer>Vorrat & Liste bleiben dauerhaft gespeichert. Tagesplan & Auswahl setzen sich automatisch um Mitternacht zurück.</footer>
+
+<script>
+const POOLS = {
+  breakfast: [
+    { id: "porridge", title: "Protein-Porridge", short: "Haferflocken + Ei + Whey + Zimt",
+      kcal: 460, protein: 40, carbs: 50, fat: 11,
+      ingredients: [
+        { name: "Haferflocken", amount: "80g", pantryKey: "haferflocken" },
+        { name: "Wasser oder Milch", amount: "200ml", pantryKey: "milch" },
+        { name: "Ei", amount: "1 Stück", pantryKey: "eier" },
+        { name: "Whey Protein", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Zimt", amount: "1 Prise", pantryKey: "zimt" }
+      ],
+      steps: [
+        "Haferflocken mit Wasser oder Milch aufkochen.",
+        "Ei einrühren, 2-3 Min unter Rühren köcheln bis cremig.",
+        "Vom Herd nehmen, 1-2 Min abkühlen lassen.",
+        "Whey unterrühren (nicht mehr kochen, sonst klumpt es).",
+        "Mit Zimt bestreuen."
+      ] },
+    { id: "ruehrei", title: "Rührei mit Vollkornbrot", short: "3 Eier + 2 Scheiben Vollkorn",
+      kcal: 420, protein: 24, carbs: 30, fat: 20,
+      ingredients: [
+        { name: "Eier", amount: "3 Stück", pantryKey: "eier" },
+        { name: "Vollkornbrot", amount: "2 Scheiben", pantryKey: "vollkornbrot" },
+        { name: "Butter", amount: "1 TL", pantryKey: "butter" }
+      ],
+      steps: [
+        "Eier verquirlen, salzen.",
+        "Butter in der Pfanne erhitzen, Eier bei mittlerer Hitze stocken lassen.",
+        "Brot toasten und dazu servieren."
+      ] },
+    { id: "skyroats", title: "Skyr-Overnight-Oats", short: "Skyr + Hafer, kalt (Vorbereitung am Vorabend)",
+      kcal: 340, protein: 28, carbs: 43, fat: 3,
+      ingredients: [
+        { name: "Skyr", amount: "200g", pantryKey: "skyr" },
+        { name: "Haferflocken", amount: "50g", pantryKey: "haferflocken" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" }
+      ],
+      steps: [
+        "Skyr, Haferflocken und Honig in einem Glas vermischen.",
+        "Abgedeckt über Nacht in den Kühlschrank stellen.",
+        "Am nächsten Morgen direkt kalt essen."
+      ] }
+  ],
+  snack: [
+    { id: "quark", title: "Magerquark-Bombe", short: "Magerquark + Honig + Topping",
+      kcal: 225, protein: 40, carbs: 12, fat: 1,
+      ingredients: [
+        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Haferflocken oder Beeren", amount: "nach Wunsch", pantryKey: "haferflocken" }
+      ],
+      steps: [
+        "Magerquark in eine Schüssel geben.",
+        "Honig unterrühren.",
+        "Nach Wunsch Haferflocken oder Beeren untermischen."
+      ] },
+    { id: "skyrshake", title: "Skyr-Whey-Shake", short: "Skyr + Whey + Milch",
+      kcal: 335, protein: 54, carbs: 17, fat: 3,
+      ingredients: [
+        { name: "Skyr", amount: "250g", pantryKey: "skyr" },
+        { name: "Whey Protein", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Milch", amount: "100-150ml", pantryKey: "milch" }
+      ],
+      steps: [
+        "Skyr, Whey und Milch in einen Shaker geben.",
+        "30 Sekunden kräftig schütteln bis glatt.",
+        "Direkt trinken."
+      ] },
+    { id: "huettenkaese", title: "Hüttenkäse mit Obst", short: "Hüttenkäse + Apfel/Beeren",
+      kcal: 280, protein: 28, carbs: 23, fat: 8,
+      ingredients: [
+        { name: "Hüttenkäse", amount: "250g", pantryKey: "huettenkaese" },
+        { name: "Apfel oder Beeren", amount: "1 Portion", pantryKey: "obst" }
+      ],
+      steps: [
+        "Hüttenkäse in eine Schüssel geben.",
+        "Obst klein schneiden und untermischen."
+      ] },
+    { id: "quarkbrot", title: "Quark-Hafer-Brot (Scheibe)", short: "Meal-Prep-Brot, Sonntags-Batch backen",
+      kcal: 140, protein: 13, carbs: 14, fat: 3,
+      ingredients: [
+        { name: "Magerquark", amount: "50g (Anteil vom Brot)", pantryKey: "magerquark" },
+        { name: "Haferflocken", amount: "20g (Anteil vom Brot)", pantryKey: "haferflocken" },
+        { name: "Ei", amount: "0.4 Stück (Anteil vom Brot)", pantryKey: "eier" }
+      ],
+      steps: [
+        "Für den ganzen Laib: 500g Magerquark, 200g Haferflocken (fein gemahlen), 4 Eier, 1 TL Backpulver, Salz vermischen.",
+        "In Kastenform füllen, bei 180°C ca. 45 Min backen.",
+        "Auskühlen lassen, in 10 Scheiben schneiden."
+      ] }
+  ],
+  main: [
+    { id: "bowl_chicken", title: "Reis-Hähnchen-Bowl", short: "Reis + Hähnchen + TK-Gemüse",
+      kcal: 430, protein: 42, carbs: 53, fat: 4,
+      ingredients: [
+        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
+        { name: "Hähnchenbrust oder -schenkel", amount: "150g", pantryKey: "haehnchen" },
+        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" },
+        { name: "Sojasauce", amount: "1-2 EL", pantryKey: "sojasauce" }
+      ],
+      steps: [
+        "Reis nach Packungsanweisung kochen.",
+        "Hähnchen würzen, in der Pfanne 5-7 Min pro Seite braten (Kerntemp. ca. 74°C).",
+        "TK-Gemüse in Pfanne oder Mikrowelle 4-5 Min garen.",
+        "Hähnchen in Streifen schneiden, alles in einer Bowl anrichten, mit Sojasauce abschmecken."
+      ] },
+    { id: "bowl_chickpea", title: "Kichererbsen-Reis-Pfanne", short: "Vegetarisch, sehr günstig",
+      kcal: 625, protein: 23, carbs: 100, fat: 14,
+      ingredients: [
+        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
+        { name: "Kichererbsen (Dose)", amount: "200g", pantryKey: "kichererbsen" },
+        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" },
+        { name: "Öl zum Anbraten", amount: "1 EL", pantryKey: "oel" }
+      ],
+      steps: [
+        "Kichererbsen abtropfen lassen.",
+        "Öl erhitzen, Kichererbsen und TK-Gemüse 6-8 Min anbraten, würzen.",
+        "Mit dem gekochten Reis vermischen."
+      ] },
+    { id: "bowl_egg", title: "Ei-Reis-Pfanne", short: "Reis + 3 Eier, schnell und billig",
+      kcal: 465, protein: 26, carbs: 55, fat: 16,
+      ingredients: [
+        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
+        { name: "Eier", amount: "3 Stück", pantryKey: "eier" },
+        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" }
+      ],
+      steps: [
+        "Eier verquirlen.",
+        "Reis und TK-Gemüse in der Pfanne kurz anbraten.",
+        "Eier dazugeben und unter Rühren stocken lassen.",
+        "Mit Sojasauce oder Gewürzen abschmecken."
+      ] },
+    { id: "bowl_tuna", title: "Thunfisch-Reis-Bowl", short: "Reis + Thunfisch + Kichererbsen",
+      kcal: 535, protein: 48, carbs: 76, fat: 4,
+      ingredients: [
+        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
+        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
+        { name: "Kichererbsen (Dose)", amount: "100g", pantryKey: "kichererbsen" },
+        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" }
+      ],
+      steps: [
+        "Reis kochen.",
+        "Thunfisch abtropfen lassen, Kichererbsen abspülen.",
+        "TK-Gemüse kurz erhitzen.",
+        "Alles zusammen anrichten, mit Gewürzen oder Zitrone abschmecken."
+      ] }
+  ]
+};
+
+const SLOTS = [
+  { id: "breakfast", label: "Frühstück", pool: "breakfast" },
+  { id: "snack1", label: "Snack", pool: "snack" },
+  { id: "lunch", label: "Mittag", pool: "main" },
+  { id: "snack2", label: "Snack", pool: "snack" },
+  { id: "dinner", label: "Abend", pool: "main" }
+];
+
+const DEFAULT_PANTRY = [
+  { key: "haferflocken", name: "Haferflocken", unit: "Portionen", qty: 5, low: 2 },
+  { key: "magerquark", name: "Magerquark", unit: "Becher (250g)", qty: 5, low: 2 },
+  { key: "skyr", name: "Skyr", unit: "Becher (250g)", qty: 5, low: 2 },
+  { key: "huettenkaese", name: "Hüttenkäse", unit: "Becher (250g)", qty: 2, low: 1 },
+  { key: "obst", name: "Obst (Apfel/Beeren)", unit: "Portionen", qty: 4, low: 1 },
+  { key: "reis", name: "Reis", unit: "Portionen", qty: 5, low: 2 },
+  { key: "eier", name: "Eier", unit: "Stück", qty: 10, low: 3 },
+  { key: "haehnchen", name: "Hähnchen(-brust/-schenkel)", unit: "Portionen", qty: 5, low: 2 },
+  { key: "tkgemuese", name: "TK-Gemüse", unit: "Portionen", qty: 5, low: 2 },
+  { key: "kichererbsen", name: "Kichererbsen (Dosen)", unit: "Dosen", qty: 2, low: 1 },
+  { key: "thunfisch", name: "Thunfisch (Dosen)", unit: "Dosen", qty: 2, low: 1 },
+  { key: "vollkornbrot", name: "Vollkornbrot", unit: "Laib", qty: 1, low: 1 },
+  { key: "butter", name: "Butter", unit: "Stück", qty: 1, low: 1 },
+  { key: "oel", name: "Öl", unit: "Flasche", qty: 1, low: 1 },
+  { key: "whey", name: "Whey Protein", unit: "Schaufeln", qty: 14, low: 4 },
+  { key: "milch", name: "Milch", unit: "Liter", qty: 2, low: 1 },
+  { key: "honig", name: "Honig", unit: "Glas", qty: 1, low: 1 },
+  { key: "zimt", name: "Zimt", unit: "Dose", qty: 1, low: 1 },
+  { key: "sojasauce", name: "Sojasauce", unit: "Flasche", qty: 1, low: 1 }
+];
+
+const LS_PANTRY = "mealtracker_pantry";
+const LS_SHOP_MANUAL = "mealtracker_shop_manual";
+const LS_SHOP_CHECKED = "mealtracker_shop_checked";
+const LS_EXPANDED = "mealtracker_expanded";
+const LS_SWITCH_OPEN = "mealtracker_switchopen";
+const STORAGE_PREFIX = "mealtracker_day2_";
+
+function todayKey() {
+  const d = new Date();
+  return STORAGE_PREFIX + d.getFullYear() + "-" + (d.getMonth()+1) + "-" + d.getDate();
+}
+function defaultDayState() {
+  const s = {};
+  SLOTS.forEach(slot => { s[slot.id] = { optionId: POOLS[slot.pool][0].id, done: false }; });
+  return s;
+}
+function loadDayState() {
+  try {
+    const raw = localStorage.getItem(todayKey());
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  const d = defaultDayState();
+  saveDayState(d);
+  return d;
+}
+function saveDayState(s) { localStorage.setItem(todayKey(), JSON.stringify(s)); }
+function cleanupOldDayKeys() {
+  const keep = todayKey();
+  for (let i = localStorage.length - 1; i >= 0; i--) {
+    const key = localStorage.key(i);
+    if (key && key.startsWith(STORAGE_PREFIX) && key !== keep) localStorage.removeItem(key);
+  }
+}
+
+function loadPantry() {
+  try { const raw = localStorage.getItem(LS_PANTRY); if (raw) return JSON.parse(raw); } catch(e) {}
+  savePantry(DEFAULT_PANTRY);
+  return DEFAULT_PANTRY.slice();
+}
+function savePantry(p) { localStorage.setItem(LS_PANTRY, JSON.stringify(p)); }
+function loadManualShop() { try { return JSON.parse(localStorage.getItem(LS_SHOP_MANUAL)) || []; } catch(e) { return []; } }
+function saveManualShop(list) { localStorage.setItem(LS_SHOP_MANUAL, JSON.stringify(list)); }
+function loadShopChecked() { try { return JSON.parse(localStorage.getItem(LS_SHOP_CHECKED)) || {}; } catch(e) { return {}; } }
+function saveShopChecked(obj) { localStorage.setItem(LS_SHOP_CHECKED, JSON.stringify(obj)); }
+function loadExpanded() { try { return JSON.parse(localStorage.getItem(LS_EXPANDED)) || {}; } catch(e) { return {}; } }
+function saveExpanded(obj) { localStorage.setItem(LS_EXPANDED, JSON.stringify(obj)); }
+function loadSwitchOpen() { try { return JSON.parse(localStorage.getItem(LS_SWITCH_OPEN)) || {}; } catch(e) { return {}; } }
+function saveSwitchOpen(obj) { localStorage.setItem(LS_SWITCH_OPEN, JSON.stringify(obj)); }
+
+function getOption(slot, optionId) {
+  return POOLS[slot.pool].find(o => o.id === optionId) || POOLS[slot.pool][0];
+}
+
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    document.querySelectorAll(".view").forEach(v => v.classList.remove("active"));
+    btn.classList.add("active");
+    document.getElementById("view-" + btn.dataset.tab).classList.add("active");
+  });
+});
+
+function renderToday() {
+  const state = loadDayState();
+  const expanded = loadExpanded();
+  const switchOpen = loadSwitchOpen();
+  const pantry = loadPantry();
+  const pantryByKey = {};
+  pantry.forEach(p => pantryByKey[p.key] = p);
+
+  const list = document.getElementById("mealList");
+  list.innerHTML = "";
+
+  let doneCount = 0;
+  let plannedTotals = { kcal:0, protein:0, carbs:0, fat:0 };
+  let eatenTotals = { kcal:0, protein:0, carbs:0, fat:0 };
+
+  SLOTS.forEach(slot => {
+    const slotState = state[slot.id] || { optionId: POOLS[slot.pool][0].id, done: false };
+    const option = getOption(slot, slotState.optionId);
+    const isDone = !!slotState.done;
+    const isOpen = !!expanded[slot.id];
+    const isSwitchOpen = !!switchOpen[slot.id];
+
+    plannedTotals.kcal += option.kcal; plannedTotals.protein += option.protein;
+    plannedTotals.carbs += option.carbs; plannedTotals.fat += option.fat;
+    if (isDone) {
+      doneCount++;
+      eatenTotals.kcal += option.kcal; eatenTotals.protein += option.protein;
+      eatenTotals.carbs += option.carbs; eatenTotals.fat += option.fat;
+    }
+
+    const card = document.createElement("div");
+    card.className = "meal-card" + (isDone ? " done" : "");
+
+    const ingredientsHtml = option.ingredients.map(ing => {
+      const p = pantryByKey[ing.pantryKey];
+      let tag = "";
+      if (p) tag = p.qty <= p.low ? `<span class="stock-tag stock-low">wenig da</span>` : `<span class="stock-tag stock-ok">vorhanden</span>`;
+      return `<div class="ing-row"><span>${ing.name} — ${ing.amount}</span>${tag}</div>`;
+    }).join("");
+    const stepsHtml = option.steps.map(s => `<li>${s}</li>`).join("");
+
+    const otherOptions = POOLS[slot.pool].filter(o => o.id !== option.id);
+    const switchHtml = otherOptions.map(o => `
+      <div class="switch-opt" data-switch-to="${o.id}">
+        <span class="switch-opt-title">${o.title}</span>
+        <span class="switch-opt-macro">${o.kcal} kcal · ${o.protein}g P</span>
+      </div>
+    `).join("");
+
+    card.innerHTML = `
+      <div class="meal-head" data-check="${slot.id}">
+        <div class="checkbox">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div class="meal-body">
+          <div class="meal-top">
+            <span class="meal-title">${option.title}</span>
+            <span class="meal-time">${slot.label}</span>
+          </div>
+          <div class="meal-macros-line">${option.kcal} kcal · ${option.protein}g P · ${option.carbs}g C · ${option.fat}g F</div>
+          <div class="meal-actions">
+            <button class="link-btn" data-expand="${slot.id}">${isOpen ? "Rezept ausblenden" : "Rezept anzeigen"}</button>
+            <button class="link-btn" data-switch="${slot.id}">${isSwitchOpen ? "Auswahl schließen" : "Andere Option"}</button>
+          </div>
+        </div>
+      </div>
+      <div class="recipe-panel ${isOpen ? "open" : ""}">
+        <div class="recipe-section"><h4>Zutaten</h4>${ingredientsHtml}</div>
+        <div class="recipe-section"><h4>Zubereitung</h4><ol class="steps">${stepsHtml}</ol></div>
+      </div>
+      <div class="switch-panel ${isSwitchOpen ? "open" : ""}">${switchHtml}</div>
+    `;
+
+    card.querySelector("[data-check]").addEventListener("click", (e) => {
+      if (e.target.closest("button")) return;
+      const s = loadDayState();
+      s[slot.id].done = !s[slot.id].done;
+      saveDayState(s);
+      renderToday();
+    });
+    card.querySelector("[data-expand]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const exp = loadExpanded();
+      exp[slot.id] = !exp[slot.id];
+      saveExpanded(exp);
+      renderToday();
+    });
+    card.querySelector("[data-switch]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const sw = loadSwitchOpen();
+      sw[slot.id] = !sw[slot.id];
+      saveSwitchOpen(sw);
+      renderToday();
+    });
+    card.querySelectorAll("[data-switch-to]").forEach(el => {
+      el.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const s = loadDayState();
+        s[slot.id].optionId = el.dataset.switchTo;
+        saveDayState(s);
+        const sw = loadSwitchOpen();
+        sw[slot.id] = false;
+        saveSwitchOpen(sw);
+        renderToday();
+      });
+    });
+
+    list.appendChild(card);
+  });
+
+  document.getElementById("progressText").textContent = `${doneCount} / ${SLOTS.length} Mahlzeiten`;
+  document.getElementById("progressFill").style.width = (doneCount / SLOTS.length * 100) + "%";
+
+  setMacroBar("kcal", eatenTotals.kcal, plannedTotals.kcal, "");
+  setMacroBar("protein", eatenTotals.protein, plannedTotals.protein, "g");
+  setMacroBar("carbs", eatenTotals.carbs, plannedTotals.carbs, "g");
+  setMacroBar("fat", eatenTotals.fat, plannedTotals.fat, "g");
+}
+
+function setMacroBar(key, eaten, planned, unit) {
+  const pct = planned > 0 ? Math.min(100, (eaten / planned) * 100) : 0;
+  document.getElementById("bar-" + key).style.width = pct + "%";
+  document.getElementById("val-" + key).textContent = `${eaten} / ${planned}${unit}`;
+}
+
+function renderDate() {
+  const d = new Date();
+  document.getElementById("dateLabel").textContent = d.toLocaleDateString('de-DE', { weekday: 'long', day: 'numeric', month: 'long' });
+}
+
+document.getElementById("resetBtn").addEventListener("click", () => {
+  saveDayState(defaultDayState());
+  saveExpanded({});
+  saveSwitchOpen({});
+  renderToday();
+});
+
+function renderPantry() {
+  const pantry = loadPantry();
+  const wrap = document.getElementById("pantryList");
+  wrap.innerHTML = "";
+  pantry.forEach((item, idx) => {
+    const isLow = item.qty <= item.low;
+    const row = document.createElement("div");
+    row.className = "pantry-item" + (isLow ? " low" : "");
+    row.innerHTML = `
+      <div>
+        <div class="pantry-name">${item.name}</div>
+        <div class="pantry-unit">${item.unit}${isLow ? " · knapp" : ""}</div>
+      </div>
+      <div class="stepper">
+        <button class="step-btn" data-action="dec" data-idx="${idx}">−</button>
+        <span class="step-val">${item.qty}</span>
+        <button class="step-btn" data-action="inc" data-idx="${idx}">+</button>
+      </div>
+    `;
+    wrap.appendChild(row);
+  });
+  wrap.querySelectorAll(".step-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const p = loadPantry();
+      const idx = parseInt(btn.dataset.idx);
+      if (btn.dataset.action === "inc") p[idx].qty++;
+      else p[idx].qty = Math.max(0, p[idx].qty - 1);
+      savePantry(p);
+      renderPantry(); renderShop(); renderToday();
+    });
+  });
+}
+
+document.getElementById("pantryAddBtn").addEventListener("click", () => {
+  const input = document.getElementById("pantryNewName");
+  const name = input.value.trim();
+  if (!name) return;
+  const pantry = loadPantry();
+  const key = name.toLowerCase().replace(/\s+/g, "_") + "_" + Date.now();
+  pantry.push({ key, name, unit: "Stück", qty: 1, low: 1 });
+  savePantry(pantry);
+  input.value = "";
+  renderPantry();
+});
+
+function renderShop() {
+  const pantry = loadPantry();
+  const lowItems = pantry.filter(p => p.qty <= p.low);
+  const checked = loadShopChecked();
+
+  const autoWrap = document.getElementById("autoShopList");
+  const autoEmpty = document.getElementById("autoShopEmpty");
+  autoWrap.innerHTML = "";
+  if (lowItems.length === 0) {
+    autoEmpty.style.display = "block";
+  } else {
+    autoEmpty.style.display = "none";
+    lowItems.forEach(item => {
+      const isChecked = !!checked["auto_" + item.key];
+      const row = document.createElement("div");
+      row.className = "shop-item" + (isChecked ? " checked" : "");
+      row.innerHTML = `
+        <div class="shop-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+        <span class="shop-name">${item.name}</span>
+      `;
+      row.addEventListener("click", () => {
+        const c = loadShopChecked();
+        c["auto_" + item.key] = !c["auto_" + item.key];
+        saveShopChecked(c);
+        renderShop();
+      });
+      autoWrap.appendChild(row);
+    });
+  }
+
+  const manual = loadManualShop();
+  const manWrap = document.getElementById("manualShopList");
+  manWrap.innerHTML = "";
+  if (manual.length === 0) manWrap.innerHTML = `<div class="empty-note">Noch keine extra Einträge.</div>`;
+  manual.forEach((item, idx) => {
+    const isChecked = !!checked["man_" + idx];
+    const row = document.createElement("div");
+    row.className = "shop-item" + (isChecked ? " checked" : "");
+    row.innerHTML = `
+      <div class="shop-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <span class="shop-name">${item}</span>
+      <button class="shop-del" data-del="${idx}">✕</button>
+    `;
+    row.querySelector(".shop-check").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const c = loadShopChecked();
+      c["man_" + idx] = !c["man_" + idx];
+      saveShopChecked(c);
+      renderShop();
+    });
+    row.querySelector("[data-del]").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const m = loadManualShop();
+      m.splice(idx, 1);
+      saveManualShop(m);
+      renderShop();
+    });
+    manWrap.appendChild(row);
+  });
+
+  const badge = document.getElementById("shopBadge");
+  const totalOpen = lowItems.filter(i => !checked["auto_" + i.key]).length +
+                     manual.filter((_, idx) => !checked["man_" + idx]).length;
+  if (totalOpen > 0) { badge.style.display = "inline-block"; badge.textContent = totalOpen; }
+  else badge.style.display = "none";
+}
+
+document.getElementById("shopAddBtn").addEventListener("click", () => {
+  const input = document.getElementById("shopNewName");
+  const val = input.value.trim();
+  if (!val) return;
+  const m = loadManualShop();
+  m.push(val);
+  saveManualShop(m);
+  input.value = "";
+  renderShop();
+});
+
+cleanupOldDayKeys();
+renderDate();
+renderToday();
+renderPantry();
+renderShop();
+
+function scheduleMidnightRefresh() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 5, 0);
+  setTimeout(() => {
+    cleanupOldDayKeys();
+    renderDate();
+    renderToday();
+    scheduleMidnightRefresh();
+  }, midnight - now);
+}
+scheduleMidnightRefresh();
+</script>
+
+</body>
+</html>
