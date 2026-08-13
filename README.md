@@ -51,6 +51,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 **Heute**
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
 - Neben den Meal-Prep-Gerichten auch schnelle Toast-Optionen ohne Kochen: 2 Eier auf Vollkorntoast, Erdnussbutter-Marmeladen-Toast, Vollkorntoast mit Putenbrust, Erdnussbutter-Banane-Toast, Thunfisch-Sandwich
+- Baked Oats als Frühstück: gemahlene Haferflocken + Banane + Ei + Whey + Backpulver, 20-25 Min bei 180°C — Porridge-Zutaten, Kuchen-Ergebnis (540 kcal, 43g Protein)
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan"
 - **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
   - Tab "Suchen": Name eintippen → Open Food Facts liefert Treffer mit Nährwerten pro 100g → Menge in Gramm eingeben → Makros werden automatisch skaliert

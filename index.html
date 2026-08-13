@@ -368,7 +368,7 @@ const POOLS = {
         { name: "Haferflocken", amount: "80g", pantryKey: "haferflocken" },
         { name: "Wasser oder Milch", amount: "200ml", pantryKey: "milch" },
         { name: "Ei", amount: "1 Stück", pantryKey: "eier" },
-        { name: "Whey Protein", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Whey", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
         { name: "Zimt", amount: "1 Prise", pantryKey: "zimt" }
       ],
       steps: [
@@ -377,6 +377,26 @@ const POOLS = {
         "Vom Herd nehmen, 1-2 Min abkühlen lassen.",
         "Whey unterrühren (nicht mehr kochen, sonst klumpt es).",
         "Mit Zimt bestreuen."
+      ] },
+    { id: "baked_oats", title: "Baked Oats", short: "Schmeckt wie Kuchen, kommt aus dem Ofen",
+      kcal: 540, protein: 43, carbs: 66, fat: 12,
+      ingredients: [
+        { name: "Haferflocken", amount: "60g", pantryKey: "haferflocken" },
+        { name: "Banane", amount: "1 reife", pantryKey: "banane" },
+        { name: "Ei", amount: "1 Stück", pantryKey: "eier" },
+        { name: "Whey", amount: "1 Schaufel (~30g), Schoko oder Vanille", pantryKey: "whey" },
+        { name: "Milch", amount: "100ml", pantryKey: "milch" },
+        { name: "Backpulver", amount: "1 TL", pantryKey: "backpulver" }
+      ],
+      steps: [
+        "Ofen auf 180°C vorheizen.",
+        "Haferflocken im Mixer fein mahlen — das macht den Kuchen-Effekt, ganze Flocken bleiben Porridge.",
+        "Banane zerdrücken, mit Ei, Milch, Whey, Backpulver und den gemahlenen Haferflocken zu einem zähen Teig verrühren.",
+        "In eine kleine Auflaufform oder Ofenform füllen (ca. 12-14cm).",
+        "20-25 Min backen, bis die Oberfläche fest ist und ein Zahnstocher sauber rauskommt.",
+        "5 Min abkühlen lassen und warm essen.",
+        "Eilig? Statt Ofen 3-4 Min in der Mikrowelle bei voller Leistung — wird dann eher Mug Cake als Kuchen.",
+        "Extras nach Wunsch: Zimt in den Teig, Erdnussbutter oder ein paar Schokostückchen oben drauf (Makros kommen dann noch dazu)."
       ] },
     { id: "ruehrei", title: "Rührei mit Vollkornbrot", short: "3 Eier + 2 Scheiben Vollkorn",
       kcal: 420, protein: 24, carbs: 30, fat: 20,
@@ -445,7 +465,7 @@ const POOLS = {
       kcal: 335, protein: 54, carbs: 17, fat: 3,
       ingredients: [
         { name: "Skyr", amount: "250g", pantryKey: "skyr" },
-        { name: "Whey Protein", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Whey", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
         { name: "Milch", amount: "100-150ml", pantryKey: "milch" }
       ],
       steps: [
