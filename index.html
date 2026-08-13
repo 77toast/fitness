@@ -382,13 +382,38 @@ const POOLS = {
       kcal: 420, protein: 24, carbs: 30, fat: 20,
       ingredients: [
         { name: "Eier", amount: "3 Stück", pantryKey: "eier" },
-        { name: "Vollkornbrot", amount: "2 Scheiben", pantryKey: "vollkornbrot" },
+        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
         { name: "Butter", amount: "1 TL", pantryKey: "butter" }
       ],
       steps: [
         "Eier verquirlen, salzen.",
         "Butter in der Pfanne erhitzen, Eier bei mittlerer Hitze stocken lassen.",
         "Brot toasten und dazu servieren."
+      ] },
+    { id: "eier_toast", title: "2 Eier auf Vollkorntoast", short: "5 Minuten, keine Vorbereitung",
+      kcal: 335, protein: 18, carbs: 29, fat: 16,
+      ingredients: [
+        { name: "Eier", amount: "2 Stück", pantryKey: "eier" },
+        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
+        { name: "Butter", amount: "1 TL", pantryKey: "butter" }
+      ],
+      steps: [
+        "Toast in den Toaster.",
+        "Butter in die Pfanne, Eier aufschlagen, 3-4 Min braten (oder 6 Min kochen).",
+        "Eier auf den Toast, salzen, pfeffern."
+      ] },
+    { id: "pbj_toast", title: "Erdnussbutter-Marmeladen-Toast", short: "PB&J, 2 Minuten — wenig Protein",
+      kcal: 330, protein: 11, carbs: 45, fat: 12,
+      ingredients: [
+        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
+        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
+        { name: "Erdbeermarmelade", amount: "20g", pantryKey: "erdbeermarmelade" }
+      ],
+      steps: [
+        "Beide Scheiben toasten.",
+        "Eine Scheibe mit Erdnussbutter bestreichen, die andere mit Marmelade.",
+        "Zusammenklappen.",
+        "Tipp: 250g Magerquark dazu, dann stimmt auch das Protein."
       ] },
     { id: "skyroats", title: "Skyr-Overnight-Oats", short: "Skyr + Hafer, kalt (Vorbereitung am Vorabend)",
       kcal: 340, protein: 28, carbs: 43, fat: 3,
@@ -437,6 +462,29 @@ const POOLS = {
       steps: [
         "Hüttenkäse in eine Schüssel geben.",
         "Obst klein schneiden und untermischen."
+      ] },
+    { id: "puten_toast", title: "Vollkorntoast mit Putenbrust", short: "2 Minuten, nichts kochen",
+      kcal: 270, protein: 28, carbs: 29, fat: 4,
+      ingredients: [
+        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
+        { name: "Putenbrust", amount: "100g (Aufschnitt)", pantryKey: "putenbrust" },
+        { name: "Senf oder Gurke", amount: "nach Wunsch", pantryKey: "senf" }
+      ],
+      steps: [
+        "Toast toasten.",
+        "Mit Putenbrust belegen, nach Wunsch Senf oder Gurkenscheiben drauf.",
+        "Zusammenklappen, fertig."
+      ] },
+    { id: "pb_banane", title: "Erdnussbutter-Banane-Toast", short: "Schneller Energie-Snack",
+      kcal: 305, protein: 9, carbs: 45, fat: 11,
+      ingredients: [
+        { name: "Vollkorntoast", amount: "1 Scheibe", pantryKey: "vollkorntoast" },
+        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
+        { name: "Banane", amount: "1 Stück", pantryKey: "banane" }
+      ],
+      steps: [
+        "Toast toasten und mit Erdnussbutter bestreichen.",
+        "Banane in Scheiben schneiden und drauflegen."
       ] },
     { id: "quarkbrot", title: "Quark-Hafer-Brot (Scheibe)", short: "Meal-Prep-Brot, Sonntags-Batch backen",
       kcal: 140, protein: 13, carbs: 14, fat: 3,
@@ -492,6 +540,18 @@ const POOLS = {
         "Eier dazugeben und unter Rühren stocken lassen.",
         "Mit Sojasauce oder Gewürzen abschmecken."
       ] },
+    { id: "tuna_sandwich", title: "Thunfisch-Sandwich", short: "5 Minuten, kein Herd",
+      kcal: 290, protein: 36, carbs: 28, fat: 3,
+      ingredients: [
+        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
+        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
+        { name: "Senf oder Zitrone", amount: "nach Wunsch", pantryKey: "senf" }
+      ],
+      steps: [
+        "Thunfisch abtropfen lassen und mit einer Gabel zerdrücken.",
+        "Mit Senf oder Zitrone, Salz und Pfeffer abschmecken.",
+        "Auf den getoasteten Vollkorntoast geben."
+      ] },
     { id: "bowl_tuna", title: "Thunfisch-Reis-Bowl", short: "Reis + Thunfisch + Kichererbsen",
       kcal: 535, protein: 48, carbs: 76, fat: 4,
       ingredients: [
@@ -517,27 +577,18 @@ const SLOTS = [
   { id: "dinner", label: "Abend", pool: "main" }
 ];
 
-const DEFAULT_PANTRY = [
-  { key: "haferflocken", name: "Haferflocken", unit: "Portionen", qty: 5, low: 2 },
-  { key: "magerquark", name: "Magerquark", unit: "Becher (250g)", qty: 5, low: 2 },
-  { key: "skyr", name: "Skyr", unit: "Becher (250g)", qty: 5, low: 2 },
-  { key: "huettenkaese", name: "Hüttenkäse", unit: "Becher (250g)", qty: 2, low: 1 },
-  { key: "obst", name: "Obst (Apfel/Beeren)", unit: "Portionen", qty: 4, low: 1 },
-  { key: "reis", name: "Reis", unit: "Portionen", qty: 5, low: 2 },
-  { key: "eier", name: "Eier", unit: "Stück", qty: 10, low: 3 },
-  { key: "haehnchen", name: "Hähnchen(-brust/-schenkel)", unit: "Portionen", qty: 5, low: 2 },
-  { key: "tkgemuese", name: "TK-Gemüse", unit: "Portionen", qty: 5, low: 2 },
-  { key: "kichererbsen", name: "Kichererbsen (Dosen)", unit: "Dosen", qty: 2, low: 1 },
-  { key: "thunfisch", name: "Thunfisch (Dosen)", unit: "Dosen", qty: 2, low: 1 },
-  { key: "vollkornbrot", name: "Vollkornbrot", unit: "Laib", qty: 1, low: 1 },
-  { key: "butter", name: "Butter", unit: "Stück", qty: 1, low: 1 },
-  { key: "oel", name: "Öl", unit: "Flasche", qty: 1, low: 1 },
-  { key: "whey", name: "Whey Protein", unit: "Schaufeln", qty: 14, low: 4 },
-  { key: "milch", name: "Milch", unit: "Liter", qty: 2, low: 1 },
-  { key: "honig", name: "Honig", unit: "Glas", qty: 1, low: 1 },
-  { key: "zimt", name: "Zimt", unit: "Dose", qty: 1, low: 1 },
-  { key: "sojasauce", name: "Sojasauce", unit: "Flasche", qty: 1, low: 1 }
-];
+/* Der Vorrat startet leer – Zutaten kommen ausschließlich manuell über den
+   "Vorrat"-Tab rein. Damit die Vorrats-Anzeige in den Rezepten trotzdem greift,
+   wird der Key aus dem Namen abgeleitet (siehe pantryKeyFor): "Hähnchen" wird
+   zu "haehnchen" und passt damit auf den pantryKey der Zutaten in POOLS. */
+const PANTRY_KEY_MAP = { "ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss" };
+
+function pantryKeyFor(name, existing) {
+  let slug = name.toLowerCase().replace(/[äöüß]/g, c => PANTRY_KEY_MAP[c]).replace(/[^a-z0-9]/g, "");
+  if (!slug) slug = "item";
+  if (existing.some(p => p.key === slug)) slug += "_" + Date.now();
+  return slug;
+}
 
 const WORKOUTS = {
   push: { label: "Push", exercises: [
@@ -566,7 +617,10 @@ const WORKOUTS = {
   ]}
 };
 
-const LS_PANTRY = "mealtracker_pantry";
+// Key bewusst auf _v2 gezogen: alte Installationen hatten eine vorbefüllte
+// Standard-Vorratsliste, die hiermit einmalig verworfen wird.
+const LS_PANTRY = "mealtracker_pantry_v2";
+const LS_PANTRY_OLD = "mealtracker_pantry";
 const LS_SHOP_MANUAL = "mealtracker_shop_manual";
 const LS_SHOP_CHECKED = "mealtracker_shop_checked";
 const LS_EXPANDED = "mealtracker_expanded";
@@ -603,12 +657,18 @@ function cleanupOldDayKeys() {
     if (key.startsWith(STORAGE_PREFIX) && key !== keepDay) localStorage.removeItem(key);
     if (key.startsWith(WORKOUT_PREFIX) && key !== keepWorkout) localStorage.removeItem(key);
   }
+  localStorage.removeItem(LS_PANTRY_OLD);
 }
 
 function loadPantry() {
-  try { const raw = localStorage.getItem(LS_PANTRY); if (raw) return JSON.parse(raw); } catch(e) {}
-  savePantry(DEFAULT_PANTRY);
-  return DEFAULT_PANTRY.slice();
+  try {
+    const raw = localStorage.getItem(LS_PANTRY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) return parsed;
+    }
+  } catch(e) {}
+  return [];
 }
 function savePantry(p) { localStorage.setItem(LS_PANTRY, JSON.stringify(p)); }
 function loadManualShop() { try { return JSON.parse(localStorage.getItem(LS_SHOP_MANUAL)) || []; } catch(e) { return []; } }
@@ -1132,14 +1192,17 @@ function renderPantry() {
   const pantry = loadPantry();
   const wrap = document.getElementById("pantryList");
   wrap.innerHTML = "";
+  if (pantry.length === 0) {
+    wrap.innerHTML = `<div class="empty-note">Noch nichts im Vorrat. Unten eintragen, was du zuhause hast — steht ein Eintrag auf 0, wandert er automatisch in die Einkaufsliste.</div>`;
+  }
   pantry.forEach((item, idx) => {
     const isLow = item.qty <= item.low;
     const row = document.createElement("div");
     row.className = "pantry-item" + (isLow ? " low" : "");
     row.innerHTML = `
       <div>
-        <div class="pantry-name">${item.name}</div>
-        <div class="pantry-unit">${item.unit}${isLow ? " · knapp" : ""}</div>
+        <div class="pantry-name">${esc(item.name)}</div>
+        <div class="pantry-unit">${esc(item.unit)}${isLow ? " · knapp" : ""}</div>
       </div>
       <div class="stepper">
         <button class="step-btn" data-action="dec" data-idx="${idx}">−</button>
@@ -1161,17 +1224,18 @@ function renderPantry() {
   });
 }
 
-document.getElementById("pantryAddBtn").addEventListener("click", () => {
+function addPantryItem() {
   const input = document.getElementById("pantryNewName");
   const name = input.value.trim();
   if (!name) return;
   const pantry = loadPantry();
-  const key = name.toLowerCase().replace(/\s+/g, "_") + "_" + Date.now();
-  pantry.push({ key, name, unit: "Stück", qty: 1, low: 1 });
+  pantry.push({ key: pantryKeyFor(name, pantry), name, unit: "Stück", qty: 1, low: 0 });
   savePantry(pantry);
   input.value = "";
-  renderPantry();
-});
+  renderPantry(); renderShop(); renderToday();
+}
+document.getElementById("pantryAddBtn").addEventListener("click", addPantryItem);
+document.getElementById("pantryNewName").addEventListener("keydown", e => { if (e.key === "Enter") addPantryItem(); });
 
 function renderShop() {
   const pantry = loadPantry();
@@ -1191,7 +1255,7 @@ function renderShop() {
       row.className = "shop-item" + (isChecked ? " checked" : "");
       row.innerHTML = `
         <div class="shop-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-        <span class="shop-name">${item.name}</span>
+        <span class="shop-name">${esc(item.name)}</span>
       `;
       row.addEventListener("click", () => {
         const c = loadShopChecked();
@@ -1213,7 +1277,7 @@ function renderShop() {
     row.className = "shop-item" + (isChecked ? " checked" : "");
     row.innerHTML = `
       <div class="shop-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <span class="shop-name">${item}</span>
+      <span class="shop-name">${esc(item)}</span>
       <button class="shop-del" data-del="${idx}">✕</button>
     `;
     row.querySelector(".shop-check").addEventListener("click", (e) => {

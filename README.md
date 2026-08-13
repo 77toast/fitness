@@ -27,7 +27,8 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 
 - `POOLS` – Objekt mit drei Kategorien (`breakfast`, `snack`, `main`), jede enthält mehrere Mahlzeit-Optionen mit `id`, `title`, `short`, `kcal`, `protein`, `carbs`, `fat`, `ingredients[]` (inkl. `pantryKey` zur Verknüpfung mit dem Vorrat) und `steps[]` (Zubereitung).
 - `SLOTS` – 5 feste Tages-Slots (Frühstück, Snack, Mittag, Snack, Abend), jeder verweist auf einen Pool.
-- `DEFAULT_PANTRY` – Standard-Vorratsliste mit `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
+- Der Vorrat hat **keine** Standardliste – er startet leer und wird ausschließlich manuell befüllt. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp", bei manuell angelegten Einträgen `0`).
+- `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
 - `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze) und `reps` (Ziel-Wiederholungsbereich).
 
 ## State / Storage-Keys (localStorage)
@@ -37,7 +38,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | `mealtracker_day2_<Jahr>-<Monat>-<Tag>` | Tagesstatus: gewählte Option + abgehakt pro Slot, plus `extras[]` | täglich (`cleanupOldDayKeys`) |
 | `fitnesstracker_workout_<YYYY-MM-DD>` | welcher Trainingstag heute gewählt ist | täglich (`cleanupOldDayKeys`) |
 | `fitnesstracker_history` | `{ übungsId: [ { date, sets: [{kg, reps}] } ] }` – gesamte Trainingshistorie | nie |
-| `mealtracker_pantry` | dauerhafter Vorrat | nie |
+| `mealtracker_pantry_v2` | dauerhafter Vorrat (startet leer) | nie |
 | `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge | nie |
 | `mealtracker_shop_checked` | abgehakte Einkaufslisten-Einträge | nie |
 | `mealtracker_expanded` / `mealtracker_switchopen` | UI-State (offene Rezepte/Auswahl-Panels) | nie |
@@ -49,6 +50,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 
 **Heute**
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
+- Neben den Meal-Prep-Gerichten auch schnelle Toast-Optionen ohne Kochen: 2 Eier auf Vollkorntoast, Erdnussbutter-Marmeladen-Toast, Vollkorntoast mit Putenbrust, Erdnussbutter-Banane-Toast, Thunfisch-Sandwich
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan"
 - **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
   - Tab "Suchen": Name eintippen → Open Food Facts liefert Treffer mit Nährwerten pro 100g → Menge in Gramm eingeben → Makros werden automatisch skaliert
@@ -63,8 +65,11 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - Fortschrittsbalken über absolvierte vs. geplante Sätze des Tages
 
 **Vorrat / Liste**
-- Vorrat mit +/- Steppern und "wird knapp"-Markierung, die automatisch in die Einkaufsliste wandert
+- Vorrat startet leer und wird manuell befüllt – es wird nichts vorgegeben, was du gar nicht hast
+- +/- Stepper pro Eintrag; steht ein Eintrag auf 0, gilt er als "knapp" und wandert automatisch in die Einkaufsliste
 - Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten
+
+Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtracker_pantry`. Der Key wurde auf `mealtracker_pantry_v2` gezogen und der alte beim Start gelöscht – der Vorrat ist also einmalig leer, egal was vorher drinstand.
 
 **Reset**
 - Täglich um Mitternacht: Tagesauswahl, Abhak-Status, Extras und gewählter Trainingstag. Vorrat, Liste und Trainingshistorie bleiben bestehen.
