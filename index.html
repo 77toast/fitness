@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Meal Plan Tracker</title>
+<title>Fitness Tracker</title>
 <style>
   :root {
     --bg: #0f1210; --card: #171b18; --card-border: #262c26; --text: #eef0ea; --muted: #8a9086;
@@ -105,6 +105,35 @@
   .extra-macros { font-size:11px; color:var(--muted); margin-top:3px; }
   .extra-del { background:none; border:none; color:var(--muted); font-size:16px; cursor:pointer; padding:4px 6px; }
 
+  body.locked > header, body.locked > .tabs, body.locked > .view, body.locked > footer { display:none; }
+  #gate { display:none; position:fixed; inset:0; z-index:50; background:var(--bg); padding:16px; align-items:center; justify-content:center; }
+  body.locked #gate { display:flex; }
+  .gate-box { width:100%; max-width:340px; background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:20px 18px; }
+  .gate-title { font-size:18px; margin:0 0 6px; }
+  .gate-note { font-size:13px; color:var(--muted); line-height:1.5; margin-bottom:14px; }
+  .gate-box input { width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:10px; padding:11px 12px; color:var(--text); font-size:14px; margin-bottom:8px; }
+  .gate-msg { font-size:12px; min-height:15px; margin-top:8px; color:var(--warn); }
+  .gate-hash { font-family:ui-monospace,Menlo,Consolas,monospace; font-size:11px; color:var(--accent); word-break:break-all; line-height:1.5; margin-top:10px; }
+  .gate-link { display:block; width:100%; background:none; border:none; color:var(--muted); font-size:12px; text-decoration:underline; text-underline-offset:2px; margin-top:14px; cursor:pointer; }
+
+  .ex-card { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:14px 16px; margin-bottom:10px; transition:border-color 0.15s ease; }
+  .ex-card.done { border-color:var(--accent-dim); }
+  .ex-top { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+  .ex-name { font-weight:600; font-size:15px; }
+  .ex-target { font-size:11px; color:var(--muted); white-space:nowrap; text-transform:uppercase; letter-spacing:0.04em; }
+  .ex-last { font-size:12px; color:var(--muted); margin-top:6px; }
+  .set-row { display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px solid var(--card-border); }
+  .set-idx { width:16px; font-size:11px; color:var(--muted); flex-shrink:0; }
+  .set-val { flex:1; font-size:13px; font-variant-numeric:tabular-nums; }
+  .set-del { background:none; border:none; color:var(--muted); font-size:15px; cursor:pointer; padding:2px 4px; }
+  .set-input-row { display:flex; gap:6px; margin-top:10px; }
+  .set-input-row input { flex:1; min-width:0; width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; padding:9px 10px; color:var(--text); font-size:13px; }
+  .set-add-btn { background:var(--accent); color:#0f1210; border:none; border-radius:8px; padding:0 14px; font-weight:700; font-size:13px; cursor:pointer; flex-shrink:0; }
+  .hist-panel { display:none; margin-top:10px; border-top:1px solid var(--card-border); padding-top:8px; }
+  .hist-panel.open { display:block; }
+  .hist-row { font-size:12px; color:var(--muted); padding:3px 0; }
+  .hist-date { color:var(--text); }
+
   .extra-add { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px; margin-top:10px; }
   .extra-add .add-row { margin:8px 0 0; }
   .extra-add .add-row input { background:var(--bg); }
@@ -125,15 +154,27 @@
   footer { text-align:center; color:var(--muted); font-size:12px; margin-top:26px; max-width:560px; margin-left:auto; margin-right:auto; }
 </style>
 </head>
-<body>
+<body class="locked">
+
+<div id="gate">
+  <div class="gate-box">
+    <h2 class="gate-title">Fitness Tracker</h2>
+    <div class="gate-note" id="gateNote">Passwort eingeben.</div>
+    <input type="password" id="gatePw" placeholder="Passwort" autocomplete="current-password">
+    <button class="wide-btn" id="gateBtn">Öffnen</button>
+    <div class="gate-msg" id="gateMsg"></div>
+    <div class="gate-hash" id="gateHash"></div>
+  </div>
+</div>
 
 <header>
-  <h1>Meal Tracker</h1>
+  <h1>Fitness Tracker</h1>
   <div class="subline" id="dateLabel"></div>
 </header>
 
 <div class="tabs">
   <button class="tab-btn active" data-tab="today">Heute</button>
+  <button class="tab-btn" data-tab="workout">Training</button>
   <button class="tab-btn" data-tab="pantry">Vorrat</button>
   <button class="tab-btn" data-tab="shop">Liste <span class="badge" id="shopBadge" style="display:none;"></span></button>
 </div>
@@ -213,6 +254,21 @@
   <button class="reset-btn" id="resetBtn">Heutigen Fortschritt zurücksetzen</button>
 </div>
 
+<div class="view" id="view-workout">
+  <div class="mini-tabs" id="dayTabs">
+    <button class="mini-tab" data-day="push">Push</button>
+    <button class="mini-tab" data-day="pull">Pull</button>
+    <button class="mini-tab" data-day="legs">Legs</button>
+  </div>
+
+  <div class="progress-wrap" style="margin-top:16px;">
+    <div class="progress-bar"><div class="progress-fill" id="workoutFill"></div></div>
+    <div class="progress-label"><span id="workoutText">0 / 0 Sätze</span></div>
+  </div>
+
+  <div id="exerciseList"></div>
+</div>
+
 <div class="view" id="view-pantry">
   <div class="shop-section-label">Was du zuhause hast</div>
   <div id="pantryList"></div>
@@ -238,6 +294,72 @@
 <footer>Vorrat &amp; Liste bleiben dauerhaft gespeichert. Tagesplan, Auswahl &amp; Extras setzen sich automatisch um Mitternacht zurück.</footer>
 
 <script>
+/* ---- Passwortschutz ----
+   PASSWORD_HASH = SHA-256-Hex des Wunschpassworts. Solange der Wert leer ist,
+   zeigt die Startmaske einen Generator, der den Hash zum Einsetzen ausgibt.
+   Achtung: rein clientseitig. Wer den Quelltext liest, kommt an die Inhalte —
+   das schützt vor neugierigen Blicken, nicht vor jemandem, der es darauf anlegt. */
+const PASSWORD_HASH = "";
+const LS_UNLOCK = "fitnesstracker_unlocked";
+
+async function sha256Hex(text) {
+  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
+  return [...new Uint8Array(buf)].map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+function unlockApp() { document.body.classList.remove("locked"); }
+
+function initGate() {
+  const note = document.getElementById("gateNote");
+  const msg = document.getElementById("gateMsg");
+  const hashOut = document.getElementById("gateHash");
+  const input = document.getElementById("gatePw");
+  const btn = document.getElementById("gateBtn");
+
+  // Kein Passwort gesetzt: Generator zeigen, App bleibt offen zugänglich.
+  if (!PASSWORD_HASH) {
+    note.textContent = "Noch kein Passwort gesetzt. Wunschpasswort eingeben, Hash kopieren und in index.html bei PASSWORD_HASH einsetzen.";
+    btn.textContent = "Hash erzeugen";
+    const skip = document.createElement("button");
+    skip.className = "gate-link";
+    skip.textContent = "Ohne Passwort öffnen";
+    skip.addEventListener("click", unlockApp);
+    btn.parentElement.appendChild(skip);
+
+    const generate = async () => {
+      if (!input.value) return;
+      if (!window.crypto || !crypto.subtle) {
+        msg.textContent = "Hash-Erzeugung braucht https oder localhost.";
+        return;
+      }
+      msg.textContent = "";
+      hashOut.textContent = await sha256Hex(input.value);
+    };
+    btn.addEventListener("click", generate);
+    input.addEventListener("keydown", e => { if (e.key === "Enter") generate(); });
+    return;
+  }
+
+  if (localStorage.getItem(LS_UNLOCK) === PASSWORD_HASH) { unlockApp(); return; }
+
+  const check = async () => {
+    if (!input.value) return;
+    if (!window.crypto || !crypto.subtle) {
+      msg.textContent = "Passwortprüfung braucht https oder localhost.";
+      return;
+    }
+    if (await sha256Hex(input.value) === PASSWORD_HASH) {
+      localStorage.setItem(LS_UNLOCK, PASSWORD_HASH);
+      unlockApp();
+    } else {
+      msg.textContent = "Falsches Passwort.";
+      input.value = "";
+    }
+  };
+  btn.addEventListener("click", check);
+  input.addEventListener("keydown", e => { if (e.key === "Enter") check(); });
+}
+
 const POOLS = {
   breakfast: [
     { id: "porridge", title: "Protein-Porridge", short: "Haferflocken + Ei + Whey + Zimt",
@@ -417,12 +539,41 @@ const DEFAULT_PANTRY = [
   { key: "sojasauce", name: "Sojasauce", unit: "Flasche", qty: 1, low: 1 }
 ];
 
+const WORKOUTS = {
+  push: { label: "Push", exercises: [
+    { id: "bench",      name: "Bankdrücken (Langhantel)",   sets: 4, reps: "6-10" },
+    { id: "inc_db",     name: "Schrägbankdrücken (KH)",     sets: 3, reps: "8-12" },
+    { id: "ohp",        name: "Schulterdrücken (KH)",       sets: 3, reps: "8-12" },
+    { id: "lat_raise",  name: "Seitheben",                  sets: 3, reps: "12-15" },
+    { id: "pushdown",   name: "Trizeps-Pushdown",           sets: 3, reps: "10-15" },
+    { id: "oh_ext",     name: "Trizeps Überkopf",           sets: 3, reps: "10-15" }
+  ]},
+  pull: { label: "Pull", exercises: [
+    { id: "pullup",     name: "Klimmzug / Latzug",          sets: 4, reps: "6-10" },
+    { id: "row_bb",     name: "Langhantelrudern",           sets: 4, reps: "8-12" },
+    { id: "row_cable",  name: "Kabelrudern eng",            sets: 3, reps: "10-12" },
+    { id: "face_pull",  name: "Face Pull",                  sets: 3, reps: "12-15" },
+    { id: "curl_bb",    name: "Bizepscurl (SZ/LH)",         sets: 3, reps: "8-12" },
+    { id: "curl_ham",   name: "Hammercurl",                 sets: 3, reps: "10-15" }
+  ]},
+  legs: { label: "Legs", exercises: [
+    { id: "squat",      name: "Kniebeuge",                  sets: 4, reps: "5-8" },
+    { id: "rdl",        name: "Rumänisches Kreuzheben",     sets: 3, reps: "8-12" },
+    { id: "legpress",   name: "Beinpresse",                 sets: 3, reps: "10-15" },
+    { id: "legcurl",    name: "Beinbeuger",                 sets: 3, reps: "10-15" },
+    { id: "legext",     name: "Beinstrecker",               sets: 3, reps: "12-15" },
+    { id: "calf",       name: "Wadenheben",                 sets: 4, reps: "12-20" }
+  ]}
+};
+
 const LS_PANTRY = "mealtracker_pantry";
 const LS_SHOP_MANUAL = "mealtracker_shop_manual";
 const LS_SHOP_CHECKED = "mealtracker_shop_checked";
 const LS_EXPANDED = "mealtracker_expanded";
 const LS_SWITCH_OPEN = "mealtracker_switchopen";
 const STORAGE_PREFIX = "mealtracker_day2_";
+const LS_HISTORY = "fitnesstracker_history";
+const WORKOUT_PREFIX = "fitnesstracker_workout_";
 
 function todayKey() {
   const d = new Date();
@@ -444,10 +595,13 @@ function loadDayState() {
 }
 function saveDayState(s) { localStorage.setItem(todayKey(), JSON.stringify(s)); }
 function cleanupOldDayKeys() {
-  const keep = todayKey();
+  const keepDay = todayKey();
+  const keepWorkout = workoutKey();
   for (let i = localStorage.length - 1; i >= 0; i--) {
     const key = localStorage.key(i);
-    if (key && key.startsWith(STORAGE_PREFIX) && key !== keep) localStorage.removeItem(key);
+    if (!key) continue;
+    if (key.startsWith(STORAGE_PREFIX) && key !== keepDay) localStorage.removeItem(key);
+    if (key.startsWith(WORKOUT_PREFIX) && key !== keepWorkout) localStorage.removeItem(key);
   }
 }
 
@@ -822,6 +976,158 @@ document.getElementById("resetBtn").addEventListener("click", () => {
   renderToday();
 });
 
+/* ---- Trainingsplan (Push / Pull / Legs) ---- */
+
+function todayISO() {
+  const d = new Date();
+  const p = n => String(n).padStart(2, "0");
+  return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+}
+function workoutKey() { return WORKOUT_PREFIX + todayISO(); }
+
+function loadWorkoutDay() {
+  try {
+    const raw = localStorage.getItem(workoutKey());
+    if (raw) {
+      const day = JSON.parse(raw).day;
+      if (WORKOUTS[day]) return day;
+    }
+  } catch(e) {}
+  return "push";
+}
+function saveWorkoutDay(day) { localStorage.setItem(workoutKey(), JSON.stringify({ day })); }
+
+function loadHistory() { try { return JSON.parse(localStorage.getItem(LS_HISTORY)) || {}; } catch(e) { return {}; } }
+function saveHistory(h) { localStorage.setItem(LS_HISTORY, JSON.stringify(h)); }
+
+// Sessions einer Übung, neueste zuerst
+function sessionsFor(exId) {
+  const list = loadHistory()[exId];
+  return Array.isArray(list) ? list.slice().sort((a, b) => b.date.localeCompare(a.date)) : [];
+}
+function todaySets(exId) {
+  const s = sessionsFor(exId).find(x => x.date === todayISO());
+  return s ? s.sets : [];
+}
+function lastSession(exId) {
+  return sessionsFor(exId).find(x => x.date !== todayISO()) || null;
+}
+
+function addSet(exId, kg, reps) {
+  const h = loadHistory();
+  if (!Array.isArray(h[exId])) h[exId] = [];
+  let session = h[exId].find(x => x.date === todayISO());
+  if (!session) { session = { date: todayISO(), sets: [] }; h[exId].push(session); }
+  session.sets.push({ kg, reps });
+  saveHistory(h);
+  renderWorkout();
+}
+function removeSet(exId, idx) {
+  const h = loadHistory();
+  const session = (h[exId] || []).find(x => x.date === todayISO());
+  if (!session) return;
+  session.sets.splice(idx, 1);
+  if (session.sets.length === 0) h[exId] = h[exId].filter(x => x !== session);
+  saveHistory(h);
+  renderWorkout();
+}
+
+function formatSets(sets) { return sets.map(s => `${s.kg}kg × ${s.reps}`).join(", "); }
+function formatDate(iso) {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" });
+}
+
+const histOpen = {};
+
+function renderWorkout() {
+  const day = loadWorkoutDay();
+  document.querySelectorAll("#dayTabs .mini-tab").forEach(b => {
+    b.classList.toggle("active", b.dataset.day === day);
+  });
+
+  const wrap = document.getElementById("exerciseList");
+  wrap.innerHTML = "";
+
+  let doneSets = 0, targetSets = 0;
+
+  WORKOUTS[day].exercises.forEach(ex => {
+    const sets = todaySets(ex.id);
+    const last = lastSession(ex.id);
+    const sessions = sessionsFor(ex.id);
+    doneSets += sets.length;
+    targetSets += ex.sets;
+
+    // Vorbelegung: letzter Satz von heute, sonst letzter Satz der Vorsession
+    const ref = sets.length ? sets[sets.length - 1] : (last ? last.sets[last.sets.length - 1] : null);
+
+    const card = document.createElement("div");
+    card.className = "ex-card" + (sets.length >= ex.sets ? " done" : "");
+
+    const setsHtml = sets.map((s, i) => `
+      <div class="set-row">
+        <span class="set-idx">${i + 1}</span>
+        <span class="set-val">${s.kg}kg × ${s.reps}</span>
+        <button class="set-del" data-del-set="${i}">✕</button>
+      </div>
+    `).join("");
+
+    const histHtml = sessions.length
+      ? sessions.slice(0, 6).map(s => `
+          <div class="hist-row"><span class="hist-date">${formatDate(s.date)}</span> — ${esc(formatSets(s.sets))}</div>
+        `).join("")
+      : `<div class="hist-row">Noch keine Einträge.</div>`;
+
+    card.innerHTML = `
+      <div class="ex-top">
+        <span class="ex-name">${ex.name}</span>
+        <span class="ex-target">${ex.sets} × ${ex.reps}</span>
+      </div>
+      <div class="ex-last">${last ? "Letztes Mal (" + formatDate(last.date) + "): " + esc(formatSets(last.sets)) : "Letztes Mal: noch keine Daten"}</div>
+      ${setsHtml}
+      <div class="set-input-row">
+        <input type="number" inputmode="decimal" step="2.5" min="0" placeholder="kg" data-kg value="${ref ? ref.kg : ""}">
+        <input type="number" inputmode="numeric" step="1" min="1" placeholder="Wdh" data-reps value="${ref ? ref.reps : ""}">
+        <button class="set-add-btn">+ Satz</button>
+      </div>
+      <div class="meal-actions"><button class="link-btn" data-hist>${histOpen[ex.id] ? "Verlauf ausblenden" : "Verlauf"}</button></div>
+      <div class="hist-panel ${histOpen[ex.id] ? "open" : ""}">${histHtml}</div>
+    `;
+
+    const kgInput = card.querySelector("[data-kg]");
+    const repsInput = card.querySelector("[data-reps]");
+    const submit = () => {
+      const kg = num(kgInput.value);
+      const reps = num(repsInput.value);
+      if (kg === null || kg < 0 || reps === null || reps < 1) return;
+      addSet(ex.id, kg, Math.round(reps));
+    };
+    card.querySelector(".set-add-btn").addEventListener("click", submit);
+    [kgInput, repsInput].forEach(el => {
+      el.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+    });
+    card.querySelectorAll("[data-del-set]").forEach(btn => {
+      btn.addEventListener("click", () => removeSet(ex.id, parseInt(btn.dataset.delSet)));
+    });
+    card.querySelector("[data-hist]").addEventListener("click", () => {
+      histOpen[ex.id] = !histOpen[ex.id];
+      renderWorkout();
+    });
+
+    wrap.appendChild(card);
+  });
+
+  document.getElementById("workoutText").textContent = `${doneSets} / ${targetSets} Sätze`;
+  document.getElementById("workoutFill").style.width = (targetSets > 0 ? Math.min(100, doneSets / targetSets * 100) : 0) + "%";
+}
+
+document.querySelectorAll("#dayTabs .mini-tab").forEach(btn => {
+  btn.addEventListener("click", () => {
+    saveWorkoutDay(btn.dataset.day);
+    renderWorkout();
+  });
+});
+
 function renderPantry() {
   const pantry = loadPantry();
   const wrap = document.getElementById("pantryList");
@@ -945,9 +1251,11 @@ document.getElementById("shopAddBtn").addEventListener("click", () => {
   renderShop();
 });
 
+initGate();
 cleanupOldDayKeys();
 renderDate();
 renderToday();
+renderWorkout();
 renderPantry();
 renderShop();
 
@@ -959,6 +1267,7 @@ function scheduleMidnightRefresh() {
     cleanupOldDayKeys();
     renderDate();
     renderToday();
+    renderWorkout();
     scheduleMidnightRefresh();
   }, midnight - now);
 }

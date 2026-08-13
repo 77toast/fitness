@@ -1,111 +1,123 @@
-# Meal Tracker
+# Fitness Tracker
 
-Persönlicher Meal-Prep-Tracker als statische Single-Page-Webseite. Kein Backend, kein Build-Step – reines HTML/CSS/JS in einer `index.html`.
+Persönlicher Meal-Prep- und Trainings-Tracker als statische Single-Page-Webseite. Kein Backend, kein Build-Step – reines HTML/CSS/JS in einer `index.html`.
 
 ## Zweck
 
-Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Reis, Hähnchen, Eier, Kichererbsen etc.) mit täglicher Abhak-Funktion, mehreren Mahlzeit-Varianten pro Slot, Makro-Tracking (Kcal/Protein/Carbs/Fett), einem Vorrats-System (Pantry) und einer automatisch generierten Einkaufsliste.
+Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Reis, Hähnchen, Eier, Kichererbsen etc.) mit täglicher Abhak-Funktion, mehreren Mahlzeit-Varianten pro Slot, Makro-Tracking (Kcal/Protein/Carbs/Fett), frei hinzufügbaren Extras mit automatischer Nährwert-Suche, einem Vorrats-System (Pantry), einer automatisch generierten Einkaufsliste und einem Push/Pull/Legs-Trainingsplan mit Satz-Tracking und Verlauf.
 
 ## Tech-Stack
 
 - Reines HTML/CSS/JS, eine einzige Datei (`index.html`)
 - Kein Framework, kein Build-Tool, keine Dependencies
+- Nährwert-Suche über die [Open Food Facts API](https://world.openfoodfacts.org/data) (kostenlos, kein API-Key, CORS erlaubt, läuft clientseitig)
 - Persistenz über `localStorage` im Browser (client-seitig, kein Server, kein Account)
-- Gehostet über **GitHub Pages**
+- Gehostet über **GitHub Pages** unter `77toast.github.io/fitness`
 
 ## Wichtig: Repo-Trennung wegen Privacy Policy
 
-Mein Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Privacy Policy für eine TikTok-API-Anbindung** (separates Content-Automation-Projekt). Der Meal Tracker läuft deshalb bewusst in einem **eigenen, separaten Repo** (z.B. `meal-tracker`), NICHT im `<username>.github.io`-Hauptrepo, damit sich beide Pages-Deployments nicht überschneiden oder gegenseitig beeinflussen.
+Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Privacy Policy für eine TikTok-API-Anbindung** (separates Content-Automation-Projekt). Der Fitness Tracker läuft deshalb bewusst in einem **eigenen, separaten Repo** (`fitness` unter dem Account `77toast`), NICHT im `<username>.github.io`-Hauptrepo, damit sich beide Pages-Deployments nicht überschneiden oder gegenseitig beeinflussen.
 
 - Haupt-Repo `<username>.github.io` → Privacy Policy (TikTok API) – nicht anfassen
-- Separates Repo `meal-tracker` → dieser Tracker, läuft unter `<username>.github.io/meal-tracker`
+- Separates Repo `77toast/fitness` → dieser Tracker, läuft unter `77toast.github.io/fitness`
 
-Falls hier mit Claude Code weitergearbeitet wird: **niemals Dateien im Haupt-`.github.io`-Repo verändern**, alles bleibt im `meal-tracker`-Repo isoliert.
+**Niemals Dateien im Haupt-`.github.io`-Repo verändern**, alles bleibt im `fitness`-Repo isoliert.
 
 ## Datenmodell (in `index.html`, im `<script>`-Teil)
 
 - `POOLS` – Objekt mit drei Kategorien (`breakfast`, `snack`, `main`), jede enthält mehrere Mahlzeit-Optionen mit `id`, `title`, `short`, `kcal`, `protein`, `carbs`, `fat`, `ingredients[]` (inkl. `pantryKey` zur Verknüpfung mit dem Vorrat) und `steps[]` (Zubereitung).
 - `SLOTS` – 5 feste Tages-Slots (Frühstück, Snack, Mittag, Snack, Abend), jeder verweist auf einen Pool.
 - `DEFAULT_PANTRY` – Standard-Vorratsliste mit `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
+- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze) und `reps` (Ziel-Wiederholungsbereich).
 
 ## State / Storage-Keys (localStorage)
 
-- `mealtracker_day2_<Jahr>-<Monat>-<Tag>` – Tagesstatus (gewählte Option + abgehakt pro Slot), wird täglich neu erzeugt, alte Tage werden automatisch aufgeräumt (`cleanupOldDayKeys`)
-- `mealtracker_pantry` – dauerhafter Vorrat (übersteht Tageswechsel)
-- `mealtracker_shop_manual` – manuell hinzugefügte Einkaufslisten-Einträge
-- `mealtracker_shop_checked` – abgehakte Einkaufslisten-Einträge
-- `mealtracker_expanded` / `mealtracker_switchopen` – UI-State (welche Rezepte/Auswahl-Panels offen sind)
+| Key | Inhalt | Reset |
+| --- | --- | --- |
+| `mealtracker_day2_<Jahr>-<Monat>-<Tag>` | Tagesstatus: gewählte Option + abgehakt pro Slot, plus `extras[]` | täglich (`cleanupOldDayKeys`) |
+| `fitnesstracker_workout_<YYYY-MM-DD>` | welcher Trainingstag heute gewählt ist | täglich (`cleanupOldDayKeys`) |
+| `fitnesstracker_history` | `{ übungsId: [ { date, sets: [{kg, reps}] } ] }` – gesamte Trainingshistorie | nie |
+| `mealtracker_pantry` | dauerhafter Vorrat | nie |
+| `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge | nie |
+| `mealtracker_shop_checked` | abgehakte Einkaufslisten-Einträge | nie |
+| `mealtracker_expanded` / `mealtracker_switchopen` | UI-State (offene Rezepte/Auswahl-Panels) | nie |
+| `fitnesstracker_unlocked` | Passwort-Flag (gesetzter Hash), schaltet die Seite ohne erneute Eingabe frei | bei Passwortwechsel |
+
+Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den täglichen Reset, nur die Auswahl des Trainingstags nicht.
 
 ## Aktueller Funktionsumfang
 
-- 3 Tabs: **Heute** (Tracker + Makros), **Vorrat** (Pantry mit +/- Steppern), **Liste** (auto-generierte + manuelle Einkaufsliste)
+**Heute**
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan"
-- Vorrat mit "wird knapp"-Markierung, die automatisch in die Einkaufsliste wandert
-- Täglicher Reset um Mitternacht (Tagesauswahl + Abhak-Status), Vorrat & Liste bleiben bestehen
+- **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
+  - Tab "Suchen": Name eintippen → Open Food Facts liefert Treffer mit Nährwerten pro 100g → Menge in Gramm eingeben → Makros werden automatisch skaliert
+  - Tab "Manuell": Name + Kcal/P/C/F direkt eintragen (Fallback, wenn die API nichts findet oder offline ist – Netzwerkfehler werden abgefangen und gemeldet)
+  - Extras erhöhen nur den "gegessen"-Wert, nicht den Tagesplan-Zielwert; die Balken deckeln visuell bei 100 %, der Zahlenwert läuft weiter (z.B. `2150 / 1770`)
+
+**Training**
+- Drei Tage: Push, Pull, Legs mit je 6 Übungen (Ziel-Sätze und Ziel-Wiederholungsbereich)
+- Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar
+- "Letztes Mal (06.08.): 57.5kg × 8, 57.5kg × 6" pro Übung, plus aufklappbarer Verlauf der letzten 6 Sessions
+- Eingabefelder sind mit dem letzten Satz vorbelegt
+- Fortschrittsbalken über absolvierte vs. geplante Sätze des Tages
+
+**Vorrat / Liste**
+- Vorrat mit +/- Steppern und "wird knapp"-Markierung, die automatisch in die Einkaufsliste wandert
+- Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten
+
+**Reset**
+- Täglich um Mitternacht: Tagesauswahl, Abhak-Status, Extras und gewählter Trainingstag. Vorrat, Liste und Trainingshistorie bleiben bestehen.
+
+## Passwort einrichten
+
+Die Seite startet gesperrt. Der Schutz ist rein clientseitig: `index.html` enthält den **SHA-256-Hash** des Passworts, nicht das Klartext-Passwort.
+
+1. Seite öffnen – solange `PASSWORD_HASH` leer ist, zeigt die Startmaske einen Generator
+2. Wunschpasswort eintippen → "Hash erzeugen" → angezeigten Hex-String kopieren
+3. In `index.html` oben im `<script>`-Teil einsetzen: `const PASSWORD_HASH = "<hash>";`
+4. Committen und pushen
+
+Danach fragt die Seite beim ersten Aufruf pro Gerät nach dem Passwort und merkt sich die Freigabe in `localStorage`. Solange kein Hash gesetzt ist, gibt es zusätzlich den Link "Ohne Passwort öffnen".
+
+**Das ist kein echter Zugriffsschutz.** GitHub Pages liefert die Datei an jeden aus, der die URL kennt; wer den Quelltext liest, sieht die Struktur der Seite, und die Daten liegen ohnehin nur lokal im Browser. Es hält neugierige Blicke ab, mehr nicht.
+
+Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Vercel** deployen (beide kostenlos, beide bieten serverseitigen Passwortschutz/Basic Auth, Deploy direkt aus dem GitHub-Repo). Dann ist die URL allerdings nicht mehr `77toast.github.io/fitness`.
 
 ## Bekannte Einschränkungen
 
 - Daten sind rein lokal im Browser (`localStorage`) – kein Sync zwischen Geräten, kein Backup
-- Keine Nutzerkonten/Auth
+- Keine Nutzerkonten/Auth (siehe Passwort-Abschnitt oben)
 - Keine Kalorien-/Makro-**Ziele** einstellbar, nur der Ist-Wert aus der Tagesauswahl als Referenz
+- Übungen im Trainingsplan sind fest im Code (`WORKOUTS`), nicht über die UI editierbar
+- Open Food Facts ist eine Community-Datenbank: Nährwerte einzelner Produkte können fehlen oder ungenau sein
 
-## Offene Aufgaben für Claude Code (nächster Ausbauschritt)
-
-Der Rest wird lokal mit Claude Code weitergebaut. Hier die vollständigen Anforderungen:
-
-### 1. Automatisiertes Macro-Tracking für individuelle/extra gegessene Sachen
-
-Aktuell zeigt der "Heute"-Tab nur "gegessen vs. Tagesplan" basierend auf den abgehakten Standard-Slots. Zusätzlich soll man:
-
-- Frei beliebige, nicht im Plan enthaltene Lebensmittel/Mahlzeiten als "Extra" für den aktuellen Tag hinzufügen können (z.B. spontane Snacks, Restaurantbesuch, Abweichung vom Plan)
-- Diese Extras sollen automatisch in die Tagesmakros (Kcal/Protein/Carbs/Fett) mit einfließen, die oben im Macro-Panel angezeigt werden
-- **Automatisierte Makro-Ermittlung, falls möglich**: beim Eintippen eines Lebensmittelnamens automatisch Nährwerte nachschlagen, nicht nur manuell eintragen. Empfehlung: [Open Food Facts API](https://world.openfoodfacts.org/data) nutzen — kostenlos, kein API-Key nötig, unterstützt CORS, funktioniert clientseitig direkt aus dem Browser (Suche z.B. über `https://world.openfoodfacts.org/cgi/search.pl?search_terms=<query>&search_simple=1&action=process&json=1&page_size=5`, liefert Nährwerte pro 100g zurück). Nutzer gibt dann nur noch die verzehrte Menge in Gramm ein, Rest wird automatisch skaliert und berechnet.
-- Manuelle Eingabe (Name + Kcal/Protein/Carbs/Fett direkt) muss als Fallback erhalten bleiben, falls die API nichts findet oder nicht erreichbar ist (Netzwerkfehler abfangen)
-- Extras sollen wie die Standard-Mahlzeiten in einer Liste im "Heute"-Tab erscheinen, mit Lösch-Möglichkeit
-- Extras zählen NICHT in den "Tagesplan"-Zielwert rein (der bleibt die Summe der 5 geplanten Slots), sondern erhöhen nur den "gegessen"-Ist-Wert — die Balken dürfen dabei über 100% des Ziels gehen (visuell z.B. bei 100% deckeln, aber den echten Zahlenwert weiter anzeigen)
-- Persistenz: Extras gehören zum Tagesstate (`mealtracker_day2_<datum>`), setzen sich also wie der Rest automatisch um Mitternacht zurück
-
-### 2. Trainingsplan (Push/Pull/Legs) mit Tracking
-
-Neuer Tab/Bereich für einen PPL-Trainingsplan, analog zum Hevy-Plan der bereits existiert (siehe Kontext: Nutzer hat bereits einen PPL-Plan für die Hevy-App gebaut — als Ausgangsbasis nutzen bzw. beim Nutzer nachfragen, welche genauen Übungen/Sätze/Wiederholungsbereiche übernommen werden sollen).
-
-Anforderungen:
-
-- 3 Trainingstage: Push, Pull, Legs, jeweils mit fester Übungsliste (Übungsname, Ziel-Sätze, Ziel-Wiederholungsbereich)
-- Pro Übung UI zum Eintragen der tatsächlich absolvierten Sätze: **Kilogramm** und **Wiederholungen** pro Satz
-- Tracking-Historie: welches Gewicht/welche Wiederholungen wurden an welchem Datum pro Übung geschafft — mindestens die letzte Session pro Übung anzeigen (z.B. "letztes Mal: 40kg x 8"), im Idealfall eine kleine Verlaufsansicht/Progression pro Übung
-- Persistenz analog zum restlichen Projekt über `localStorage`, eigene Storage-Keys (z.B. `fitnesstracker_workout_<datum>`, `fitnesstracker_history`)
-- Design/UI-Stil an das bestehende dunkle Card-Design des Meal Trackers anlehnen (gleiche Farbpalette/Komponenten wiederverwenden), damit es sich wie eine App anfühlt
-
-### 3. Passwortschutz für die Seite
-
-Die Seite (Meal Tracker + neuer Trainingsplan) soll nicht öffentlich einsehbar sein, da es sich um private Gesundheits-/Trainingsdaten handelt.
-
-- Da GitHub Pages selbst (auch mit privatem Repo) keine echte Zugriffskontrolle bietet (siehe Hinweis oben zu Free/Pro-Plan-Limitierungen), reicht ein reiner client-seitiger Passwortschutz NICHT für echte Sicherheit aus (Quellcode ist im Browser einsehbar) — für dieses private, nicht-kritische Anwendung (Ernährungs-/Trainingsdaten, kein Login mit echten Konsequenzen) ist das aber ein akzeptabler Kompromiss, sofern das dem Nutzer bewusst ist
-- Einfachste Umsetzung: eine simple Passwort-Eingabemaske vor dem Zugriff auf den Inhalt, die z.B. einen gehashten Wert (nicht das Klartext-Passwort im Code) mit der Eingabe vergleicht, und den Zugriff dann per `sessionStorage`/`localStorage`-Flag freischaltet
-- Empfehlung, falls echte Sicherheit gewünscht ist: stattdessen auf Netlify oder Vercel umziehen (beide kostenlos, beide bieten echten Passwortschutz/Basic-Auth ohne Umweg über clientseitigen JS-Check) — das dem Nutzer als Option nennen/anbieten
-
-### 4. Rebranding: Umzug zu `77toast.github.io/fitness`
-
-- Das Projekt soll künftig unter dem GitHub-Account/Repo-Namen `77toast` laufen, konkret unter `77toast.github.io/fitness` erreichbar sein
-- Das heißt: neues bzw. umbenanntes Repo `fitness` unter dem Account `77toast`, `index.html` (und alle weiteren Dateien) dort hinein
-- Bestehender Hinweis zur Repo-Trennung wegen der Privacy Policy (siehe oben) bleibt unverändert gültig — die Privacy Policy liegt weiterhin im `<username>.github.io`-Hauptrepo, der Fitness-/Meal-Tracker läuft komplett separat unter `77toast.github.io/fitness`
-- Titel/Branding auf der Seite selbst (aktuell "Meal Tracker") entsprechend anpassen, sobald der neue Trainingsplan-Bereich dazukommt (z.B. neuer Oberbegriff wie "77toast Fitness" o.ä. — Nutzer nach gewünschtem Namen fragen, falls nicht klar)
-
-## Bereits vorhandene, mögliche weitere Ausbauideen (niedrigere Priorität)
+## Mögliche weitere Ausbauideen
 
 - Wochenübersicht/Historie (letzte 7 Tage, z.B. Streak oder Durchschnittswerte) für den Meal Tracker
 - Eigene Tagesziele für Kcal/Makros einstellbar machen, Balken relativ dazu färben
 - Export der Einkaufsliste (z.B. als Text zum Teilen/Copy)
+- Übungen über die UI hinzufügen/umbenennen/löschen
+- Progressions-Graph statt Textliste im Übungsverlauf
+- Barcode-Scan für Extras (Open Food Facts unterstützt Lookup per EAN)
 
 ## Deployment
 
 Einfache statische Seite, kein Build nötig:
 
-1. Neues, separates GitHub-Repo anlegen (z.B. `meal-tracker`) – **nicht** das `.github.io`-Hauptrepo
-2. `index.html` ins Repo-Root hochladen
+1. Repo `fitness` unter dem Account `77toast` anlegen – **nicht** das `.github.io`-Hauptrepo
+2. `index.html` ins Repo-Root pushen
 3. Settings → Pages → Branch `main` → Save
-4. Live unter `<username>.github.io/meal-tracker`
+4. Live unter `77toast.github.io/fitness`
 
-Bei Änderungen: `index.html` einfach im Repo überschreiben/committen, Pages baut automatisch neu.
+Bei Änderungen: `index.html` committen und pushen, Pages baut automatisch neu.
+
+### Lokal testen
+
+`localStorage` und die Passwortprüfung (`crypto.subtle`) brauchen einen echten Origin – per Doppelklick über `file://` geöffnet funktioniert die Seite nicht. Stattdessen:
+
+```bash
+python -m http.server 8777 --directory .
+```
+
+Dann `http://localhost:8777` im Browser öffnen.
