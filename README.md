@@ -39,7 +39,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | `fitnesstracker_workout_<YYYY-MM-DD>` | welcher Trainingstag heute gewählt ist | täglich (`cleanupOldDayKeys`) |
 | `fitnesstracker_history` | `{ übungsId: [ { date, sets: [{kg, reps}] } ] }` – gesamte Trainingshistorie | nie |
 | `mealtracker_pantry_v2` | dauerhafter Vorrat (startet leer) | nie |
-| `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge | nie |
+| `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge als `{id, name}` | nie |
 | `mealtracker_shop_checked` | abgehakte Einkaufslisten-Einträge | nie |
 | `mealtracker_expanded` / `mealtracker_switchopen` | UI-State (offene Rezepte/Auswahl-Panels) | nie |
 | `fitnesstracker_unlocked` | Passwort-Flag (gesetzter Hash), schaltet die Seite ohne erneute Eingabe frei | bei Passwortwechsel / "Seite sperren" |
@@ -85,12 +85,13 @@ Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtr
 - Bestleistung pro Übung, "PR"-Marke wenn der heutige Top-Satz die bisherige Bestleistung schlägt
 - Progressionsvorschlag aus der letzten Session: oberes Ende des Wiederholungsbereichs erreicht → +2,5kg, sonst eine Wiederholung mehr
 - Sätze pro Muskelgruppe der letzten 7 Tage als Balken (`mg`-Feld an jeder Übung)
+- Im Verlauf pro Übung: Graph über das geschätzte 1RM (Epley: `kg × (1 + reps/30)`) plus aktueller Schätzwert und Differenz zur Vorsession. Damit sind Sessions vergleichbar, in denen sich Gewicht *und* Wiederholungen unterscheiden
 
 **Mehr**
 - Wochenübersicht der letzten 7 Tage: Training (💪), abgehakte Mahlzeiten, Streak, Ø Kcal und Ø Protein
 - Gewicht eintragen mit 7-Tage-Schnitt, Trend gegen die Vorwoche und Sparkline über die letzten 30 Einträge
 - Eigene Tagesziele für Kcal/P/C/F und Wasser – sind welche gesetzt, vergleichen die Balken im Heute-Tab dagegen statt gegen den Tagesplan
-- Backup: Export als JSON-Datei, Import stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert)
+- Backup: Export als JSON-Datei, Import stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert). Das Datum des letzten Exports steht in `fitnesstracker_last_export` und wird im Panel angezeigt – ab 30 Tagen als Alter statt als Datum
 - "Seite sperren" verwirft die Freigabe, danach fragt die Seite wieder nach dem Passwort
 
 **Als App installieren**

@@ -37,6 +37,7 @@
   .macro-bar-bg { flex:1; height:7px; background:var(--card-border); border-radius:99px; overflow:hidden; }
   .macro-bar-fill { height:100%; border-radius:99px; transition:width 0.3s ease; }
   .macro-val { font-size:12px; color:var(--text); width:92px; flex-shrink:0; text-align:right; font-variant-numeric:tabular-nums; }
+  .macro-rest { font-size:12px; color:var(--muted); margin-top:10px; padding-top:9px; border-top:1px solid var(--card-border); }
 
   .progress-wrap { margin:0 0 18px; }
   .progress-bar { height:8px; background:var(--card-border); border-radius:99px; overflow:hidden; }
@@ -245,6 +246,7 @@
       <div class="macro-bar-bg"><div class="macro-bar-fill" id="bar-fat" style="background:var(--c-fat);"></div></div>
       <span class="macro-val" id="val-fat">0 / 0g</span>
     </div>
+    <div class="macro-rest" id="macroRest"></div>
   </div>
 
   <div class="progress-wrap">
@@ -796,6 +798,7 @@ const LS_GOALS = "fitnesstracker_goals";
 const LS_WEIGHT = "fitnesstracker_weight";
 const LS_RECENT = "fitnesstracker_extra_recent";
 const LS_DAYLOG = "fitnesstracker_daylog";
+const LS_LAST_EXPORT = "fitnesstracker_last_export";
 
 const BACKUP_KEYS = [LS_PANTRY, LS_SHOP_MANUAL, LS_SHOP_CHECKED, LS_EXPANDED, LS_SWITCH_OPEN,
                      LS_HISTORY, LS_GOALS, LS_WEIGHT, LS_RECENT, LS_DAYLOG];
@@ -816,10 +819,25 @@ function defaultDayState() {
   SLOTS.forEach(slot => { s[slot.id] = { optionId: POOLS[slot.pool][0].id, done: false }; });
   return s;
 }
+// Fehlende Felder auffüllen, damit ein unvollständiger oder älterer Tagesstand
+// die Klick-Handler nicht auf undefined laufen lässt.
+function normalizeDayState(s) {
+  SLOTS.forEach(slot => {
+    if (!s[slot.id] || typeof s[slot.id] !== "object") {
+      s[slot.id] = { optionId: POOLS[slot.pool][0].id, done: false };
+    }
+  });
+  if (!Array.isArray(s.extras)) s.extras = [];
+  if (typeof s.water !== "number") s.water = 0;
+  return s;
+}
 function loadDayState() {
   try {
     const raw = localStorage.getItem(todayKey());
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return normalizeDayState(parsed);
+    }
   } catch(e) {}
   const d = defaultDayState();
   saveDayState(d);
@@ -849,7 +867,22 @@ function loadPantry() {
   return [];
 }
 function savePantry(p) { localStorage.setItem(LS_PANTRY, JSON.stringify(p)); }
-function loadManualShop() { try { return JSON.parse(localStorage.getItem(LS_SHOP_MANUAL)) || []; } catch(e) { return []; } }
+/* Einträge sind {id, name}. Früher waren es reine Strings und der Abhak-Status
+   hing am Array-Index — beim Löschen erbte der Nachrücker den Haken. Alte
+   Daten werden hier einmalig auf stabile IDs migriert. */
+function loadManualShop() {
+  let list;
+  try { list = JSON.parse(localStorage.getItem(LS_SHOP_MANUAL)) || []; } catch(e) { list = []; }
+  if (!Array.isArray(list)) return [];
+  let migrated = false;
+  const out = list.map((item, i) => {
+    if (item && typeof item === "object" && item.id) return item;
+    migrated = true;
+    return { id: "m" + Date.now() + "_" + i, name: typeof item === "string" ? item : String(item) };
+  });
+  if (migrated) { saveManualShop(out); saveShopChecked({}); }
+  return out;
+}
 function saveManualShop(list) { localStorage.setItem(LS_SHOP_MANUAL, JSON.stringify(list)); }
 function loadShopChecked() { try { return JSON.parse(localStorage.getItem(LS_SHOP_CHECKED)) || {}; } catch(e) { return {}; } }
 function saveShopChecked(obj) { localStorage.setItem(LS_SHOP_CHECKED, JSON.stringify(obj)); }
@@ -1023,6 +1056,12 @@ function renderToday() {
   setMacroBar("protein", eatenTotals.protein, goalFor(goals, "protein", plannedTotals.protein), "g");
   setMacroBar("carbs", eatenTotals.carbs, goalFor(goals, "carbs", plannedTotals.carbs), "g");
   setMacroBar("fat", eatenTotals.fat, goalFor(goals, "fat", plannedTotals.fat), "g");
+
+  const restKcal = Math.max(0, Math.round(goalFor(goals, "kcal", plannedTotals.kcal) - eatenTotals.kcal));
+  const restProtein = Math.max(0, Math.round(goalFor(goals, "protein", plannedTotals.protein) - eatenTotals.protein));
+  document.getElementById("macroRest").textContent = (restKcal === 0 && restProtein === 0)
+    ? "Kcal und Protein sind durch."
+    : `Noch ${restKcal} kcal · ${restProtein}g Protein`;
 
   const water = typeof state.water === "number" ? state.water : 0;
   const waterGoal = goalFor(goals, "water", 8);
@@ -1291,6 +1330,43 @@ function removeSet(exId, idx) {
   renderWorkout();
 }
 
+/* Geschätztes 1RM nach Epley. Macht Sessions vergleichbar, bei denen sich
+   Gewicht UND Wiederholungen unterscheiden – 60kg × 8 und 65kg × 5 sagen als
+   rohe Zahlen wenig übereinander. */
+function estimated1RM(set) { return set.kg * (1 + set.reps / 30); }
+function sessionBest1RM(session) {
+  return session.sets.reduce((max, s) => Math.max(max, estimated1RM(s)), 0);
+}
+function fmtKgShort(v) { return (Math.round(v * 10) / 10).toString().replace(".", ",") + "kg"; }
+
+// sessions kommt neueste-zuerst, für den Graph brauchen wir chronologisch
+function oneRmSparkline(sessions) {
+  const values = sessions.slice().reverse().slice(-12).map(sessionBest1RM);
+  if (values.length < 2) return "";
+  const min = Math.min(...values), max = Math.max(...values);
+  const span = (max - min) || 1;
+  const coords = values.map((v, i) => {
+    const x = (i / (values.length - 1)) * 300;
+    const y = 36 - ((v - min) / span) * 30;
+    return x.toFixed(1) + "," + y.toFixed(1);
+  }).join(" ");
+  return `<svg class="spark" style="height:42px;" viewBox="0 0 300 42" preserveAspectRatio="none">
+      <polyline points="${coords}" fill="none" stroke="var(--accent)" stroke-width="2" vector-effect="non-scaling-stroke"/>
+    </svg>`;
+}
+
+function oneRmLine(sessions) {
+  if (!sessions.length) return "";
+  const now = sessionBest1RM(sessions[0]);
+  let delta = "";
+  if (sessions.length > 1) {
+    const before = sessionBest1RM(sessions[1]);
+    const d = now - before;
+    if (Math.abs(d) >= 0.1) delta = ` (${d > 0 ? "+" : "−"}${fmtKgShort(Math.abs(d))} zur Vorsession)`;
+  }
+  return `<div class="hist-row"><span class="hist-date">Geschätztes 1RM: ${fmtKgShort(now)}</span>${delta}</div>`;
+}
+
 function formatSets(sets) { return sets.map(s => `${s.kg}kg × ${s.reps}`).join(", "); }
 function formatDate(iso) {
   const [y, m, d] = iso.split("-").map(Number);
@@ -1332,7 +1408,7 @@ function renderWorkout() {
     `).join("");
 
     const histHtml = sessions.length
-      ? sessions.slice(0, 6).map(s => `
+      ? oneRmSparkline(sessions) + oneRmLine(sessions) + sessions.slice(0, 6).map(s => `
           <div class="hist-row"><span class="hist-date">${formatDate(s.date)}</span> — ${esc(formatSets(s.sets))}</div>
         `).join("")
       : `<div class="hist-row">Noch keine Einträge.</div>`;
@@ -1592,7 +1668,24 @@ function exportBackup() {
   a.download = "fitnesstracker-backup-" + todayISO() + ".json";
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+  localStorage.setItem(LS_LAST_EXPORT, todayISO());
   document.getElementById("backupNote").textContent = "Backup heruntergeladen.";
+}
+
+function daysBetween(fromISO, toISO) {
+  const [y1, m1, d1] = fromISO.split("-").map(Number);
+  const [y2, m2, d2] = toISO.split("-").map(Number);
+  return Math.round((new Date(y2, m2 - 1, d2) - new Date(y1, m1 - 1, d1)) / 864e5);
+}
+
+function backupReminder() {
+  const hasData = Object.keys(loadHistory()).length > 0 || loadWeight().length > 0;
+  if (!hasData) return "";
+  const last = localStorage.getItem(LS_LAST_EXPORT);
+  if (!last) return "Noch nie exportiert — jetzt wäre ein guter Moment.";
+  const age = daysBetween(last, todayISO());
+  if (age >= 30) return `Letztes Backup vor ${age} Tagen.`;
+  return `Letztes Backup: ${formatDate(last)}`;
 }
 
 function importBackup(file) {
@@ -1718,6 +1811,7 @@ function renderVolume() {
 function renderMore() {
   renderWeek();
   renderWeight();
+  document.getElementById("backupNote").textContent = backupReminder();
   const goals = loadGoals();
   [["goalKcal", "kcal"], ["goalProtein", "protein"], ["goalCarbs", "carbs"], ["goalFat", "fat"], ["goalWater", "water"]]
     .forEach(([id, key]) => { document.getElementById(id).value = goals[key] > 0 ? goals[key] : ""; });
@@ -1806,27 +1900,28 @@ function renderShop() {
   const manWrap = document.getElementById("manualShopList");
   manWrap.innerHTML = "";
   if (manual.length === 0) manWrap.innerHTML = `<div class="empty-note">Noch keine extra Einträge.</div>`;
-  manual.forEach((item, idx) => {
-    const isChecked = !!checked["man_" + idx];
+  manual.forEach(item => {
+    const isChecked = !!checked["man_" + item.id];
     const row = document.createElement("div");
     row.className = "shop-item" + (isChecked ? " checked" : "");
     row.innerHTML = `
       <div class="shop-check"><svg viewBox="0 0 24 24" fill="none" stroke="#0f1210" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
-      <span class="shop-name">${esc(item)}</span>
-      <button class="shop-del" data-del="${idx}">✕</button>
+      <span class="shop-name">${esc(item.name)}</span>
+      <button class="shop-del">✕</button>
     `;
     row.querySelector(".shop-check").addEventListener("click", (e) => {
       e.stopPropagation();
       const c = loadShopChecked();
-      c["man_" + idx] = !c["man_" + idx];
+      c["man_" + item.id] = !c["man_" + item.id];
       saveShopChecked(c);
       renderShop();
     });
-    row.querySelector("[data-del]").addEventListener("click", (e) => {
+    row.querySelector(".shop-del").addEventListener("click", (e) => {
       e.stopPropagation();
-      const m = loadManualShop();
-      m.splice(idx, 1);
-      saveManualShop(m);
+      saveManualShop(loadManualShop().filter(x => x.id !== item.id));
+      const c = loadShopChecked();
+      delete c["man_" + item.id];
+      saveShopChecked(c);
       renderShop();
     });
     manWrap.appendChild(row);
@@ -1834,21 +1929,23 @@ function renderShop() {
 
   const badge = document.getElementById("shopBadge");
   const totalOpen = lowItems.filter(i => !checked["auto_" + i.key]).length +
-                     manual.filter((_, idx) => !checked["man_" + idx]).length;
+                     manual.filter(i => !checked["man_" + i.id]).length;
   if (totalOpen > 0) { badge.style.display = "inline-block"; badge.textContent = totalOpen; }
   else badge.style.display = "none";
 }
 
-document.getElementById("shopAddBtn").addEventListener("click", () => {
+function addShopItem() {
   const input = document.getElementById("shopNewName");
   const val = input.value.trim();
   if (!val) return;
   const m = loadManualShop();
-  m.push(val);
+  m.push({ id: "m" + Date.now(), name: val });
   saveManualShop(m);
   input.value = "";
   renderShop();
-});
+}
+document.getElementById("shopAddBtn").addEventListener("click", addShopItem);
+document.getElementById("shopNewName").addEventListener("keydown", e => { if (e.key === "Enter") addShopItem(); });
 
 /* ---- Barcode-Scan (nur wo BarcodeDetector existiert, z.B. Chrome/Android) ---- */
 
@@ -1923,8 +2020,8 @@ function shopListText() {
   loadPantry().filter(p => p.qty <= p.low).forEach(p => {
     if (!checked["auto_" + p.key]) lines.push("- " + p.name);
   });
-  loadManualShop().forEach((item, idx) => {
-    if (!checked["man_" + idx]) lines.push("- " + item);
+  loadManualShop().forEach(item => {
+    if (!checked["man_" + item.id]) lines.push("- " + item.name);
   });
   return lines.length ? "Einkaufsliste\n" + lines.join("\n") : "";
 }
