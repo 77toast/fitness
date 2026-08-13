@@ -42,7 +42,11 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge | nie |
 | `mealtracker_shop_checked` | abgehakte Einkaufslisten-Einträge | nie |
 | `mealtracker_expanded` / `mealtracker_switchopen` | UI-State (offene Rezepte/Auswahl-Panels) | nie |
-| `fitnesstracker_unlocked` | Passwort-Flag (gesetzter Hash), schaltet die Seite ohne erneute Eingabe frei | bei Passwortwechsel |
+| `fitnesstracker_unlocked` | Passwort-Flag (gesetzter Hash), schaltet die Seite ohne erneute Eingabe frei | bei Passwortwechsel / "Seite sperren" |
+| `fitnesstracker_goals` | eigene Tagesziele für Kcal/P/C/F und Wasser | nie |
+| `fitnesstracker_weight` | `[{ date, kg }]` – Gewichtsverlauf | nie |
+| `fitnesstracker_extra_recent` | die letzten 10 Extras für die Schnellauswahl-Chips | nie |
+| `fitnesstracker_daylog` | `{ "YYYY-MM-DD": { kcal, protein, meals } }` – Tageszusammenfassungen für die Wochenübersicht, auf 60 Tage begrenzt | rollierend |
 
 Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den täglichen Reset, nur die Auswahl des Trainingstags nicht.
 
@@ -72,8 +76,30 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 
 Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtracker_pantry`. Der Key wurde auf `mealtracker_pantry_v2` gezogen und der alte beim Start gelöscht – der Vorrat ist also einmalig leer, egal was vorher drinstand.
 
+- Wasser-Zähler in Gläsern à 250ml, ebenfalls Teil des Tagesstates
+- Schnellauswahl-Chips ("Zuletzt gegessen") für die letzten 10 Extras – ein Tap statt erneut suchen
+- Barcode-Scan für Extras: Button erscheint nur, wenn der Browser `BarcodeDetector` kann (Chrome auf Android), sonst bleibt es bei Suche und manueller Eingabe
+
+**Training**
+- Satzpausen-Timer (90s / 2min / 3min), startet automatisch beim Eintragen eines Satzes, mit Signalton am Ende
+- Bestleistung pro Übung, "PR"-Marke wenn der heutige Top-Satz die bisherige Bestleistung schlägt
+- Progressionsvorschlag aus der letzten Session: oberes Ende des Wiederholungsbereichs erreicht → +2,5kg, sonst eine Wiederholung mehr
+- Sätze pro Muskelgruppe der letzten 7 Tage als Balken (`mg`-Feld an jeder Übung)
+
+**Mehr**
+- Wochenübersicht der letzten 7 Tage: Training (💪), abgehakte Mahlzeiten, Streak, Ø Kcal und Ø Protein
+- Gewicht eintragen mit 7-Tage-Schnitt, Trend gegen die Vorwoche und Sparkline über die letzten 30 Einträge
+- Eigene Tagesziele für Kcal/P/C/F und Wasser – sind welche gesetzt, vergleichen die Balken im Heute-Tab dagegen statt gegen den Tagesplan
+- Backup: Export als JSON-Datei, Import stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert)
+- "Seite sperren" verwirft die Freigabe, danach fragt die Seite wieder nach dem Passwort
+
+**Als App installieren**
+- `manifest.json` + `sw.js` machen die Seite zur PWA: über "Zum Startbildschirm hinzufügen" bekommst du ein App-Icon, Vollbild ohne Browserleiste und Offline-Betrieb
+- Der Service Worker läuft **network-first** – ein neuer Push kommt sofort an, der Cache springt nur ein, wenn kein Netz da ist. Anfragen an Open Food Facts werden nie gecacht.
+- Icons (`icon-192.png`, `icon-512.png`) werden von `tools/make_icons.py` erzeugt
+
 **Reset**
-- Täglich um Mitternacht: Tagesauswahl, Abhak-Status, Extras und gewählter Trainingstag. Vorrat, Liste und Trainingshistorie bleiben bestehen.
+- Täglich um Mitternacht: Tagesauswahl, Abhak-Status, Extras, Wasser und gewählter Trainingstag. Vorrat, Liste, Trainingshistorie, Gewicht, Ziele und Wochenlog bleiben bestehen.
 
 ## Passwort einrichten
 
@@ -100,12 +126,10 @@ Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Ver
 
 ## Mögliche weitere Ausbauideen
 
-- Wochenübersicht/Historie (letzte 7 Tage, z.B. Streak oder Durchschnittswerte) für den Meal Tracker
-- Eigene Tagesziele für Kcal/Makros einstellbar machen, Balken relativ dazu färben
-- Export der Einkaufsliste (z.B. als Text zum Teilen/Copy)
-- Übungen über die UI hinzufügen/umbenennen/löschen
-- Progressions-Graph statt Textliste im Übungsverlauf
-- Barcode-Scan für Extras (Open Food Facts unterstützt Lookup per EAN)
+- Übungen über die UI hinzufügen/umbenennen/löschen (aktuell fest in `WORKOUTS`)
+- Progressions-Graph pro Übung statt der Textliste im Verlauf
+- Eigene Rezepte über die UI anlegen statt in `POOLS`
+- Trainingsplan-Varianten (Upper/Lower, Ganzkörper) neben PPL
 
 ## Deployment
 
