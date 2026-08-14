@@ -29,7 +29,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 - `SLOTS` – 5 feste Tages-Slots (Frühstück, Snack, Mittag, Snack, Abend), jeder verweist auf einen Pool.
 - Der Vorrat hat **keine** Standardliste – er startet leer und wird ausschließlich manuell befüllt. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp", bei manuell angelegten Einträgen `0`).
 - `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
-- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze) und `reps` (Ziel-Wiederholungsbereich).
+- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich) und `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung).
 
 ## State / Storage-Keys (localStorage)
 
@@ -60,38 +60,33 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
 - Neben den Meal-Prep-Gerichten auch schnelle Toast-Optionen ohne Kochen: 2 Eier auf Vollkorntoast, Erdnussbutter-Marmeladen-Toast, Vollkorntoast mit Putenbrust, Erdnussbutter-Banane-Toast, Thunfisch-Sandwich
 - Baked Oats als Frühstück: gemahlene Haferflocken + Banane + Ei + Whey + Backpulver, 20-25 Min bei 180°C — Porridge-Zutaten, Kuchen-Ergebnis (540 kcal, 43g Protein)
-- Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan"
+- Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
 - **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
   - Tab "Suchen": Name eintippen → Open Food Facts liefert Treffer mit Nährwerten pro 100g → Menge in Gramm eingeben → Makros werden automatisch skaliert
   - Tab "Manuell": Name + Kcal/P/C/F direkt eintragen (Fallback, wenn die API nichts findet oder offline ist – Netzwerkfehler werden abgefangen und gemeldet)
   - Extras erhöhen nur den "gegessen"-Wert, nicht den Tagesplan-Zielwert; die Balken deckeln visuell bei 100 %, der Zahlenwert läuft weiter (z.B. `2150 / 1770`)
+  - Schnellauswahl-Chips ("Zuletzt gegessen") für die letzten 10 Extras – ein Tap statt erneut suchen
+  - Barcode-Scan: Button erscheint nur, wenn der Browser `BarcodeDetector` kann (Chrome auf Android), sonst bleibt es bei Suche und manueller Eingabe
+- Wasser-Zähler in Gläsern à 250ml, ebenfalls Teil des Tagesstates
 
 **Training**
 - Drei Tage: Push, Pull, Legs mit je 6 Übungen (Ziel-Sätze und Ziel-Wiederholungsbereich)
-- Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar
+- Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar; Eingabefelder sind mit dem letzten Satz vorbelegt
+- **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
 - "Letztes Mal (06.08.): 57.5kg × 8, 57.5kg × 6" pro Übung, plus aufklappbarer Verlauf der letzten 6 Sessions
-- Eingabefelder sind mit dem letzten Satz vorbelegt
 - Fortschrittsbalken über absolvierte vs. geplante Sätze des Tages
+- Satzpausen-Timer (90s / 2min / 3min), startet automatisch beim Eintragen eines Satzes, mit Signalton am Ende
+- Bestleistung pro Übung, "PR"-Marke wenn der heutige Top-Satz die bisherige Bestleistung schlägt
+- Progressionsvorschlag aus der letzten Session: oberes Ende des Wiederholungsbereichs erreicht → +2,5kg, sonst eine Wiederholung mehr
+- Im Verlauf pro Übung: Graph über das geschätzte 1RM (Epley: `kg × (1 + reps/30)`) plus aktueller Schätzwert und Differenz zur Vorsession. Damit sind Sessions vergleichbar, in denen sich Gewicht *und* Wiederholungen unterscheiden
+- Sätze pro Muskelgruppe der letzten 7 Tage als Balken (`mg`-Feld an jeder Übung)
+- **Platten- & Warm-up-Rechner** pro Übung: Zielgewicht + Stangengewicht → Scheiben pro Seite (Greedy-Algorithmus über 25/20/15/10/5/2.5/1.25kg) plus eine Warm-up-Ramp (40/60/80/90 % des Zielgewichts mit Wiederholungsvorschlag). Stangengewicht wird gemerkt (`fitnesstracker_bar_weight`) — Idee von den kostenlosen Tools der Stronger-App
 
 **Vorrat / Liste**
 - Vorrat startet leer und wird manuell befüllt – es wird nichts vorgegeben, was du gar nicht hast
 - +/- Stepper pro Eintrag; steht ein Eintrag auf 0, gilt er als "knapp" und wandert automatisch in die Einkaufsliste
-- Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten
-
-Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtracker_pantry`. Der Key wurde auf `mealtracker_pantry_v2` gezogen und der alte beim Start gelöscht – der Vorrat ist also einmalig leer, egal was vorher drinstand.
-
-- Wasser-Zähler in Gläsern à 250ml, ebenfalls Teil des Tagesstates
-- Schnellauswahl-Chips ("Zuletzt gegessen") für die letzten 10 Extras – ein Tap statt erneut suchen
-- Barcode-Scan für Extras: Button erscheint nur, wenn der Browser `BarcodeDetector` kann (Chrome auf Android), sonst bleibt es bei Suche und manueller Eingabe
-
-**Training**
-- Satzpausen-Timer (90s / 2min / 3min), startet automatisch beim Eintragen eines Satzes, mit Signalton am Ende
-- Bestleistung pro Übung, "PR"-Marke wenn der heutige Top-Satz die bisherige Bestleistung schlägt
-- Progressionsvorschlag aus der letzten Session: oberes Ende des Wiederholungsbereichs erreicht → +2,5kg, sonst eine Wiederholung mehr
-- Sätze pro Muskelgruppe der letzten 7 Tage als Balken (`mg`-Feld an jeder Übung)
-- Im Verlauf pro Übung: Graph über das geschätzte 1RM (Epley: `kg × (1 + reps/30)`) plus aktueller Schätzwert und Differenz zur Vorsession. Damit sind Sessions vergleichbar, in denen sich Gewicht *und* Wiederholungen unterscheiden
-- **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
-- **Platten- & Warm-up-Rechner** pro Übung: Zielgewicht + Stangengewicht → Scheiben pro Seite (Greedy-Algorithmus über 25/20/15/10/5/2.5/1.25kg) plus eine Warm-up-Ramp (40/60/80/90 % des Zielgewichts mit Wiederholungsvorschlag). Stangengewicht wird gemerkt (`fitnesstracker_bar_weight`) — Idee von den kostenlosen Tools der Stronger-App
+- Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten und Kopieren als Text
+- Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtracker_pantry`. Der Key wurde auf `mealtracker_pantry_v2` gezogen und der alte beim Start gelöscht – der Vorrat ist also einmalig leer, egal was vorher drinstand.
 
 **Mehr**
 - Wochenübersicht der letzten 7 Tage: Training (💪), abgehakte Mahlzeiten, Streak, Ø Kcal und Ø Protein
@@ -129,9 +124,8 @@ Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Ver
 
 ## Bekannte Einschränkungen
 
-- Daten sind rein lokal im Browser (`localStorage`) – kein Sync zwischen Geräten, kein Backup
+- Daten sind rein lokal im Browser (`localStorage`) – kein Sync zwischen Geräten. Ein Backup gibt es nur manuell über Export/Import im "Mehr"-Tab, nichts passiert automatisch
 - Keine Nutzerkonten/Auth (siehe Passwort-Abschnitt oben)
-- Keine Kalorien-/Makro-**Ziele** einstellbar, nur der Ist-Wert aus der Tagesauswahl als Referenz
 - Übungen im Trainingsplan sind fest im Code (`WORKOUTS`), nicht über die UI editierbar
 - Open Food Facts ist eine Community-Datenbank: Nährwerte einzelner Produkte können fehlen oder ungenau sein
 
