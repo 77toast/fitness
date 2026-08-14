@@ -37,7 +37,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | --- | --- | --- |
 | `mealtracker_day2_<Jahr>-<Monat>-<Tag>` | Tagesstatus: gewählte Option + abgehakt pro Slot, plus `extras[]` | täglich (`cleanupOldDayKeys`) |
 | `fitnesstracker_workout_<YYYY-MM-DD>` | welcher Trainingstag heute gewählt ist | täglich (`cleanupOldDayKeys`) |
-| `fitnesstracker_history` | `{ übungsId: [ { date, sets: [{kg, reps}] } ] }` – gesamte Trainingshistorie | nie |
+| `fitnesstracker_history` | `{ übungsId: [ { date, sets: [{kg, reps, rpe?}] } ] }` – gesamte Trainingshistorie, `rpe` optional | nie |
 | `mealtracker_pantry_v2` | dauerhafter Vorrat (startet leer) | nie |
 | `mealtracker_shop_manual` | manuell hinzugefügte Einkaufslisten-Einträge als `{id, name}` | nie |
 | `mealtracker_shop_checked` | abgehakte Einkaufslisten-Einträge | nie |
@@ -47,6 +47,10 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | `fitnesstracker_weight` | `[{ date, kg }]` – Gewichtsverlauf | nie |
 | `fitnesstracker_extra_recent` | die letzten 10 Extras für die Schnellauswahl-Chips | nie |
 | `fitnesstracker_daylog` | `{ "YYYY-MM-DD": { kcal, protein, meals } }` – Tageszusammenfassungen für die Wochenübersicht, auf 60 Tage begrenzt | rollierend |
+| `fitnesstracker_measurements` | `[{ date, waist?, chest?, hips?, arm?, thigh? }]` – Körpermaße | nie |
+| `fitnesstracker_best_streak` | längster je erreichter Streak (Zahl), Basis für die Streak-Badges | nie |
+| `fitnesstracker_bar_weight` | zuletzt genutztes Stangengewicht im Platten-/Warm-up-Rechner | nie |
+| `fitnesstracker_calc_inputs` | zuletzt genutzte Eingaben des TDEE-Rechners (ohne Gewicht, das kommt vom Gewichts-Tracking) | nie |
 
 Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den täglichen Reset, nur die Auswahl des Trainingstags nicht.
 
@@ -86,11 +90,17 @@ Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtr
 - Progressionsvorschlag aus der letzten Session: oberes Ende des Wiederholungsbereichs erreicht → +2,5kg, sonst eine Wiederholung mehr
 - Sätze pro Muskelgruppe der letzten 7 Tage als Balken (`mg`-Feld an jeder Übung)
 - Im Verlauf pro Übung: Graph über das geschätzte 1RM (Epley: `kg × (1 + reps/30)`) plus aktueller Schätzwert und Differenz zur Vorsession. Damit sind Sessions vergleichbar, in denen sich Gewicht *und* Wiederholungen unterscheiden
+- **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
+- **Platten- & Warm-up-Rechner** pro Übung: Zielgewicht + Stangengewicht → Scheiben pro Seite (Greedy-Algorithmus über 25/20/15/10/5/2.5/1.25kg) plus eine Warm-up-Ramp (40/60/80/90 % des Zielgewichts mit Wiederholungsvorschlag). Stangengewicht wird gemerkt (`fitnesstracker_bar_weight`) — Idee von den kostenlosen Tools der Stronger-App
 
 **Mehr**
 - Wochenübersicht der letzten 7 Tage: Training (💪), abgehakte Mahlzeiten, Streak, Ø Kcal und Ø Protein
+- **Aktivitäts-Heatmap** (12 Wochen): Contribution-Graph im GitHub-Stil, Zellfarbe zeigt Mahlzeiten geloggt / trainiert / beides an einem Tag
+- **Auszeichnungen**: Badges für Streak-Meilensteine (3/7/14/30/100 Tage, gegen den bisher längsten Streak in `fitnesstracker_best_streak`) und Trainings-Meilensteine (10/25/50/100 Einheiten)
 - Gewicht eintragen mit 7-Tage-Schnitt, Trend gegen die Vorwoche und Sparkline über die letzten 30 Einträge
+- **Körpermaße**: Taille/Brust/Hüfte/Oberarm/Oberschenkel eintragen, zeigt jeweils den letzten Wert und den Trend zum Eintrag von vor ca. 3 Wochen (`fitnesstracker_measurements`)
 - Eigene Tagesziele für Kcal/P/C/F und Wasser – sind welche gesetzt, vergleichen die Balken im Heute-Tab dagegen statt gegen den Tagesplan
+- **TDEE-Rechner** (Mifflin-St-Jeor) direkt bei den Tageszielen: Alter/Größe/Gewicht/Aktivitätslevel/Ziel (Abnehmen/Halten/Aufbauen) → befüllt die Kcal-/Protein-/Carbs-/Fett-Zielfelder, Eingaben werden gemerkt (`fitnesstracker_calc_inputs`)
 - Backup: Export als JSON-Datei, Import stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert). Das Datum des letzten Exports steht in `fitnesstracker_last_export` und wird im Panel angezeigt – ab 30 Tagen als Alter statt als Datum
 - "Seite sperren" verwirft die Freigabe, danach fragt die Seite wieder nach dem Passwort
 
@@ -128,9 +138,11 @@ Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Ver
 ## Mögliche weitere Ausbauideen
 
 - Übungen über die UI hinzufügen/umbenennen/löschen (aktuell fest in `WORKOUTS`)
-- Progressions-Graph pro Übung statt der Textliste im Verlauf
 - Eigene Rezepte über die UI anlegen statt in `POOLS`
 - Trainingsplan-Varianten (Upper/Lower, Ganzkörper) neben PPL
+- Supersätze/Drop-Sets als eigene Satz-Typen (JEFIT-Feature)
+- Fortschrittsfotos (wie bei JEFIT) — technisch machbar über `localStorage`/IndexedDB, aber Speicherplatz im Browser ist begrenzt
+- Sparklines pro Körpermaß statt nur Zahl + Trend
 
 ## Deployment
 
