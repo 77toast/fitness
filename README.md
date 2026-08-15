@@ -29,7 +29,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 - `SLOTS` – 5 feste Tages-Slots (Frühstück, Snack, Mittag, Snack, Abend), jeder verweist auf einen Pool.
 - Der Vorrat hat **keine** Standardliste – er startet leer und wird ausschließlich manuell befüllt. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp", bei manuell angelegten Einträgen `0`).
 - `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
-- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich) und `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung).
+- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich), `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung) und `alts[]` (alternative Übungen für denselben Slot, je mit eigener `id` und `name`).
 
 ## State / Storage-Keys (localStorage)
 
@@ -50,6 +50,7 @@ Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Priva
 | `fitnesstracker_measurements` | `[{ date, waist?, chest?, hips?, arm?, thigh? }]` – Körpermaße | nie |
 | `fitnesstracker_best_streak` | längster je erreichter Streak (Zahl), Basis für die Streak-Badges | nie |
 | `fitnesstracker_bar_weight` | zuletzt genutztes Stangengewicht im Platten-/Warm-up-Rechner | nie |
+| `fitnesstracker_ex_choice` | `{ slotId: variantenId }` – gewählte Übungs-Variante pro Slot, Standard-Übung wird nicht gespeichert | nie |
 | `fitnesstracker_calc_inputs` | zuletzt genutzte Eingaben des TDEE-Rechners (ohne Gewicht, das kommt vom Gewichts-Tracking) | nie |
 
 Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den täglichen Reset, nur die Auswahl des Trainingstags nicht.
@@ -71,6 +72,8 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 
 **Training**
 - Drei Tage: Push, Pull, Legs mit je 6 Übungen (Ziel-Sätze und Ziel-Wiederholungsbereich)
+- **Trainingstag wird vorgeschlagen**: aus der Historie wird der zuletzt absolvierte Tag ermittelt und der nächste der Rotation Push → Pull → Legs vorgewählt, mit Hinweis "Zuletzt Push am 12.08. — Pull ist dran". Tippst du selbst auf einen Tag, gilt deine Wahl für heute
+- **Alternativen pro Übung** ("Andere Übung", analog zu "Andere Option" bei den Mahlzeiten): z.B. Bankdrücken ↔ Kurzhantel ↔ Brustpresse, Klimmzug ↔ Latzug. Jede Variante hat eine eigene ID, die Historie bleibt also getrennt — die Wochenvolumen-Auswertung zählt aber alle Varianten eines Slots auf dieselbe Muskelgruppe. Die Wahl gilt dauerhaft (`fitnesstracker_ex_choice`), nicht nur für heute
 - Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar; Eingabefelder sind mit dem letzten Satz vorbelegt
 - **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
 - "Letztes Mal (06.08.): 57.5kg × 8, 57.5kg × 6" pro Übung, plus aufklappbarer Verlauf der letzten 6 Sessions

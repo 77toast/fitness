@@ -370,6 +370,7 @@
     <button class="mini-tab" data-day="pull">Pull</button>
     <button class="mini-tab" data-day="legs">Legs</button>
   </div>
+  <div class="empty-note" id="dayHint"></div>
 
   <div class="progress-wrap" style="margin-top:16px;">
     <div class="progress-bar"><div class="progress-fill" id="workoutFill"></div></div>
@@ -868,28 +869,45 @@ function pantryKeyFor(name, existing) {
 
 const WORKOUTS = {
   push: { label: "Push", exercises: [
-    { id: "bench",      name: "Bankdrücken (Langhantel)",   sets: 4, reps: "6-10",  mg: "Brust" },
-    { id: "inc_db",     name: "Schrägbankdrücken (KH)",     sets: 3, reps: "8-12",  mg: "Brust" },
-    { id: "ohp",        name: "Schulterdrücken (KH)",       sets: 3, reps: "8-12",  mg: "Schultern" },
-    { id: "lat_raise",  name: "Seitheben",                  sets: 3, reps: "12-15", mg: "Schultern" },
-    { id: "pushdown",   name: "Trizeps-Pushdown",           sets: 3, reps: "10-15", mg: "Trizeps" },
-    { id: "oh_ext",     name: "Trizeps Überkopf",           sets: 3, reps: "10-15", mg: "Trizeps" }
+    { id: "bench",      name: "Bankdrücken (Langhantel)",   sets: 4, reps: "6-10",  mg: "Brust",
+      alts: [{ id: "bench_db", name: "Bankdrücken (Kurzhantel)" }, { id: "bench_machine", name: "Brustpresse (Maschine)" }] },
+    { id: "inc_db",     name: "Schrägbankdrücken (KH)",     sets: 3, reps: "8-12",  mg: "Brust",
+      alts: [{ id: "inc_bb", name: "Schrägbankdrücken (LH)" }, { id: "chest_fly", name: "Butterfly / Kabelzug" }] },
+    { id: "ohp",        name: "Schulterdrücken (KH)",       sets: 3, reps: "8-12",  mg: "Schultern",
+      alts: [{ id: "ohp_bb", name: "Schulterdrücken (LH)" }, { id: "ohp_machine", name: "Schulterpresse (Maschine)" }] },
+    { id: "lat_raise",  name: "Seitheben",                  sets: 3, reps: "12-15", mg: "Schultern",
+      alts: [{ id: "lat_raise_cable", name: "Seitheben am Kabel" }] },
+    { id: "pushdown",   name: "Trizeps-Pushdown",           sets: 3, reps: "10-15", mg: "Trizeps",
+      alts: [{ id: "pushdown_rope", name: "Pushdown am Seil" }, { id: "dips", name: "Dips" }] },
+    { id: "oh_ext",     name: "Trizeps Überkopf",           sets: 3, reps: "10-15", mg: "Trizeps",
+      alts: [{ id: "skullcrusher", name: "Skullcrusher" }] }
   ]},
   pull: { label: "Pull", exercises: [
-    { id: "pullup",     name: "Klimmzug / Latzug",          sets: 4, reps: "6-10",  mg: "Rücken" },
-    { id: "row_bb",     name: "Langhantelrudern",           sets: 4, reps: "8-12",  mg: "Rücken" },
-    { id: "row_cable",  name: "Kabelrudern eng",            sets: 3, reps: "10-12", mg: "Rücken" },
-    { id: "face_pull",  name: "Face Pull",                  sets: 3, reps: "12-15", mg: "Schultern" },
-    { id: "curl_bb",    name: "Bizepscurl (SZ/LH)",         sets: 3, reps: "8-12",  mg: "Bizeps" },
-    { id: "curl_ham",   name: "Hammercurl",                 sets: 3, reps: "10-15", mg: "Bizeps" }
+    { id: "pullup",     name: "Klimmzug",                   sets: 4, reps: "6-10",  mg: "Rücken",
+      alts: [{ id: "latzug", name: "Latzug" }, { id: "pullup_assisted", name: "Klimmzug (unterstützt)" }] },
+    { id: "row_bb",     name: "Langhantelrudern",           sets: 4, reps: "8-12",  mg: "Rücken",
+      alts: [{ id: "row_db", name: "Kurzhantelrudern" }, { id: "row_tbar", name: "T-Bar-Rudern" }] },
+    { id: "row_cable",  name: "Kabelrudern eng",            sets: 3, reps: "10-12", mg: "Rücken",
+      alts: [{ id: "row_machine", name: "Rudermaschine" }] },
+    { id: "face_pull",  name: "Face Pull",                  sets: 3, reps: "12-15", mg: "Schultern",
+      alts: [{ id: "rear_delt_fly", name: "Reverse Butterfly" }] },
+    { id: "curl_bb",    name: "Bizepscurl (SZ/LH)",         sets: 3, reps: "8-12",  mg: "Bizeps",
+      alts: [{ id: "curl_db", name: "Kurzhantelcurl" }, { id: "curl_cable", name: "Kabelcurl" }] },
+    { id: "curl_ham",   name: "Hammercurl",                 sets: 3, reps: "10-15", mg: "Bizeps",
+      alts: [{ id: "curl_preacher", name: "Scott-Curl" }] }
   ]},
   legs: { label: "Legs", exercises: [
-    { id: "squat",      name: "Kniebeuge",                  sets: 4, reps: "5-8",   mg: "Quadrizeps" },
-    { id: "rdl",        name: "Rumänisches Kreuzheben",     sets: 3, reps: "8-12",  mg: "Beinbeuger" },
-    { id: "legpress",   name: "Beinpresse",                 sets: 3, reps: "10-15", mg: "Quadrizeps" },
-    { id: "legcurl",    name: "Beinbeuger",                 sets: 3, reps: "10-15", mg: "Beinbeuger" },
-    { id: "legext",     name: "Beinstrecker",               sets: 3, reps: "12-15", mg: "Quadrizeps" },
-    { id: "calf",       name: "Wadenheben",                 sets: 4, reps: "12-20", mg: "Waden" }
+    { id: "squat",      name: "Kniebeuge",                  sets: 4, reps: "5-8",   mg: "Quadrizeps",
+      alts: [{ id: "squat_hack", name: "Hackenschmidt-Kniebeuge" }, { id: "squat_goblet", name: "Goblet Squat" }] },
+    { id: "rdl",        name: "Rumänisches Kreuzheben",     sets: 3, reps: "8-12",  mg: "Beinbeuger",
+      alts: [{ id: "rdl_db", name: "RDL (Kurzhantel)" }, { id: "hipthrust", name: "Hip Thrust" }] },
+    { id: "legpress",   name: "Beinpresse",                 sets: 3, reps: "10-15", mg: "Quadrizeps",
+      alts: [{ id: "lunge", name: "Ausfallschritte" }] },
+    { id: "legcurl",    name: "Beinbeuger",                 sets: 3, reps: "10-15", mg: "Beinbeuger",
+      alts: [{ id: "legcurl_seated", name: "Beinbeuger sitzend" }] },
+    { id: "legext",     name: "Beinstrecker",               sets: 3, reps: "12-15", mg: "Quadrizeps", alts: [] },
+    { id: "calf",       name: "Wadenheben",                 sets: 4, reps: "12-20", mg: "Waden",
+      alts: [{ id: "calf_seated", name: "Wadenheben sitzend" }] }
   ]}
 };
 
@@ -909,13 +927,14 @@ const LS_WEIGHT = "fitnesstracker_weight";
 const LS_RECENT = "fitnesstracker_extra_recent";
 const LS_DAYLOG = "fitnesstracker_daylog";
 const LS_LAST_EXPORT = "fitnesstracker_last_export";
+const LS_EX_CHOICE = "fitnesstracker_ex_choice";
 const LS_MEASUREMENTS = "fitnesstracker_measurements";
 const LS_BEST_STREAK = "fitnesstracker_best_streak";
 const LS_BAR_WEIGHT = "fitnesstracker_bar_weight";
 const LS_CALC_INPUTS = "fitnesstracker_calc_inputs";
 
 const BACKUP_KEYS = [LS_PANTRY, LS_SHOP_MANUAL, LS_SHOP_CHECKED, LS_EXPANDED, LS_SWITCH_OPEN,
-                     LS_HISTORY, LS_GOALS, LS_WEIGHT, LS_RECENT, LS_DAYLOG,
+                     LS_HISTORY, LS_GOALS, LS_WEIGHT, LS_RECENT, LS_DAYLOG, LS_EX_CHOICE,
                      LS_MEASUREMENTS, LS_BEST_STREAK, LS_BAR_WEIGHT, LS_CALC_INPUTS];
 const BACKUP_PREFIXES = [STORAGE_PREFIX, WORKOUT_PREFIX];
 
@@ -1400,6 +1419,66 @@ function daysAgoISO(n) {
 }
 function workoutKey() { return WORKOUT_PREFIX + todayISO(); }
 
+const DAY_ORDER = ["push", "pull", "legs"];
+
+/* Übungs-Varianten: die Auswahl gilt dauerhaft, nicht pro Tag – dein Gym
+   ändert sich schließlich nicht täglich. Jede Variante hat eine eigene ID,
+   damit die Historie von Langhantel und Maschine getrennt bleibt. */
+function loadExChoice() {
+  const c = readJSON(LS_EX_CHOICE, {});
+  return (c && typeof c === "object" && !Array.isArray(c)) ? c : {};
+}
+function setExChoice(baseId, chosenId) {
+  const c = loadExChoice();
+  if (chosenId === baseId) delete c[baseId];
+  else c[baseId] = chosenId;
+  writeJSON(LS_EX_CHOICE, c);
+  renderWorkout();
+}
+function variantsOf(ex) {
+  return [{ id: ex.id, name: ex.name }].concat(ex.alts || []);
+}
+// Die aktive Variante erbt Sätze/Wiederholungen/Muskelgruppe vom Slot
+function activeVariant(ex) {
+  const chosen = loadExChoice()[ex.id];
+  const variant = variantsOf(ex).find(v => v.id === chosen) || variantsOf(ex)[0];
+  return { id: variant.id, name: variant.name, sets: ex.sets, reps: ex.reps, mg: ex.mg, baseId: ex.id };
+}
+
+// Übungs-ID (inkl. Varianten) → Trainingstag
+function exerciseDayIndex() {
+  const map = {};
+  DAY_ORDER.forEach(day => {
+    WORKOUTS[day].exercises.forEach(ex => variantsOf(ex).forEach(v => map[v.id] = day));
+  });
+  return map;
+}
+
+function lastTrainedSession() {
+  const map = exerciseDayIndex();
+  const h = loadHistory();
+  let best = null;
+  Object.keys(h).forEach(exId => {
+    const day = map[exId];
+    if (!day) return;
+    (h[exId] || []).forEach(s => {
+      if (!s.sets || !s.sets.length || s.date === todayISO()) return;
+      if (!best || s.date > best.date) best = { date: s.date, day };
+    });
+  });
+  return best;
+}
+
+// Nächster Tag der Rotation, basierend auf der letzten Session vor heute
+function suggestedDay() {
+  const last = lastTrainedSession();
+  if (!last) return { day: "push", last: null };
+  return { day: DAY_ORDER[(DAY_ORDER.indexOf(last.day) + 1) % DAY_ORDER.length], last };
+}
+
+function hasExplicitDay() {
+  try { return !!localStorage.getItem(workoutKey()); } catch(e) { return false; }
+}
 function loadWorkoutDay() {
   try {
     const raw = localStorage.getItem(workoutKey());
@@ -1408,7 +1487,7 @@ function loadWorkoutDay() {
       if (WORKOUTS[day]) return day;
     }
   } catch(e) {}
-  return "push";
+  return suggestedDay().day;
 }
 function saveWorkoutDay(day) { localStorage.setItem(workoutKey(), JSON.stringify({ day })); }
 
@@ -1494,6 +1573,7 @@ function formatDate(iso) {
 }
 
 const histOpen = {};
+const swapOpen = {};
 const calcOpen = {};
 
 /* ---- Plattenrechner & Warm-up-Ramp ---- */
@@ -1560,15 +1640,28 @@ function renderWorkout() {
     b.classList.toggle("active", b.dataset.day === day);
   });
 
+  const suggestion = suggestedDay();
+  const chosen = hasExplicitDay();
+  const hintEl = document.getElementById("dayHint");
+  if (!suggestion.last) {
+    hintEl.textContent = chosen ? "" : "Noch keine Historie — Push ist als Start vorgewählt.";
+  } else {
+    const lastTxt = `Zuletzt ${WORKOUTS[suggestion.last.day].label} am ${formatDate(suggestion.last.date)}`;
+    hintEl.textContent = chosen
+      ? lastTxt
+      : `${lastTxt} — ${WORKOUTS[suggestion.day].label} ist dran, schon vorgewählt.`;
+  }
+
   const wrap = document.getElementById("exerciseList");
   wrap.innerHTML = "";
 
   let doneSets = 0, targetSets = 0;
 
   WORKOUTS[day].exercises.forEach(ex => {
-    const sets = todaySets(ex.id);
-    const last = lastSession(ex.id);
-    const sessions = sessionsFor(ex.id);
+    const av = activeVariant(ex);
+    const sets = todaySets(av.id);
+    const last = lastSession(av.id);
+    const sessions = sessionsFor(av.id);
     doneSets += sets.length;
     targetSets += ex.sets;
 
@@ -1592,14 +1685,25 @@ function renderWorkout() {
         `).join("")
       : `<div class="hist-row">Noch keine Einträge.</div>`;
 
-    const prevBest = bestSet(ex.id, true);
+    const prevBest = bestSet(av.id, true);
     const todayBest = sets.length ? topSetOf({ sets }) : null;
     const isPR = todayBest && (!prevBest || todayBest.kg > prevBest.kg || (todayBest.kg === prevBest.kg && todayBest.reps > prevBest.reps));
     const hint = overloadHint(ex, last);
 
+    const variants = variantsOf(ex);
+    const swapHtml = variants.filter(v => v.id !== av.id).map(v => {
+      const vSessions = sessionsFor(v.id);
+      const vLast = vSessions.find(s => s.date !== todayISO());
+      return `
+        <div class="switch-opt" data-swap-to="${v.id}">
+          <span class="switch-opt-title">${v.name}</span>
+          <span class="switch-opt-macro">${vLast ? formatDate(vLast.date) : "noch nie"}</span>
+        </div>`;
+    }).join("");
+
     card.innerHTML = `
       <div class="ex-top">
-        <span class="ex-name">${ex.name}${isPR ? '<span class="pr-tag">PR</span>' : ""}</span>
+        <span class="ex-name">${av.name}${isPR ? '<span class="pr-tag">PR</span>' : ""}</span>
         <span class="ex-target">${ex.sets} × ${ex.reps}</span>
       </div>
       <div class="ex-last">${last ? "Letztes Mal (" + formatDate(last.date) + "): " + esc(formatSets(last.sets)) : "Letztes Mal: noch keine Daten"}</div>
@@ -1615,7 +1719,9 @@ function renderWorkout() {
       <div class="meal-actions">
         <button class="link-btn" data-hist>${histOpen[ex.id] ? "Verlauf ausblenden" : "Verlauf"}</button>
         <button class="link-btn" data-calc>${calcOpen[ex.id] ? "Rechner ausblenden" : "Platten- & Warm-up-Rechner"}</button>
+        ${swapHtml ? `<button class="link-btn" data-swap>${swapOpen[ex.id] ? "Auswahl schließen" : "Andere Übung"}</button>` : ""}
       </div>
+      <div class="switch-panel ${swapOpen[ex.id] ? "open" : ""}" style="padding-left:0; padding-right:0;">${swapHtml}</div>
       <div class="hist-panel ${histOpen[ex.id] ? "open" : ""}">${histHtml}</div>
       <div class="calc-panel ${calcOpen[ex.id] ? "open" : ""}" data-calc-panel>
         <div class="calc-row">
@@ -1635,14 +1741,25 @@ function renderWorkout() {
       if (kg === null || kg < 0 || reps === null || reps < 1) return;
       const rpeRaw = num(rpeInput.value);
       const rpe = (rpeRaw !== null && rpeRaw >= 5 && rpeRaw <= 10) ? rpeRaw : null;
-      addSet(ex.id, kg, Math.round(reps), rpe);
+      addSet(av.id, kg, Math.round(reps), rpe);
     };
     card.querySelector(".set-add-btn").addEventListener("click", submit);
     [kgInput, repsInput, rpeInput].forEach(el => {
       el.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
     });
     card.querySelectorAll("[data-del-set]").forEach(btn => {
-      btn.addEventListener("click", () => removeSet(ex.id, parseInt(btn.dataset.delSet)));
+      btn.addEventListener("click", () => removeSet(av.id, parseInt(btn.dataset.delSet)));
+    });
+    card.querySelectorAll("[data-swap-to]").forEach(el => {
+      el.addEventListener("click", () => {
+        swapOpen[ex.id] = false;
+        setExChoice(ex.id, el.dataset.swapTo);
+      });
+    });
+    const swapBtn = card.querySelector("[data-swap]");
+    if (swapBtn) swapBtn.addEventListener("click", () => {
+      swapOpen[ex.id] = !swapOpen[ex.id];
+      renderWorkout();
     });
     card.querySelector("[data-hist]").addEventListener("click", () => {
       histOpen[ex.id] = !histOpen[ex.id];
@@ -2096,9 +2213,10 @@ function renderVolume() {
   const byMg = {};
   Object.keys(WORKOUTS).forEach(day => {
     WORKOUTS[day].exercises.forEach(ex => {
-      const n = sessionsFor(ex.id)
+      // alle Varianten eines Slots zählen auf dieselbe Muskelgruppe ein
+      const n = variantsOf(ex).reduce((total, v) => total + sessionsFor(v.id)
         .filter(s => s.date >= cutoff)
-        .reduce((a, s) => a + s.sets.length, 0);
+        .reduce((a, s) => a + s.sets.length, 0), 0);
       if (n > 0) byMg[ex.mg] = (byMg[ex.mg] || 0) + n;
     });
   });
