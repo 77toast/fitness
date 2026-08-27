@@ -56,7 +56,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
 - Neben den Meal-Prep-Gerichten auch schnelle Toast-Optionen ohne Kochen: 2 Eier auf Vollkorntoast, Erdnussbutter-Marmeladen-Toast, Vollkorntoast mit Putenbrust, Erdnussbutter-Banane-Toast, Thunfisch-Sandwich
 - Schnelle Hauptgerichte ohne großen Aufwand: Pasta mit Thunfisch-Quark-Sauce, Airfryer-Hähnchen mit Reis (Fertigbeutel, kein Topf), Mikro-Kartoffel mit Quark-Thunfisch-Dip
-- Schüttel-Porridge: Haferflocken, Magerquark, Whey und Wasser im Shaker, Heidelbeeren dazu — kein Herd, keine Vorbereitung am Vorabend (525 kcal, 65g Protein)
+- Schüttel-Porridge: Haferflocken, Magerquark, Whey und Wasser in der Schale, Heidelbeeren dazu — kein Herd, keine Vorbereitung am Vorabend (525 kcal, 65g Protein)
 - Baked Oats als Frühstück: gemahlene Haferflocken + Banane + Ei + Whey + Backpulver, 20-25 Min bei 180°C — Porridge-Zutaten, Kuchen-Ergebnis (540 kcal, 43g Protein)
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
 - **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
