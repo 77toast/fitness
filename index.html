@@ -842,6 +842,46 @@ const POOLS = {
         "Thunfisch abtropfen lassen, Kichererbsen abspülen.",
         "TK-Gemüse kurz erhitzen.",
         "Alles zusammen anrichten, mit Gewürzen oder Zitrone abschmecken."
+      ] },
+    { id: "pasta_thunfisch", title: "Pasta mit Thunfisch-Quark-Sauce", short: "Nudeln kochen, Rest nur verrühren",
+      kcal: 525, protein: 50, carbs: 74, fat: 3,
+      ingredients: [
+        { name: "Nudeln", amount: "100g", pantryKey: "nudeln" },
+        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
+        { name: "Magerquark", amount: "100g", pantryKey: "magerquark" }
+      ],
+      steps: [
+        "Reichlich Wasser salzen und aufkochen, Nudeln nach Packungsanweisung bissfest kochen.",
+        "Thunfisch abtropfen lassen.",
+        "Magerquark mit Salz und Pfeffer verrühren, Thunfisch untermischen.",
+        "Abgegossene Nudeln mit der Quark-Thunfisch-Mischung vermengen. Bei Bedarf etwas heißes Nudelwasser für mehr Cremigkeit dazugeben."
+      ] },
+    { id: "airfryer_chicken_rice", title: "Airfryer-Hähnchen mit Reis", short: "Airfryer + Fertigreis, kein Topf nötig",
+      kcal: 560, protein: 47, carbs: 52, fat: 10,
+      ingredients: [
+        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
+        { name: "Paprikapulver", amount: "0.5 TL", pantryKey: "paprikapulver" },
+        { name: "Öl", amount: "1 TL", pantryKey: "oel" },
+        { name: "Reisbeutel", amount: "1 Stück (250g, für die Mikrowelle)", pantryKey: "reisbeutel" }
+      ],
+      steps: [
+        "Hähnchenbrust mit Paprikapulver, Öl, Salz und Pfeffer einreiben.",
+        "Im Airfryer bei 200°C ca. 12 Minuten garen, nach der Hälfte wenden.",
+        "Reis-Fertigbeutel nach Packungsanweisung in der Mikrowelle erwärmen (meist 2 Minuten).",
+        "Hähnchen in Streifen schneiden und mit dem Reis servieren."
+      ] },
+    { id: "kartoffel_dip", title: "Mikro-Kartoffel mit Quark-Thunfisch-Dip", short: "Nur Mikrowelle, kein Topf",
+      kcal: 425, protein: 49, carbs: 55, fat: 2,
+      ingredients: [
+        { name: "Kartoffel", amount: "1 große (ca. 250g)", pantryKey: "kartoffeln" },
+        { name: "Magerquark", amount: "150g", pantryKey: "magerquark" },
+        { name: "Thunfisch (Wasser, Dose)", amount: "1 Dose", pantryKey: "thunfisch" }
+      ],
+      steps: [
+        "Kartoffel gründlich waschen und mehrmals mit einer Gabel einstechen.",
+        "Auf einem mikrowellenfesten Teller bei voller Leistung 6-8 Minuten garen, bis sie weich ist.",
+        "Magerquark mit abgetropftem Thunfisch, Salz, Pfeffer und etwas Paprikapulver verrühren.",
+        "Kartoffel aufschneiden und mit dem Dip füllen."
       ] }
   ]
 };
@@ -976,7 +1016,7 @@ function loadDayState() {
       if (parsed && typeof parsed === "object" && !Array.isArray(parsed)) return normalizeDayState(parsed);
     }
   } catch(e) {}
-  const d = defaultDayState();
+  const d = normalizeDayState(defaultDayState());
   saveDayState(d);
   return d;
 }

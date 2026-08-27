@@ -14,12 +14,9 @@ Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Reis, Hähnchen
 - Persistenz über `localStorage` im Browser (client-seitig, kein Server, kein Account)
 - Gehostet über **GitHub Pages** unter `77toast.github.io/fitness`
 
-## Wichtig: Repo-Trennung wegen Privacy Policy
+## Wichtig: eigenes Repo, nicht das Hauptrepo
 
-Der Haupt-GitHub-Account hostet unter `<username>.github.io` bereits die **Privacy Policy für eine TikTok-API-Anbindung** (separates Content-Automation-Projekt). Der Fitness Tracker läuft deshalb bewusst in einem **eigenen, separaten Repo** (`fitness` unter dem Account `77toast`), NICHT im `<username>.github.io`-Hauptrepo, damit sich beide Pages-Deployments nicht überschneiden oder gegenseitig beeinflussen.
-
-- Haupt-Repo `<username>.github.io` → Privacy Policy (TikTok API) – nicht anfassen
-- Separates Repo `77toast/fitness` → dieser Tracker, läuft unter `77toast.github.io/fitness`
+Unter `<username>.github.io` liegt bereits ein anderes, unabhängiges GitHub-Pages-Projekt. Der Fitness Tracker läuft deshalb bewusst in einem **eigenen, separaten Repo** (`fitness` unter dem Account `77toast`), NICHT im `<username>.github.io`-Hauptrepo, damit sich die beiden Pages-Deployments nicht überschneiden oder gegenseitig beeinflussen.
 
 **Niemals Dateien im Haupt-`.github.io`-Repo verändern**, alles bleibt im `fitness`-Repo isoliert.
 
@@ -60,6 +57,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 **Heute**
 - Pro Mahlzeit: mehrere austauschbare Varianten ("Andere Option"), volle Rezepte mit Zutaten & Zubereitungsschritten
 - Neben den Meal-Prep-Gerichten auch schnelle Toast-Optionen ohne Kochen: 2 Eier auf Vollkorntoast, Erdnussbutter-Marmeladen-Toast, Vollkorntoast mit Putenbrust, Erdnussbutter-Banane-Toast, Thunfisch-Sandwich
+- Schnelle Hauptgerichte ohne großen Aufwand: Pasta mit Thunfisch-Quark-Sauce, Airfryer-Hähnchen mit Reis (Fertigbeutel, kein Topf), Mikro-Kartoffel mit Quark-Thunfisch-Dip
 - Baked Oats als Frühstück: gemahlene Haferflocken + Banane + Ei + Whey + Backpulver, 20-25 Min bei 180°C — Porridge-Zutaten, Kuchen-Ergebnis (540 kcal, 43g Protein)
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
 - **Extras**: beliebige, nicht geplante Lebensmittel für den Tag hinzufügen
