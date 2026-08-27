@@ -544,6 +544,14 @@
   <div class="panel">
     <div class="panel-title">Zugang</div>
     <button class="ghost-btn" style="margin-top:0;" id="lockBtn">Seite sperren</button>
+
+    <div class="chips-label">Passwort ändern</div>
+    <div class="add-row" style="margin-top:6px;">
+      <input type="password" id="pwNew" placeholder="Neues Passwort" autocomplete="new-password">
+      <button id="pwHashBtn">Hash</button>
+    </div>
+    <div class="gate-hash" id="pwHashOut"></div>
+    <div class="empty-note" id="pwHashNote">Erzeugt den SHA-256-Hash. Den Wert in <code>index.html</code> bei <code>PASSWORD_HASH</code> einsetzen, committen und pushen — vorher gilt weiter das alte Passwort. Das Passwort selbst verlässt dein Gerät nicht.</div>
   </div>
 </div>
 
@@ -2640,6 +2648,26 @@ document.getElementById("importFile").addEventListener("change", e => {
   if (e.target.files && e.target.files[0]) importBackup(e.target.files[0]);
   e.target.value = "";
 });
+
+async function makePasswordHash() {
+  const input = document.getElementById("pwNew");
+  const out = document.getElementById("pwHashOut");
+  const note = document.getElementById("pwHashNote");
+  if (!input.value) return;
+  if (!window.crypto || !crypto.subtle) {
+    note.textContent = "Hash-Erzeugung braucht https oder localhost.";
+    return;
+  }
+  const hash = await sha256Hex(input.value);
+  out.textContent = hash;
+  input.value = "";
+  let copied = false;
+  try { await navigator.clipboard.writeText(hash); copied = true; } catch(e) {}
+  note.textContent = (copied ? "Hash kopiert. " : "") +
+    "In index.html bei PASSWORD_HASH einsetzen, committen und pushen — vorher gilt weiter das alte Passwort.";
+}
+document.getElementById("pwHashBtn").addEventListener("click", makePasswordHash);
+document.getElementById("pwNew").addEventListener("keydown", e => { if (e.key === "Enter") makePasswordHash(); });
 
 document.getElementById("lockBtn").addEventListener("click", () => {
   localStorage.removeItem(LS_UNLOCK);

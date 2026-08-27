@@ -117,6 +117,8 @@ Die Seite startet gesperrt. Der Schutz ist rein clientseitig: `index.html` enth�
 
 Danach fragt die Seite beim ersten Aufruf pro Gerät nach dem Passwort und merkt sich die Freigabe in `localStorage`. Solange kein Hash gesetzt ist, gibt es zusätzlich den Link "Ohne Passwort öffnen".
 
+**Passwort später ändern:** im "Mehr"-Tab unter *Zugang* das neue Passwort eintippen und auf *Hash* tippen — der Hash wird angezeigt und in die Zwischenablage gelegt. Ihn wie oben bei `PASSWORD_HASH` einsetzen, committen, pushen. Bis zum Push gilt das alte Passwort weiter. Das Passwort selbst wird nirgends gespeichert oder übertragen, die Berechnung läuft lokal über `crypto.subtle`.
+
 **Das ist kein echter Zugriffsschutz.** GitHub Pages liefert die Datei an jeden aus, der die URL kennt; wer den Quelltext liest, sieht die Struktur der Seite, und die Daten liegen ohnehin nur lokal im Browser. Es hält neugierige Blicke ab, mehr nicht.
 
 Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Vercel** deployen (beide kostenlos, beide bieten serverseitigen Passwortschutz/Basic Auth, Deploy direkt aus dem GitHub-Repo). Dann ist die URL allerdings nicht mehr `77toast.github.io/fitness`.
