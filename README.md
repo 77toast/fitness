@@ -71,6 +71,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - **Trainingstag wird vorgeschlagen**: aus der Historie wird der zuletzt absolvierte Tag ermittelt und der nächste der Rotation Push → Pull → Legs vorgewählt, mit Hinweis "Zuletzt Push am 12.08. — Pull ist dran". Tippst du selbst auf einen Tag, gilt deine Wahl für heute
 - **Alternativen pro Übung** ("Andere Übung", analog zu "Andere Option" bei den Mahlzeiten): z.B. Bankdrücken ↔ Kurzhantel ↔ Brustpresse, Klimmzug ↔ Latzug. Jede Variante hat eine eigene ID, die Historie bleibt also getrennt — die Wochenvolumen-Auswertung zählt aber alle Varianten eines Slots auf dieselbe Muskelgruppe. Die Wahl gilt dauerhaft (`fitnesstracker_ex_choice`), nicht nur für heute
 - Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar; Eingabefelder sind mit dem letzten Satz vorbelegt
+- **Jeder Satz jeder Session ist korrigierbar**, nicht nur der von heute: im Verlauf pro Session auf *bearbeiten* tippen, dann lassen sich kg, Wiederholungen und RPE ändern oder der Satz löschen. Ein Vertipper würde sonst dauerhaft Bestleistung, 1RM-Graph und Progressionsvorschlag verbiegen
 - **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
 - "Letztes Mal (06.08.): 57.5kg × 8, 57.5kg × 6" pro Übung, plus aufklappbarer Verlauf der letzten 6 Sessions
 - Fortschrittsbalken über absolvierte vs. geplante Sätze des Tages
@@ -83,7 +84,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 
 **Vorrat / Liste**
 - Vorrat startet leer und wird manuell befüllt – es wird nichts vorgegeben, was du gar nicht hast
-- +/- Stepper pro Eintrag; steht ein Eintrag auf 0, gilt er als "knapp" und wandert automatisch in die Einkaufsliste
+- +/- Stepper pro Eintrag, dazu eine einstellbare Schwelle ("knapp ab"): erreicht die Menge die Schwelle, gilt der Eintrag als knapp und wandert automatisch in die Einkaufsliste. Neue Einträge starten bei Menge 2 mit Schwelle 1, warnen also bevor es leer ist
 - Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten und Kopieren als Text
 - Alte Installationen hatten eine vorbefüllte Standard-Vorratsliste unter `mealtracker_pantry`. Der Key wurde auf `mealtracker_pantry_v2` gezogen und der alte beim Start gelöscht – der Vorrat ist also einmalig leer, egal was vorher drinstand.
 
@@ -95,7 +96,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - **Körpermaße**: Taille/Brust/Hüfte/Oberarm/Oberschenkel eintragen, zeigt jeweils den letzten Wert und den Trend zum Eintrag von vor ca. 3 Wochen (`fitnesstracker_measurements`)
 - Eigene Tagesziele für Kcal/P/C/F und Wasser – sind welche gesetzt, vergleichen die Balken im Heute-Tab dagegen statt gegen den Tagesplan
 - **TDEE-Rechner** (Mifflin-St-Jeor) direkt bei den Tageszielen: Alter/Größe/Gewicht/Aktivitätslevel/Ziel (Abnehmen/Halten/Aufbauen) → befüllt die Kcal-/Protein-/Carbs-/Fett-Zielfelder, Eingaben werden gemerkt (`fitnesstracker_calc_inputs`)
-- Backup: Export als JSON-Datei, Import stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert). Das Datum des letzten Exports steht in `fitnesstracker_last_export` und wird im Panel angezeigt – ab 30 Tagen als Alter statt als Datum
+- Backup: **Teilen** schickt die JSON-Datei über die Web Share API dorthin, wo du sie wiederfindest (Mail, Cloud, Messenger) — eine Datei im Download-Ordner überlebt den Verlust des Geräts nicht. Wo Teilen nicht unterstützt wird, fällt der Button auf den Download zurück. *Exportieren* lädt weiterhin direkt herunter, *Importieren* stellt alles wieder her (der Passwort-Flag wird bewusst nicht mitgesichert). Das Datum des letzten Exports steht in `fitnesstracker_last_export` und wird im Panel angezeigt – ab 30 Tagen als Alter statt als Datum
 - "Seite sperren" verwirft die Freigabe, danach fragt die Seite wieder nach dem Passwort
 
 **Als App installieren**
@@ -127,7 +128,7 @@ Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Ver
 
 - Daten sind rein lokal im Browser (`localStorage`) – kein Sync zwischen Geräten. Ein Backup gibt es nur manuell über Export/Import im "Mehr"-Tab, nichts passiert automatisch
 - Keine Nutzerkonten/Auth (siehe Passwort-Abschnitt oben)
-- Übungen im Trainingsplan sind fest im Code (`WORKOUTS`), nicht über die UI editierbar
+- Übungen im Trainingsplan sind fest im Code (`WORKOUTS`), nicht über die UI editierbar — austauschen lassen sie sich nur über die hinterlegten Alternativen
 - Open Food Facts ist eine Community-Datenbank: Nährwerte einzelner Produkte können fehlen oder ungenau sein
 
 ## Mögliche weitere Ausbauideen

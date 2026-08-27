@@ -138,6 +138,11 @@
   .hist-panel { display:none; margin-top:10px; border-top:1px solid var(--card-border); padding-top:8px; }
   .hist-panel.open { display:block; }
   .hist-row { font-size:12px; color:var(--muted); padding:3px 0; }
+  .hist-row .link-btn { margin-left:6px; }
+  .set-edit-row { display:flex; gap:6px; align-items:center; margin:4px 0 8px; }
+  .set-edit-row input { flex:1; min-width:0; width:100%; background:var(--bg); border:1px solid var(--card-border); border-radius:8px; padding:7px 8px; color:var(--text); font-size:13px; }
+  .pantry-low { display:block; font-size:11px; color:var(--muted); margin-top:5px; }
+  .pantry-low input { width:46px; background:var(--bg); border:1px solid var(--card-border); border-radius:6px; padding:3px 6px; color:var(--text); font-size:12px; margin-left:4px; }
   .hist-date { color:var(--text); }
 
   .extra-add { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:12px 14px; margin-top:10px; }
@@ -534,7 +539,8 @@
     <div class="panel-title">Daten sichern</div>
     <div class="empty-note" style="padding-top:0;">Alles liegt nur in diesem Browser. Löschst du die Browserdaten, ist auch die Trainingshistorie weg — hier regelmäßig ein Backup ziehen.</div>
     <div class="btn-row">
-      <button class="wide-btn" id="exportBtn">Exportieren</button>
+      <button class="wide-btn" id="shareBtn">Teilen</button>
+      <button class="ghost-btn" style="margin-top:0;" id="exportBtn">Exportieren</button>
       <button class="ghost-btn" style="margin-top:0;" id="importBtn">Importieren</button>
     </div>
     <input type="file" id="importFile" accept="application/json,.json" style="display:none;">
@@ -1567,12 +1573,29 @@ function addSet(exId, kg, reps, rpe) {
   startTimer(90); // Satzpause läuft automatisch mit, Stop-Button daneben
   renderWorkout();
 }
-function removeSet(exId, idx) {
+function removeSetOn(exId, date, idx) {
   const h = loadHistory();
-  const session = (h[exId] || []).find(x => x.date === todayISO());
-  if (!session) return;
+  const session = (h[exId] || []).find(x => x.date === date);
+  if (!session || !session.sets[idx]) return;
   session.sets.splice(idx, 1);
   if (session.sets.length === 0) h[exId] = h[exId].filter(x => x !== session);
+  if (h[exId] && h[exId].length === 0) delete h[exId];
+  saveHistory(h);
+  renderWorkout();
+}
+function removeSet(exId, idx) { removeSetOn(exId, todayISO(), idx); }
+
+/* Ein Vertipper von vorgestern verbiegt sonst dauerhaft Bestleistung,
+   1RM-Graph und Progressionsvorschlag – deshalb ist jeder Satz jeder
+   Session korrigierbar, nicht nur der von heute. */
+function updateSetOn(exId, date, idx, patch) {
+  const h = loadHistory();
+  const session = (h[exId] || []).find(x => x.date === date);
+  if (!session || !session.sets[idx]) return;
+  const set = session.sets[idx];
+  if (patch.kg !== null) set.kg = patch.kg;
+  if (patch.reps !== null) set.reps = patch.reps;
+  if (patch.rpe === null) delete set.rpe; else set.rpe = patch.rpe;
   saveHistory(h);
   renderWorkout();
 }
@@ -1622,6 +1645,7 @@ function formatDate(iso) {
 
 const histOpen = {};
 const swapOpen = {};
+const editOpen = {};
 const calcOpen = {};
 
 /* ---- Plattenrechner & Warm-up-Ramp ---- */
@@ -1728,9 +1752,21 @@ function renderWorkout() {
     `).join("");
 
     const histHtml = sessions.length
-      ? oneRmSparkline(sessions) + oneRmLine(sessions) + sessions.slice(0, 6).map(s => `
-          <div class="hist-row"><span class="hist-date">${formatDate(s.date)}</span> — ${esc(formatSets(s.sets))}</div>
-        `).join("")
+      ? oneRmSparkline(sessions) + oneRmLine(sessions) + sessions.slice(0, 6).map(sess => {
+          const key = av.id + "|" + sess.date;
+          const rows = editOpen[key] ? sess.sets.map((set, i) => `
+            <div class="set-edit-row">
+              <input type="number" inputmode="decimal" step="2.5" min="0" data-e-date="${sess.date}" data-e-idx="${i}" data-e-kg value="${set.kg}">
+              <input type="number" inputmode="numeric" step="1" min="1" data-e-date="${sess.date}" data-e-idx="${i}" data-e-reps value="${set.reps}">
+              <input type="number" inputmode="decimal" step="0.5" min="5" max="10" placeholder="RPE" data-e-date="${sess.date}" data-e-idx="${i}" data-e-rpe value="${set.rpe || ""}">
+              <button class="set-del" data-e-del data-e-date="${sess.date}" data-e-idx="${i}">✕</button>
+            </div>`).join("") : "";
+          return `
+            <div class="hist-row">
+              <span class="hist-date">${formatDate(sess.date)}</span> — ${esc(formatSets(sess.sets))}
+              <button class="link-btn" data-edit-session="${sess.date}">${editOpen[key] ? "fertig" : "bearbeiten"}</button>
+            </div>${rows}`;
+        }).join("")
       : `<div class="hist-row">Noch keine Einträge.</div>`;
 
     const prevBest = bestSet(av.id, true);
@@ -1794,6 +1830,30 @@ function renderWorkout() {
     card.querySelector(".set-add-btn").addEventListener("click", submit);
     [kgInput, repsInput, rpeInput].forEach(el => {
       el.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+    });
+    card.querySelectorAll("[data-edit-session]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const key = av.id + "|" + btn.dataset.editSession;
+        editOpen[key] = !editOpen[key];
+        renderWorkout();
+      });
+    });
+    card.querySelectorAll(".set-edit-row").forEach(row => {
+      const date = row.querySelector("[data-e-kg]").dataset.eDate;
+      const idx = parseInt(row.querySelector("[data-e-kg]").dataset.eIdx);
+      const apply = () => {
+        const kg = num(row.querySelector("[data-e-kg]").value);
+        const reps = num(row.querySelector("[data-e-reps]").value);
+        const rpeRaw = num(row.querySelector("[data-e-rpe]").value);
+        if (kg === null || kg < 0 || reps === null || reps < 1) { renderWorkout(); return; }
+        updateSetOn(av.id, date, idx, {
+          kg: kg,
+          reps: Math.round(reps),
+          rpe: (rpeRaw !== null && rpeRaw >= 5 && rpeRaw <= 10) ? rpeRaw : null
+        });
+      };
+      row.querySelectorAll("input").forEach(el => el.addEventListener("change", apply));
+      row.querySelector("[data-e-del]").addEventListener("click", () => removeSetOn(av.id, date, idx));
     });
     card.querySelectorAll("[data-del-set]").forEach(btn => {
       btn.addEventListener("click", () => removeSet(av.id, parseInt(btn.dataset.delSet)));
@@ -2314,6 +2374,7 @@ function renderPantry() {
       <div>
         <div class="pantry-name">${esc(item.name)}</div>
         <div class="pantry-unit">${esc(item.unit)}${isLow ? " · knapp" : ""}</div>
+        <label class="pantry-low">knapp ab<input type="number" inputmode="numeric" min="0" step="1" data-low-idx="${idx}" value="${item.low}"></label>
       </div>
       <div class="stepper">
         <button class="step-btn" data-action="dec" data-idx="${idx}">−</button>
@@ -2322,6 +2383,17 @@ function renderPantry() {
       </div>
     `;
     wrap.appendChild(row);
+  });
+  wrap.querySelectorAll("[data-low-idx]").forEach(input => {
+    input.addEventListener("change", () => {
+      const p = loadPantry();
+      const idx = parseInt(input.dataset.lowIdx);
+      const v = num(input.value);
+      if (!p[idx] || v === null || v < 0) { renderPantry(); return; }
+      p[idx].low = Math.round(v);
+      savePantry(p);
+      renderPantry(); renderShop(); renderToday();
+    });
   });
   wrap.querySelectorAll(".step-btn").forEach(btn => {
     btn.addEventListener("click", () => {
@@ -2340,7 +2412,7 @@ function addPantryItem() {
   const name = input.value.trim();
   if (!name) return;
   const pantry = loadPantry();
-  pantry.push({ key: pantryKeyFor(name, pantry), name, unit: "Stück", qty: 1, low: 0 });
+  pantry.push({ key: pantryKeyFor(name, pantry), name, unit: "Stück", qty: 2, low: 1 });
   savePantry(pantry);
   input.value = "";
   renderPantry(); renderShop(); renderToday();
@@ -2642,6 +2714,27 @@ function submitWeight() {
 document.getElementById("weightAddBtn").addEventListener("click", submitWeight);
 document.getElementById("weightInput").addEventListener("keydown", e => { if (e.key === "Enter") submitWeight(); });
 
+/* Eine Datei im Download-Ordner überlebt den Verlust des Geräts nicht –
+   über Teilen landet das Backup dort, wo du es wiederfindest. */
+async function shareBackup() {
+  const note = document.getElementById("backupNote");
+  const name = "fitnesstracker-backup-" + todayISO() + ".json";
+  const file = new File([JSON.stringify(collectBackup(), null, 2)], name, { type: "application/json" });
+  if (!navigator.canShare || !navigator.canShare({ files: [file] })) {
+    exportBackup();
+    note.textContent = "Teilen geht auf diesem Gerät nicht — Backup wurde stattdessen heruntergeladen.";
+    return;
+  }
+  try {
+    await navigator.share({ files: [file], title: "Fitness Tracker Backup" });
+    localStorage.setItem(LS_LAST_EXPORT, todayISO());
+    note.textContent = "Backup geteilt.";
+  } catch(e) {
+    if (e && e.name === "AbortError") return;
+    note.textContent = "Teilen abgebrochen oder nicht möglich.";
+  }
+}
+document.getElementById("shareBtn").addEventListener("click", shareBackup);
 document.getElementById("exportBtn").addEventListener("click", exportBackup);
 document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
 document.getElementById("importFile").addEventListener("change", e => {
