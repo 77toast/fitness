@@ -14,11 +14,9 @@ Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Reis, Hähnchen
 - Persistenz über `localStorage` im Browser (client-seitig, kein Server, kein Account)
 - Gehostet über **GitHub Pages** unter `77toast.github.io/fitness`
 
-## Wichtig: eigenes Repo, nicht das Hauptrepo
+## Scope
 
-Unter `<username>.github.io` liegt bereits ein anderes, unabhängiges GitHub-Pages-Projekt. Der Fitness Tracker läuft deshalb bewusst in einem **eigenen, separaten Repo** (`fitness` unter dem Account `77toast`), NICHT im `<username>.github.io`-Hauptrepo, damit sich die beiden Pages-Deployments nicht überschneiden oder gegenseitig beeinflussen.
-
-**Niemals Dateien im Haupt-`.github.io`-Repo verändern**, alles bleibt im `fitness`-Repo isoliert.
+Der Fitness Tracker lebt vollständig im Repo `77toast/fitness` und ist unter `77toast.github.io/fitness` erreichbar. Alles zu diesem Projekt gehört ausschließlich hierher — **niemals Dateien im `<username>.github.io`-Hauptrepo oder in einem anderen Repo des Accounts anfassen.**
 
 ## Datenmodell (in `index.html`, im `<script>`-Teil)
 
@@ -143,7 +141,7 @@ Wenn echter Schutz gewünscht ist: statt GitHub Pages auf **Netlify** oder **Ver
 
 Einfache statische Seite, kein Build nötig:
 
-1. Repo `fitness` unter dem Account `77toast` anlegen – **nicht** das `.github.io`-Hauptrepo
+1. Repo `fitness` unter dem Account `77toast` anlegen
 2. `index.html` ins Repo-Root pushen
 3. Settings → Pages → Branch `main` → Save
 4. Live unter `77toast.github.io/fitness`
