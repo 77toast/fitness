@@ -632,297 +632,74 @@ function initGate() {
 
 const POOLS = {
   breakfast: [
-    { id: "porridge", title: "Protein-Porridge", short: "Haferflocken + Ei + Whey + Zimt",
-      kcal: 460, protein: 40, carbs: 50, fat: 11,
+    { id: "magerquark_whey_bowl", title: "Magerquark-Whey-Bowl", short: "Nur mischen, kein Gerät nötig",
+      kcal: 600, protein: 68, carbs: 69, fat: 6,
       ingredients: [
-        { name: "Haferflocken", amount: "80g", pantryKey: "haferflocken" },
-        { name: "Wasser oder Milch", amount: "200ml", pantryKey: "milch" },
-        { name: "Ei", amount: "1 Stück", pantryKey: "eier" },
-        { name: "Whey", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Zimt", amount: "1 Prise", pantryKey: "zimt" }
-      ],
-      steps: [
-        "Haferflocken mit Wasser oder Milch aufkochen.",
-        "Ei einrühren, 2-3 Min unter Rühren köcheln bis cremig.",
-        "Vom Herd nehmen, 1-2 Min abkühlen lassen.",
-        "Whey unterrühren (nicht mehr kochen, sonst klumpt es).",
-        "Mit Zimt bestreuen."
-      ] },
-    { id: "shake_porridge", title: "Schüttel-Porridge", short: "Alles in die Schüssel, Deckel drauf, schütteln",
-      kcal: 525, protein: 65, carbs: 54, fat: 6,
-      ingredients: [
-        { name: "Haferflocken", amount: "50g (zarte)", pantryKey: "haferflocken" },
-        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
-        { name: "Whey", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Wasser", amount: "150-200ml" },
-        { name: "Heidelbeeren", amount: "100g", pantryKey: "heidelbeeren" }
-      ],
-      steps: [
-        "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
-        "Deckel drauf und 20-30 Sekunden kräftig schütteln, bis es cremig ist.",
-        "5 Minuten stehen lassen, damit die Flocken quellen, dann nochmal kurz schütteln.",
-        "Zu fest? Schluck Wasser nach und nochmal schütteln.",
-        "Heidelbeeren dazu: mitgeschüttelt färben sie alles lila, erst danach untergerührt bleiben sie ganz.",
-        "Zarte oder Instant-Flocken nehmen — kernige quellen kalt kaum und bleiben hart. Tiefkühl-Heidelbeeren gehen auch, machen das Ganze dann eher wie Eis."
-      ] },
-    { id: "baked_oats", title: "Baked Oats", short: "Schmeckt wie Kuchen, kommt aus dem Ofen",
-      kcal: 540, protein: 43, carbs: 66, fat: 12,
-      ingredients: [
-        { name: "Haferflocken", amount: "60g (zarte)", pantryKey: "haferflocken" },
-        { name: "Banane", amount: "1 reife", pantryKey: "banane" },
-        { name: "Ei", amount: "1 Stück", pantryKey: "eier" },
-        { name: "Whey", amount: "1 Schaufel (~30g), Schoko oder Vanille", pantryKey: "whey" },
-        { name: "Milch", amount: "100ml", pantryKey: "milch" },
-        { name: "Backpulver", amount: "1 TL", pantryKey: "backpulver" }
-      ],
-      steps: [
-        "Ofen auf 180°C vorheizen.",
-        "Banane zerdrücken, mit Ei, Milch, Whey, Backpulver und den Haferflocken zu einem zähen Teig verrühren.",
-        "Teig 5 Min stehen lassen, damit die Flocken die Flüssigkeit ziehen — das macht ihn weicher.",
-        "In eine kleine Auflaufform füllen (ca. 12-14cm).",
-        "20-25 Min backen, bis die Oberfläche fest ist und ein Zahnstocher sauber rauskommt.",
-        "5 Min abkühlen lassen und warm essen.",
-        "Mit ganzen Flocken wird es eher saftiger Haferkuchen als feiner Rührkuchen. Zarte oder Instant-Flocken kommen dem Kuchen am nächsten, ohne dass du irgendwas mahlen musst.",
-        "Eilig? Statt Ofen 3-4 Min in der Mikrowelle bei voller Leistung.",
-        "Extras nach Wunsch: Zimt in den Teig, Erdnussbutter oder Schokostückchen oben drauf (Makros kommen dann noch dazu)."
-      ] },
-    { id: "ruehrei", title: "Rührei mit Vollkornbrot", short: "3 Eier + 2 Scheiben Vollkorn",
-      kcal: 420, protein: 24, carbs: 30, fat: 20,
-      ingredients: [
-        { name: "Eier", amount: "3 Stück", pantryKey: "eier" },
-        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
-        { name: "Butter", amount: "1 TL", pantryKey: "butter" }
-      ],
-      steps: [
-        "Eier verquirlen, salzen.",
-        "Butter in der Pfanne erhitzen, Eier bei mittlerer Hitze stocken lassen.",
-        "Brot toasten und dazu servieren."
-      ] },
-    { id: "eier_toast", title: "2 Eier auf Vollkorntoast", short: "5 Minuten, keine Vorbereitung",
-      kcal: 335, protein: 18, carbs: 29, fat: 16,
-      ingredients: [
-        { name: "Eier", amount: "2 Stück", pantryKey: "eier" },
-        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
-        { name: "Butter", amount: "1 TL", pantryKey: "butter" }
-      ],
-      steps: [
-        "Toast in den Toaster.",
-        "Butter in die Pfanne, Eier aufschlagen, 3-4 Min braten (oder 6 Min kochen).",
-        "Eier auf den Toast, salzen, pfeffern."
-      ] },
-    { id: "pbj_toast", title: "Erdnussbutter-Marmeladen-Toast", short: "PB&J, 2 Minuten — wenig Protein",
-      kcal: 330, protein: 11, carbs: 45, fat: 12,
-      ingredients: [
-        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
-        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
-        { name: "Erdbeermarmelade", amount: "20g", pantryKey: "erdbeermarmelade" }
-      ],
-      steps: [
-        "Beide Scheiben toasten.",
-        "Eine Scheibe mit Erdnussbutter bestreichen, die andere mit Marmelade.",
-        "Zusammenklappen.",
-        "Tipp: 250g Magerquark dazu, dann stimmt auch das Protein."
-      ] },
-    { id: "skyroats", title: "Skyr-Overnight-Oats", short: "Skyr + Hafer, kalt (Vorbereitung am Vorabend)",
-      kcal: 340, protein: 28, carbs: 43, fat: 3,
-      ingredients: [
-        { name: "Skyr", amount: "200g", pantryKey: "skyr" },
+        { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
+        { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
         { name: "Haferflocken", amount: "50g", pantryKey: "haferflocken" },
-        { name: "Honig", amount: "1 TL", pantryKey: "honig" }
-      ],
-      steps: [
-        "Skyr, Haferflocken und Honig in einem Glas vermischen.",
-        "Abgedeckt über Nacht in den Kühlschrank stellen.",
-        "Am nächsten Morgen direkt kalt essen."
-      ] }
-  ],
-  snack: [
-    { id: "quark", title: "Magerquark-Bombe", short: "Magerquark + Honig + Topping",
-      kcal: 225, protein: 40, carbs: 12, fat: 1,
-      ingredients: [
-        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
-        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
-        { name: "Haferflocken oder Beeren", amount: "nach Wunsch", pantryKey: "haferflocken" }
-      ],
-      steps: [
-        "Magerquark in eine Schüssel geben.",
-        "Honig unterrühren.",
-        "Nach Wunsch Haferflocken oder Beeren untermischen."
-      ] },
-    { id: "skyrshake", title: "Skyr-Whey-Shake", short: "Skyr + Whey + Milch",
-      kcal: 335, protein: 54, carbs: 17, fat: 3,
-      ingredients: [
-        { name: "Skyr", amount: "250g", pantryKey: "skyr" },
-        { name: "Whey", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Milch", amount: "100-150ml", pantryKey: "milch" }
-      ],
-      steps: [
-        "Skyr, Whey und Milch in einen Shaker geben.",
-        "30 Sekunden kräftig schütteln bis glatt.",
-        "Direkt trinken."
-      ] },
-    { id: "huettenkaese", title: "Hüttenkäse mit Obst", short: "Hüttenkäse + Apfel/Beeren",
-      kcal: 280, protein: 28, carbs: 23, fat: 8,
-      ingredients: [
-        { name: "Hüttenkäse", amount: "250g", pantryKey: "huettenkaese" },
-        { name: "Apfel oder Beeren", amount: "1 Portion", pantryKey: "obst" }
-      ],
-      steps: [
-        "Hüttenkäse in eine Schüssel geben.",
-        "Obst klein schneiden und untermischen."
-      ] },
-    { id: "puten_toast", title: "Vollkorntoast mit Putenbrust", short: "2 Minuten, nichts kochen",
-      kcal: 270, protein: 28, carbs: 29, fat: 4,
-      ingredients: [
-        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
-        { name: "Putenbrust", amount: "100g (Aufschnitt)", pantryKey: "putenbrust" },
-        { name: "Senf oder Gurke", amount: "nach Wunsch", pantryKey: "senf" }
-      ],
-      steps: [
-        "Toast toasten.",
-        "Mit Putenbrust belegen, nach Wunsch Senf oder Gurkenscheiben drauf.",
-        "Zusammenklappen, fertig."
-      ] },
-    { id: "pb_banane", title: "Erdnussbutter-Banane-Toast", short: "Schneller Energie-Snack",
-      kcal: 305, protein: 9, carbs: 45, fat: 11,
-      ingredients: [
-        { name: "Vollkorntoast", amount: "1 Scheibe", pantryKey: "vollkorntoast" },
-        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
         { name: "Banane", amount: "1 Stück", pantryKey: "banane" }
       ],
       steps: [
-        "Toast toasten und mit Erdnussbutter bestreichen.",
-        "Banane in Scheiben schneiden und drauflegen."
-      ] },
-    { id: "quarkbrot", title: "Quark-Hafer-Brot (Scheibe)", short: "Meal-Prep-Brot, Sonntags-Batch backen",
-      kcal: 140, protein: 13, carbs: 14, fat: 3,
-      ingredients: [
-        { name: "Magerquark", amount: "50g (Anteil vom Brot)", pantryKey: "magerquark" },
-        { name: "Haferflocken", amount: "20g (Anteil vom Brot)", pantryKey: "haferflocken" },
-        { name: "Ei", amount: "0.4 Stück (Anteil vom Brot)", pantryKey: "eier" }
-      ],
-      steps: [
-        "Für den ganzen Laib: 500g Magerquark, 200g Haferflocken (fein gemahlen), 4 Eier, 1 TL Backpulver, Salz vermischen.",
-        "In Kastenform füllen, bei 180°C ca. 45 Min backen.",
-        "Auskühlen lassen, in 10 Scheiben schneiden."
+        "Magerquark und Whey in einer Schüssel glattrühren.",
+        "Haferflocken unterrühren.",
+        "Banane in Scheiben schneiden und obenauf geben."
       ] }
   ],
-  main: [
-    { id: "bowl_chicken", title: "Reis-Hähnchen-Bowl", short: "Reis + Hähnchen + TK-Gemüse",
-      kcal: 430, protein: 42, carbs: 53, fat: 4,
+  lunch: [
+    { id: "airfryer_haehnchen_brokkoli_reis", title: "Airfryer-Hähnchen-Brokkoli-Reis-Bowl", short: "Hähnchen + Brokkoli aus dem Airfryer, Reis aus der Mikrowelle",
+      kcal: 770, protein: 70, carbs: 87, fat: 15,
       ingredients: [
-        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
-        { name: "Hähnchenbrust oder -schenkel", amount: "150g", pantryKey: "haehnchen" },
-        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" },
-        { name: "Sojasauce", amount: "1-2 EL", pantryKey: "sojasauce" }
+        { name: "Hähnchenbrust", amount: "250g", pantryKey: "haehnchen" },
+        { name: "Reis-Fertigbeutel (fertig gegart)", amount: "300g", pantryKey: "reis" },
+        { name: "TK-Brokkoli", amount: "200g", pantryKey: "tkgemuese" },
+        { name: "Olivenöl", amount: "8g", pantryKey: "oel" }
       ],
       steps: [
-        "Reis nach Packungsanweisung kochen.",
-        "Hähnchen würzen, in der Pfanne 5-7 Min pro Seite braten (Kerntemp. ca. 74°C).",
-        "TK-Gemüse in Pfanne oder Mikrowelle 4-5 Min garen.",
-        "Hähnchen in Streifen schneiden, alles in einer Bowl anrichten, mit Sojasauce abschmecken."
-      ] },
-    { id: "bowl_chickpea", title: "Kichererbsen-Reis-Pfanne", short: "Vegetarisch, sehr günstig",
-      kcal: 625, protein: 23, carbs: 100, fat: 14,
+        "Hähnchen und Brokkoli salzen, pfeffern, mit Paprikapulver und Olivenöl vermengen.",
+        "Hähnchen allein 5 Minuten bei 180°C im Airfryer vorgaren.",
+        "Brokkoli dazugeben, zusammen 10 weitere Minuten garen, nach der Hälfte wenden/schütteln.",
+        "Reis-Fertigbeutel in der Mikrowelle nach Packungsanweisung erhitzen (ca. 2-3 Minuten).",
+        "Hähnchen in Streifen schneiden, mit Reis und Brokkoli in einer Schüssel anrichten."
+      ] }
+  ],
+  snack: [
+    { id: "skyr_power_bowl", title: "Skyr-Power-Bowl", short: "Kein Gerät nötig – einfach mischen",
+      kcal: 630, protein: 67, carbs: 66, fat: 15,
       ingredients: [
-        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
-        { name: "Kichererbsen (Dose)", amount: "200g", pantryKey: "kichererbsen" },
-        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" },
-        { name: "Öl zum Anbraten", amount: "1 EL", pantryKey: "oel" }
+        { name: "Skyr", amount: "500g", pantryKey: "skyr" },
+        { name: "Haferflocken", amount: "50g", pantryKey: "haferflocken" },
+        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
+        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" }
       ],
       steps: [
-        "Kichererbsen abtropfen lassen.",
-        "Öl erhitzen, Kichererbsen und TK-Gemüse 6-8 Min anbraten, würzen.",
-        "Mit dem gekochten Reis vermischen."
-      ] },
-    { id: "bowl_egg", title: "Ei-Reis-Pfanne", short: "Reis + 3 Eier, schnell und billig",
-      kcal: 465, protein: 26, carbs: 55, fat: 16,
+        "Skyr, Haferflocken und Erdnussbutter in einer Schüssel verrühren.",
+        "Heidelbeeren obenauf verteilen, kurz antauen lassen."
+      ] }
+  ],
+  dinner: [
+    { id: "airfryer_kartoffel_quark_dip", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Kartoffelecken aus dem Airfryer, Dip aus Magerquark",
+      kcal: 760, protein: 57, carbs: 92, fat: 18,
       ingredients: [
-        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
-        { name: "Eier", amount: "3 Stück", pantryKey: "eier" },
-        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" }
+        { name: "Kartoffeln", amount: "450g", pantryKey: "kartoffeln" },
+        { name: "Magerquark", amount: "350g", pantryKey: "magerquark" },
+        { name: "Olivenöl", amount: "8g", pantryKey: "oel" },
+        { name: "Geriebener Käse", amount: "30g", pantryKey: "kaese" }
       ],
       steps: [
-        "Eier verquirlen.",
-        "Reis und TK-Gemüse in der Pfanne kurz anbraten.",
-        "Eier dazugeben und unter Rühren stocken lassen.",
-        "Mit Sojasauce oder Gewürzen abschmecken."
-      ] },
-    { id: "tuna_sandwich", title: "Thunfisch-Sandwich", short: "5 Minuten, kein Herd",
-      kcal: 290, protein: 36, carbs: 28, fat: 3,
-      ingredients: [
-        { name: "Vollkorntoast", amount: "2 Scheiben", pantryKey: "vollkorntoast" },
-        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
-        { name: "Senf oder Zitrone", amount: "nach Wunsch", pantryKey: "senf" }
-      ],
-      steps: [
-        "Thunfisch abtropfen lassen und mit einer Gabel zerdrücken.",
-        "Mit Senf oder Zitrone, Salz und Pfeffer abschmecken.",
-        "Auf den getoasteten Vollkorntoast geben."
-      ] },
-    { id: "bowl_tuna", title: "Thunfisch-Reis-Bowl", short: "Reis + Thunfisch + Kichererbsen",
-      kcal: 535, protein: 48, carbs: 76, fat: 4,
-      ingredients: [
-        { name: "Reis", amount: "150g gekocht", pantryKey: "reis" },
-        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
-        { name: "Kichererbsen (Dose)", amount: "100g", pantryKey: "kichererbsen" },
-        { name: "TK-Gemüse", amount: "150g", pantryKey: "tkgemuese" }
-      ],
-      steps: [
-        "Reis kochen.",
-        "Thunfisch abtropfen lassen, Kichererbsen abspülen.",
-        "TK-Gemüse kurz erhitzen.",
-        "Alles zusammen anrichten, mit Gewürzen oder Zitrone abschmecken."
-      ] },
-    { id: "pasta_thunfisch", title: "Pasta mit Thunfisch-Quark-Sauce", short: "Nudeln kochen, Rest nur verrühren",
-      kcal: 525, protein: 50, carbs: 74, fat: 3,
-      ingredients: [
-        { name: "Nudeln", amount: "100g", pantryKey: "nudeln" },
-        { name: "Thunfisch (Wasser, Dose)", amount: "150g", pantryKey: "thunfisch" },
-        { name: "Magerquark", amount: "100g", pantryKey: "magerquark" }
-      ],
-      steps: [
-        "Reichlich Wasser salzen und aufkochen, Nudeln nach Packungsanweisung bissfest kochen.",
-        "Thunfisch abtropfen lassen.",
-        "Magerquark mit Salz und Pfeffer verrühren, Thunfisch untermischen.",
-        "Abgegossene Nudeln mit der Quark-Thunfisch-Mischung vermengen. Bei Bedarf etwas heißes Nudelwasser für mehr Cremigkeit dazugeben."
-      ] },
-    { id: "airfryer_chicken_rice", title: "Airfryer-Hähnchen mit Reis", short: "Airfryer + Fertigreis, kein Topf nötig",
-      kcal: 560, protein: 47, carbs: 52, fat: 10,
-      ingredients: [
-        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
-        { name: "Paprikapulver", amount: "0.5 TL", pantryKey: "paprikapulver" },
-        { name: "Öl", amount: "1 TL", pantryKey: "oel" },
-        { name: "Reisbeutel", amount: "1 Stück (250g, für die Mikrowelle)", pantryKey: "reisbeutel" }
-      ],
-      steps: [
-        "Hähnchenbrust mit Paprikapulver, Öl, Salz und Pfeffer einreiben.",
-        "Im Airfryer bei 200°C ca. 12 Minuten garen, nach der Hälfte wenden.",
-        "Reis-Fertigbeutel nach Packungsanweisung in der Mikrowelle erwärmen (meist 2 Minuten).",
-        "Hähnchen in Streifen schneiden und mit dem Reis servieren."
-      ] },
-    { id: "kartoffel_dip", title: "Mikro-Kartoffel mit Quark-Thunfisch-Dip", short: "Nur Mikrowelle, kein Topf",
-      kcal: 425, protein: 49, carbs: 55, fat: 2,
-      ingredients: [
-        { name: "Kartoffel", amount: "1 große (ca. 250g)", pantryKey: "kartoffeln" },
-        { name: "Magerquark", amount: "150g", pantryKey: "magerquark" },
-        { name: "Thunfisch (Wasser, Dose)", amount: "1 Dose", pantryKey: "thunfisch" }
-      ],
-      steps: [
-        "Kartoffel gründlich waschen und mehrmals mit einer Gabel einstechen.",
-        "Auf einem mikrowellenfesten Teller bei voller Leistung 6-8 Minuten garen, bis sie weich ist.",
-        "Magerquark mit abgetropftem Thunfisch, Salz, Pfeffer und etwas Paprikapulver verrühren.",
-        "Kartoffel aufschneiden und mit dem Dip füllen."
+        "Kartoffeln waschen, in Ecken schneiden, mit Olivenöl und Gewürzen vermengen.",
+        "Im Airfryer bei 200°C ca. 18-20 Minuten garen, zwischendurch schütteln.",
+        "Magerquark mit Salz, Pfeffer und Kräutern nach Wahl verrühren.",
+        "Kartoffelecken mit Käse bestreuen und mit dem Dip servieren."
       ] }
   ]
 };
 
 const SLOTS = [
   { id: "breakfast", label: "Frühstück", pool: "breakfast" },
+  { id: "lunch", label: "Mittag", pool: "lunch" },
   { id: "snack1", label: "Snack", pool: "snack" },
-  { id: "lunch", label: "Mittag", pool: "main" },
-  { id: "snack2", label: "Snack", pool: "snack" },
-  { id: "dinner", label: "Abend", pool: "main" }
+  { id: "dinner", label: "Abend", pool: "dinner" }
 ];
 
 /* Der Vorrat startet leer – Zutaten kommen ausschließlich manuell über den
@@ -1064,12 +841,36 @@ function cleanupOldDayKeys() {
   localStorage.removeItem(LS_PANTRY_OLD);
 }
 
+/* Startliste mit genau den Zutaten, die die 4 Rezepte brauchen — bewusst
+   alle mit Menge 0. Der Vorrat behauptet also nicht, du hättest etwas da:
+   alle Einträge stehen sofort auf der Einkaufsliste und du zählst hoch,
+   was du gekauft hast. Greift nur, wenn noch nie etwas gespeichert wurde;
+   ein bereits befüllter Vorrat wird nicht überschrieben. */
+const DEFAULT_PANTRY = [
+  { key: "magerquark",     name: "Magerquark",           unit: "Becher (500g)",   qty: 0, low: 2 },
+  { key: "whey",           name: "Whey",                 unit: "Dose",            qty: 0, low: 1 },
+  { key: "haferflocken",   name: "Haferflocken",         unit: "Packung (500g)",  qty: 0, low: 1 },
+  { key: "banane",         name: "Banane",                unit: "Stück",           qty: 0, low: 2 },
+  { key: "haehnchen",      name: "Hähnchenbrust",        unit: "Packung (250g)",  qty: 0, low: 1 },
+  { key: "reis",           name: "Reis-Fertigbeutel",    unit: "Beutel",          qty: 0, low: 2 },
+  { key: "tkgemuese",      name: "TK-Brokkoli",          unit: "Beutel (450g)",   qty: 0, low: 1 },
+  { key: "oel",            name: "Olivenöl",             unit: "Flasche",         qty: 0, low: 1 },
+  { key: "skyr",           name: "Skyr",                 unit: "Becher (450g)",   qty: 0, low: 1 },
+  { key: "erdnussbutter",  name: "Erdnussbutter",        unit: "Glas",            qty: 0, low: 1 },
+  { key: "heidelbeeren",   name: "TK-Heidelbeeren",      unit: "Beutel (300g)",   qty: 0, low: 1 },
+  { key: "kartoffeln",     name: "Kartoffeln",           unit: "kg",              qty: 0, low: 1 },
+  { key: "kaese",          name: "Geriebener Käse",      unit: "Packung (200g)",  qty: 0, low: 1 }
+];
 function loadPantry() {
   try {
     const raw = localStorage.getItem(LS_PANTRY);
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed)) return parsed;
+    } else {
+      const seeded = DEFAULT_PANTRY.map(item => ({ ...item }));
+      savePantry(seeded);
+      return seeded;
     }
   } catch(e) {}
   return [];
@@ -1198,7 +999,7 @@ function renderToday() {
           <div class="meal-macros-line">${option.kcal} kcal · ${option.protein}g P · ${option.carbs}g C · ${option.fat}g F</div>
           <div class="meal-actions">
             <button class="link-btn" data-expand="${slot.id}">${isOpen ? "Rezept ausblenden" : "Rezept anzeigen"}</button>
-            <button class="link-btn" data-switch="${slot.id}">${isSwitchOpen ? "Auswahl schließen" : "Andere Option"}</button>
+            ${otherOptions.length ? `<button class="link-btn" data-switch="${slot.id}">${isSwitchOpen ? "Auswahl schließen" : "Andere Option"}</button>` : ""}
           </div>
         </div>
       </div>
@@ -1223,7 +1024,8 @@ function renderToday() {
       saveExpanded(exp);
       renderToday();
     });
-    card.querySelector("[data-switch]").addEventListener("click", (e) => {
+    const switchBtn = card.querySelector("[data-switch]");
+    if (switchBtn) switchBtn.addEventListener("click", (e) => {
       e.stopPropagation();
       const sw = loadSwitchOpen();
       sw[slot.id] = !sw[slot.id];
