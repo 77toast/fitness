@@ -22,7 +22,7 @@ Der Fitness Tracker lebt vollständig im Repo `77toast/fitness` und ist unter `7
 
 - `POOLS` – vier Kategorien (`breakfast`, `lunch`, `snack`, `dinner`) mit je einer Mahlzeit-Option aus `id`, `title`, `short`, `kcal`, `protein`, `carbs`, `fat`, `ingredients[]` (inkl. `pantryKey` zur Verknüpfung mit dem Vorrat) und `steps[]` (Zubereitung). Mehrere Einträge pro Pool sind weiterhin möglich — dann erscheint pro Mahlzeit wieder der Knopf "Andere Option", der bei nur einer Option ausgeblendet bleibt.
 - `SLOTS` – 4 feste Tages-Slots (Frühstück, Mittag, Snack, Abend), jeder verweist auf einen Pool.
-- `DEFAULT_PANTRY` – Startliste mit den 13 Zutaten der vier Rezepte, **alle mit Menge 0**. Der Vorrat behauptet damit nie, du hättest etwas da: alles steht sofort auf der Einkaufsliste, du zählst hoch was du gekauft hast. Wird nur angelegt, wenn noch nie ein Vorrat gespeichert wurde — ein bestehender wird nicht überschrieben. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
+- `DEFAULT_PANTRY` – Startliste mit den 12 Zutaten der vier Rezepte, **alle mit Menge 0**. Der Vorrat behauptet damit nie, du hättest etwas da: alles steht sofort auf der Einkaufsliste, du zählst hoch was du gekauft hast. Wird nur angelegt, wenn noch nie ein Vorrat gespeichert wurde — ein bestehender wird nicht überschrieben. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
 - `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
 - `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich), `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung) und `alts[]` (alternative Übungen für denselben Slot, je mit eigener `id` und `name`).
 
@@ -53,8 +53,8 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Vier Mahlzeiten pro Tag, zusammen 2760 kcal und 262g Protein:
-  - Frühstück: Magerquark-Whey-Bowl (600 kcal, 68g P)
+- Vier Mahlzeiten pro Tag, zusammen 2730 kcal und 264g Protein:
+  - Frühstück: Schüttel-Porridge (570 kcal, 70g P)
   - Mittag: Airfryer-Hähnchen-Brokkoli-Reis-Bowl (770 kcal, 70g P)
   - Snack: Skyr-Power-Bowl (630 kcal, 67g P)
   - Abend: Airfryer-Kartoffelecken mit Quark-Dip (760 kcal, 57g P)
@@ -85,7 +85,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - **Platten- & Warm-up-Rechner** pro Übung: Zielgewicht + Stangengewicht → Scheiben pro Seite (Greedy-Algorithmus über 25/20/15/10/5/2.5/1.25kg) plus eine Warm-up-Ramp (40/60/80/90 % des Zielgewichts mit Wiederholungsvorschlag). Stangengewicht wird gemerkt (`fitnesstracker_bar_weight`) — Idee von den kostenlosen Tools der Stronger-App
 
 **Vorrat / Liste**
-- Vorrat startet als Einkaufs-Checkliste: die 13 Zutaten der Rezepte stehen mit Menge 0 drin, eigene Einträge kommen manuell dazu
+- Vorrat startet als Einkaufs-Checkliste: die 12 Zutaten der Rezepte stehen mit Menge 0 drin, eigene Einträge kommen manuell dazu
 - +/- Stepper pro Eintrag, dazu eine einstellbare Schwelle ("knapp ab"): erreicht die Menge die Schwelle, gilt der Eintrag als knapp und wandert automatisch in die Einkaufsliste. Neue Einträge starten bei Menge 2 mit Schwelle 1, warnen also bevor es leer ist
 - Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten und Kopieren als Text
 - Der Vorrat liegt unter `mealtracker_pantry_v2`; ein alter Eintrag unter `mealtracker_pantry` wird beim Start verworfen.

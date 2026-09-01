@@ -632,18 +632,23 @@ function initGate() {
 
 const POOLS = {
   breakfast: [
-    { id: "magerquark_whey_bowl", title: "Magerquark-Whey-Bowl", short: "Nur mischen, kein Gerät nötig",
-      kcal: 600, protein: 68, carbs: 69, fat: 6,
+    { id: "shake_porridge", title: "Schüttel-Porridge", short: "Alles in die Schüssel, Deckel drauf, schütteln",
+      kcal: 570, protein: 70, carbs: 58, fat: 6,
       ingredients: [
+        { name: "Haferflocken", amount: "50g (zarte)", pantryKey: "haferflocken" },
         { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Haferflocken", amount: "50g", pantryKey: "haferflocken" },
-        { name: "Banane", amount: "1 Stück", pantryKey: "banane" }
+        { name: "Wasser", amount: "150-200ml" },
+        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" }
       ],
       steps: [
-        "Magerquark und Whey in einer Schüssel glattrühren.",
-        "Haferflocken unterrühren.",
-        "Banane in Scheiben schneiden und obenauf geben."
+        "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
+        "Deckel drauf und 20-30 Sekunden kräftig schütteln, bis es cremig ist.",
+        "5 Minuten stehen lassen, damit die Flocken quellen, dann nochmal kurz schütteln.",
+        "Zu fest? Schluck Wasser nach und nochmal schütteln.",
+        "Heidelbeeren dazu: mitgeschüttelt färben sie alles lila, erst danach untergerührt bleiben sie ganz.",
+        "Gefroren rein macht es kalt und eisartig, aufgetaut wird es cremiger und süßer — beides funktioniert.",
+        "Zu fad? Prise Zimt, ein Teelöffel Honig oder 10g Erdnussbutter (die kommt mit ~60 kcal und 5g Fett obendrauf)."
       ] }
   ],
   lunch: [
@@ -850,7 +855,6 @@ const DEFAULT_PANTRY = [
   { key: "magerquark",     name: "Magerquark",           unit: "Becher (500g)",   qty: 0, low: 2 },
   { key: "whey",           name: "Whey",                 unit: "Dose",            qty: 0, low: 1 },
   { key: "haferflocken",   name: "Haferflocken",         unit: "Packung (500g)",  qty: 0, low: 1 },
-  { key: "banane",         name: "Banane",                unit: "Stück",           qty: 0, low: 2 },
   { key: "haehnchen",      name: "Hähnchenbrust",        unit: "Packung (250g)",  qty: 0, low: 1 },
   { key: "reis",           name: "Reis-Fertigbeutel",    unit: "Beutel",          qty: 0, low: 2 },
   { key: "tkgemuese",      name: "TK-Brokkoli",          unit: "Beutel (450g)",   qty: 0, low: 1 },
