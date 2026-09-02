@@ -371,9 +371,8 @@
 
 <div class="view" id="view-workout">
   <div class="mini-tabs" id="dayTabs">
-    <button class="mini-tab" data-day="push">Push</button>
-    <button class="mini-tab" data-day="pull">Pull</button>
-    <button class="mini-tab" data-day="legs">Legs</button>
+    <button class="mini-tab" data-day="a">Ganzkörper A</button>
+    <button class="mini-tab" data-day="b">Ganzkörper B</button>
   </div>
   <div class="empty-note" id="dayHint"></div>
 
@@ -718,46 +717,39 @@ function pantryKeyFor(name, existing) {
 }
 
 const WORKOUTS = {
-  push: { label: "Push", exercises: [
-    { id: "bench",      name: "Bankdrücken (Langhantel)",   sets: 4, reps: "6-10",  mg: "Brust",
+  a: { label: "Ganzkörper A", exercises: [
+    { id: "squat",      name: "Kniebeuge",                  sets: 3, reps: "5-8",   mg: "Quadrizeps",
+      alts: [{ id: "squat_goblet", name: "Goblet Squat" }, { id: "squat_hack", name: "Hackenschmidt-Kniebeuge" }] },
+    { id: "bench",      name: "Bankdrücken (Langhantel)",   sets: 3, reps: "6-10",  mg: "Brust",
       alts: [{ id: "bench_db", name: "Bankdrücken (Kurzhantel)" }, { id: "bench_machine", name: "Brustpresse (Maschine)" }] },
-    { id: "inc_db",     name: "Schrägbankdrücken (KH)",     sets: 3, reps: "8-12",  mg: "Brust",
-      alts: [{ id: "inc_bb", name: "Schrägbankdrücken (LH)" }, { id: "chest_fly", name: "Butterfly / Kabelzug" }] },
+    { id: "row_bb",     name: "Langhantelrudern",           sets: 3, reps: "8-12",  mg: "Rücken",
+      alts: [{ id: "row_db", name: "Kurzhantelrudern" }, { id: "row_machine", name: "Rudermaschine" }] },
     { id: "ohp",        name: "Schulterdrücken (KH)",       sets: 3, reps: "8-12",  mg: "Schultern",
       alts: [{ id: "ohp_bb", name: "Schulterdrücken (LH)" }, { id: "ohp_machine", name: "Schulterpresse (Maschine)" }] },
-    { id: "lat_raise",  name: "Seitheben",                  sets: 3, reps: "12-15", mg: "Schultern",
-      alts: [{ id: "lat_raise_cable", name: "Seitheben am Kabel" }] },
-    { id: "pushdown",   name: "Trizeps-Pushdown",           sets: 3, reps: "10-15", mg: "Trizeps",
-      alts: [{ id: "pushdown_rope", name: "Pushdown am Seil" }, { id: "dips", name: "Dips" }] },
-    { id: "oh_ext",     name: "Trizeps Überkopf",           sets: 3, reps: "10-15", mg: "Trizeps",
-      alts: [{ id: "skullcrusher", name: "Skullcrusher" }] }
-  ]},
-  pull: { label: "Pull", exercises: [
-    { id: "pullup",     name: "Klimmzug",                   sets: 4, reps: "6-10",  mg: "Rücken",
-      alts: [{ id: "latzug", name: "Latzug" }, { id: "pullup_assisted", name: "Klimmzug (unterstützt)" }] },
-    { id: "row_bb",     name: "Langhantelrudern",           sets: 4, reps: "8-12",  mg: "Rücken",
-      alts: [{ id: "row_db", name: "Kurzhantelrudern" }, { id: "row_tbar", name: "T-Bar-Rudern" }] },
-    { id: "row_cable",  name: "Kabelrudern eng",            sets: 3, reps: "10-12", mg: "Rücken",
-      alts: [{ id: "row_machine", name: "Rudermaschine" }] },
-    { id: "face_pull",  name: "Face Pull",                  sets: 3, reps: "12-15", mg: "Schultern",
-      alts: [{ id: "rear_delt_fly", name: "Reverse Butterfly" }] },
-    { id: "curl_bb",    name: "Bizepscurl (SZ/LH)",         sets: 3, reps: "8-12",  mg: "Bizeps",
-      alts: [{ id: "curl_db", name: "Kurzhantelcurl" }, { id: "curl_cable", name: "Kabelcurl" }] },
-    { id: "curl_ham",   name: "Hammercurl",                 sets: 3, reps: "10-15", mg: "Bizeps",
-      alts: [{ id: "curl_preacher", name: "Scott-Curl" }] }
-  ]},
-  legs: { label: "Legs", exercises: [
-    { id: "squat",      name: "Kniebeuge",                  sets: 4, reps: "5-8",   mg: "Quadrizeps",
-      alts: [{ id: "squat_hack", name: "Hackenschmidt-Kniebeuge" }, { id: "squat_goblet", name: "Goblet Squat" }] },
-    { id: "rdl",        name: "Rumänisches Kreuzheben",     sets: 3, reps: "8-12",  mg: "Beinbeuger",
-      alts: [{ id: "rdl_db", name: "RDL (Kurzhantel)" }, { id: "hipthrust", name: "Hip Thrust" }] },
-    { id: "legpress",   name: "Beinpresse",                 sets: 3, reps: "10-15", mg: "Quadrizeps",
-      alts: [{ id: "lunge", name: "Ausfallschritte" }] },
     { id: "legcurl",    name: "Beinbeuger",                 sets: 3, reps: "10-15", mg: "Beinbeuger",
       alts: [{ id: "legcurl_seated", name: "Beinbeuger sitzend" }] },
-    { id: "legext",     name: "Beinstrecker",               sets: 3, reps: "12-15", mg: "Quadrizeps", alts: [] },
-    { id: "calf",       name: "Wadenheben",                 sets: 4, reps: "12-20", mg: "Waden",
-      alts: [{ id: "calf_seated", name: "Wadenheben sitzend" }] }
+    { id: "curl_bb",    name: "Bizepscurl (SZ/LH)",         sets: 2, reps: "10-15", mg: "Bizeps",
+      alts: [{ id: "curl_db", name: "Kurzhantelcurl" }] },
+    { id: "pushdown",   name: "Trizeps-Pushdown",           sets: 2, reps: "10-15", mg: "Trizeps",
+      alts: [{ id: "pushdown_rope", name: "Pushdown am Seil" }, { id: "dips", name: "Dips" }] },
+    { id: "calf",       name: "Wadenheben stehend",         sets: 3, reps: "12-20", mg: "Waden", alts: [] }
+  ]},
+  b: { label: "Ganzkörper B", exercises: [
+    { id: "rdl",        name: "Rumänisches Kreuzheben",     sets: 3, reps: "8-12",  mg: "Beinbeuger",
+      alts: [{ id: "rdl_db", name: "RDL (Kurzhantel)" }, { id: "hipthrust", name: "Hip Thrust" }] },
+    { id: "pullup",     name: "Klimmzug",                   sets: 3, reps: "6-10",  mg: "Rücken",
+      alts: [{ id: "latzug", name: "Latzug" }, { id: "pullup_assisted", name: "Klimmzug (unterstützt)" }] },
+    { id: "inc_db",     name: "Schrägbankdrücken (KH)",     sets: 3, reps: "8-12",  mg: "Brust",
+      alts: [{ id: "inc_bb", name: "Schrägbankdrücken (LH)" }, { id: "chest_fly", name: "Butterfly / Kabelzug" }] },
+    { id: "legpress",   name: "Beinpresse",                 sets: 3, reps: "10-15", mg: "Quadrizeps",
+      alts: [{ id: "lunge", name: "Ausfallschritte" }, { id: "legext", name: "Beinstrecker" }] },
+    { id: "lat_raise",  name: "Seitheben",                  sets: 3, reps: "12-15", mg: "Schultern",
+      alts: [{ id: "lat_raise_cable", name: "Seitheben am Kabel" }, { id: "face_pull", name: "Face Pull" }] },
+    { id: "curl_ham",   name: "Hammercurl",                 sets: 2, reps: "10-15", mg: "Bizeps",
+      alts: [{ id: "curl_preacher", name: "Scott-Curl" }, { id: "curl_cable", name: "Kabelcurl" }] },
+    { id: "oh_ext",     name: "Trizeps Überkopf",           sets: 2, reps: "10-15", mg: "Trizeps",
+      alts: [{ id: "skullcrusher", name: "Skullcrusher" }] },
+    { id: "calf_seated", name: "Wadenheben sitzend",        sets: 3, reps: "12-20", mg: "Waden", alts: [] }
   ]}
 };
 
@@ -1293,7 +1285,7 @@ function daysAgoISO(n) {
 }
 function workoutKey() { return WORKOUT_PREFIX + todayISO(); }
 
-const DAY_ORDER = ["push", "pull", "legs"];
+const DAY_ORDER = ["a", "b"];
 
 /* Übungs-Varianten: die Auswahl gilt dauerhaft, nicht pro Tag – dein Gym
    ändert sich schließlich nicht täglich. Jede Variante hat eine eigene ID,
@@ -1346,12 +1338,17 @@ function lastTrainedSession() {
 // Nächster Tag der Rotation, basierend auf der letzten Session vor heute
 function suggestedDay() {
   const last = lastTrainedSession();
-  if (!last) return { day: "push", last: null };
+  if (!last) return { day: DAY_ORDER[0], last: null };
   return { day: DAY_ORDER[(DAY_ORDER.indexOf(last.day) + 1) % DAY_ORDER.length], last };
 }
 
+// Nur eine gültige gespeicherte Wahl zählt — ein Tagesschlüssel aus einem
+// alten Plan ("push") ist keine Entscheidung für den aktuellen Plan.
 function hasExplicitDay() {
-  try { return !!localStorage.getItem(workoutKey()); } catch(e) { return false; }
+  try {
+    const raw = localStorage.getItem(workoutKey());
+    return !!raw && !!WORKOUTS[JSON.parse(raw).day];
+  } catch(e) { return false; }
 }
 function loadWorkoutDay() {
   try {
@@ -1536,7 +1533,7 @@ function renderWorkout() {
   const chosen = hasExplicitDay();
   const hintEl = document.getElementById("dayHint");
   if (!suggestion.last) {
-    hintEl.textContent = chosen ? "" : "Noch keine Historie — Push ist als Start vorgewählt.";
+    hintEl.textContent = chosen ? "" : `Noch keine Historie — ${WORKOUTS[suggestion.day].label} ist als Start vorgewählt.`;
   } else {
     const lastTxt = `Zuletzt ${WORKOUTS[suggestion.last.day].label} am ${formatDate(suggestion.last.date)}`;
     hintEl.textContent = chosen

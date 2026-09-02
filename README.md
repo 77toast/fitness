@@ -24,7 +24,7 @@ Der Fitness Tracker lebt vollständig im Repo `77toast/fitness` und ist unter `7
 - `SLOTS` – 4 feste Tages-Slots (Frühstück, Mittag, Snack, Abend), jeder verweist auf einen Pool.
 - `DEFAULT_PANTRY` – Startliste mit den 12 Zutaten der vier Rezepte, **alle mit Menge 0**. Der Vorrat behauptet damit nie, du hättest etwas da: alles steht sofort auf der Einkaufsliste, du zählst hoch was du gekauft hast. Wird nur angelegt, wenn noch nie ein Vorrat gespeichert wurde — ein bestehender wird nicht überschrieben. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
 - `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
-- `WORKOUTS` – drei Trainingstage (`push`, `pull`, `legs`), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich), `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung) und `alts[]` (alternative Übungen für denselben Slot, je mit eigener `id` und `name`).
+- `WORKOUTS` – zwei Trainingstage (`a`, `b`, beide Ganzkörper), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich), `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung) und `alts[]` (alternative Übungen für denselben Slot, je mit eigener `id` und `name`).
 
 ## State / Storage-Keys (localStorage)
 
@@ -69,9 +69,9 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - Wasser-Zähler in Gläsern à 250ml, ebenfalls Teil des Tagesstates
 
 **Training**
-- Drei Tage: Push, Pull, Legs mit je 6 Übungen (Ziel-Sätze und Ziel-Wiederholungsbereich)
-- **Trainingstag wird vorgeschlagen**: aus der Historie wird der zuletzt absolvierte Tag ermittelt und der nächste der Rotation Push → Pull → Legs vorgewählt, mit Hinweis "Zuletzt Push am 12.08. — Pull ist dran". Tippst du selbst auf einen Tag, gilt deine Wahl für heute
-- **Alternativen pro Übung** ("Andere Übung", analog zu "Andere Option" bei den Mahlzeiten): z.B. Bankdrücken ↔ Kurzhantel ↔ Brustpresse, Klimmzug ↔ Latzug. Jede Variante hat eine eigene ID, die Historie bleibt also getrennt — die Wochenvolumen-Auswertung zählt aber alle Varianten eines Slots auf dieselbe Muskelgruppe. Die Wahl gilt dauerhaft (`fitnesstracker_ex_choice`), nicht nur für heute
+- Zwei Ganzkörper-Tage A und B mit je 8 Übungen und 22 Sätzen, im Wechsel zweimal pro Woche. Jede Muskelgruppe kommt in **beiden** Tagen vor, wird also 2× pro Woche trainiert — nur mit anderer Übung (Kniebeuge/Beinpresse, Bankdrücken/Schrägbank, Rudern/Klimmzug, Schulterdrücken/Seitheben, Beinbeuger/Kreuzheben, SZ-Curl/Hammercurl, Pushdown/Überkopf, Waden stehend/sitzend)
+- **Trainingstag wird vorgeschlagen**: aus der Historie wird der zuletzt absolvierte Tag ermittelt und der andere vorgewählt, mit Hinweis "Zuletzt Ganzkörper A am 31.08. — Ganzkörper B ist dran". Tippst du selbst auf einen Tag, gilt deine Wahl für heute. Ein Tagesschlüssel aus einem früheren Plan wird ignoriert
+- **Alternativen pro Übung** ("Andere Übung"): z.B. Bankdrücken ↔ Kurzhantel ↔ Brustpresse, Klimmzug ↔ Latzug. Jede Variante hat eine eigene ID, die Historie bleibt also getrennt — die Wochenvolumen-Auswertung zählt aber alle Varianten eines Slots auf dieselbe Muskelgruppe. Die Wahl gilt dauerhaft (`fitnesstracker_ex_choice`), nicht nur für heute
 - Pro Übung Sätze mit **kg × Wiederholungen** eintragen, einzeln löschbar; Eingabefelder sind mit dem letzten Satz vorbelegt
 - **Jeder Satz jeder Session ist korrigierbar**, nicht nur der von heute: im Verlauf pro Session auf *bearbeiten* tippen, dann lassen sich kg, Wiederholungen und RPE ändern oder der Satz löschen. Ein Vertipper würde sonst dauerhaft Bestleistung, 1RM-Graph und Progressionsvorschlag verbiegen
 - **RPE pro Satz** (optional, 5-10 in 0,5er-Schritten): wird mitgespeichert, in Satzliste und Verlauf als "@RPE 8" angezeigt (Feature aus Strong/Hevy)
