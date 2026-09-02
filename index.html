@@ -631,15 +631,17 @@ function initGate() {
 
 const POOLS = {
   shake_am: [
-    { id: "whey_shake_am", title: "Whey-Shake", short: "Whey + Milch, 30 Sekunden",
-      kcal: 350, protein: 41, carbs: 25, fat: 9,
+    { id: "whey_shake_am", title: "Whey-Shake", short: "Whey, Milch, Hafer — 30 Sekunden",
+      kcal: 405, protein: 45, carbs: 39, fat: 12,
       ingredients: [
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Milch", amount: "500ml", pantryKey: "milch" }
+        { name: "Milch", amount: "300ml", pantryKey: "milch" },
+        { name: "Wasser", amount: "200ml" },
+        { name: "Haferflocken", amount: "40g (zarte)", pantryKey: "haferflocken" }
       ],
       steps: [
-        "Milch in den Shaker, Whey dazu.",
-        "30 Sekunden schütteln."
+        "Milch und Wasser in den Shaker, Whey und Haferflocken dazu.",
+        "30 Sekunden schütteln, kurz stehen lassen, nochmal schütteln."
       ] },
     { id: "loaded_shake", title: "Großer Shake", short: "Mit Hafer und Banane, wenn der Tag mehr Kalorien braucht",
       kcal: 610, protein: 40, carbs: 80, fat: 15,
@@ -707,9 +709,9 @@ const POOLS = {
   ],
   dinner: [
     { id: "potato_wedges", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Airfryer, 25 Minuten",
-      kcal: 970, protein: 55, carbs: 123, fat: 30,
+      kcal: 1010, protein: 56, carbs: 130, fat: 31,
       ingredients: [
-        { name: "Kartoffeln", amount: "650g", pantryKey: "kartoffeln" },
+        { name: "Kartoffeln", amount: "700g", pantryKey: "kartoffeln" },
         { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
         { name: "Olivenöl", amount: "18g", pantryKey: "oel" },
         { name: "Geriebener Käse", amount: "35g", pantryKey: "kaese" }
@@ -723,13 +725,14 @@ const POOLS = {
   ],
   shake_pm: [
     { id: "whey_shake_pm", title: "Whey-Shake", short: "Whey + Milch, 30 Sekunden",
-      kcal: 350, protein: 41, carbs: 25, fat: 9,
+      kcal: 255, protein: 34, carbs: 17, fat: 6,
       ingredients: [
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Milch", amount: "500ml", pantryKey: "milch" }
+        { name: "Milch", amount: "300ml", pantryKey: "milch" },
+        { name: "Wasser", amount: "200ml" }
       ],
       steps: [
-        "Milch in den Shaker, Whey dazu.",
+        "Milch und Wasser in den Shaker, Whey dazu.",
         "30 Sekunden schütteln."
       ] },
     { id: "quark_shake", title: "Schoko-Quark-Shake", short: "Langsames Protein für die Nacht",
@@ -912,7 +915,7 @@ function cleanupOldDayKeys() {
 const DEFAULT_PANTRY = [
   { key: "magerquark",     name: "Magerquark",           unit: "Becher (500g)",   qty: 0, low: 2 },
   { key: "whey",           name: "Whey",                 unit: "Dose",            qty: 0, low: 1 },
-  { key: "milch",          name: "Milch",                unit: "Liter",           qty: 0, low: 2 },
+  { key: "milch",          name: "Milch",                unit: "Liter",           qty: 0, low: 1 },
   { key: "haferflocken",   name: "Haferflocken",         unit: "Packung (500g)",  qty: 0, low: 1 },
   { key: "mandeln",        name: "Mandeln",              unit: "Packung (200g)",  qty: 0, low: 1 },
   { key: "banane",         name: "Banane",               unit: "Stück",           qty: 0, low: 2 },
