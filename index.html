@@ -632,17 +632,16 @@ function initGate() {
 const POOLS = {
   breakfast: [
     { id: "shake_porridge", title: "Schüttel-Porridge", short: "Alles in die Schüssel, Deckel drauf, schütteln",
-      kcal: 655, protein: 63, carbs: 62, fat: 17,
+      kcal: 630, protein: 41, carbs: 72, fat: 18,
       ingredients: [
-        { name: "Haferflocken", amount: "60g (zarte)", pantryKey: "haferflocken" },
-        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
+        { name: "Haferflocken", amount: "90g (zarte)", pantryKey: "haferflocken" },
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Wasser", amount: "150-200ml" },
+        { name: "Wasser", amount: "250-300ml" },
         { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" },
         { name: "Mandeln", amount: "20g", pantryKey: "mandeln" }
       ],
       steps: [
-        "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
+        "Haferflocken, Whey und Wasser in eine Schüssel mit Deckel geben.",
         "Deckel drauf, 20-30 Sekunden kräftig schütteln.",
         "5 Minuten quellen lassen, nochmal kurz schütteln.",
         "Heidelbeeren und Mandeln dazu."
@@ -650,9 +649,9 @@ const POOLS = {
   ],
   lunch: [
     { id: "chicken_bowl", title: "Airfryer-Hähnchen-Bowl", short: "Airfryer + Fertigreis, 15 Minuten",
-      kcal: 690, protein: 56, carbs: 72, fat: 18,
+      kcal: 635, protein: 45, carbs: 72, fat: 17,
       ingredients: [
-        { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
+        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
         { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "10g", pantryKey: "oel" }
@@ -664,9 +663,9 @@ const POOLS = {
         "Hähnchen aufschneiden und alles zusammen anrichten."
       ] },
     { id: "salmon_bowl", title: "Lachs-Reis-Bowl", short: "Omega-3-Variante, gleiche Zubereitung",
-      kcal: 800, protein: 46, carbs: 72, fat: 33,
+      kcal: 735, protein: 40, carbs: 72, fat: 29,
       ingredients: [
-        { name: "Lachsfilet", amount: "180g", pantryKey: "lachs" },
+        { name: "Lachsfilet", amount: "150g", pantryKey: "lachs" },
         { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "5g", pantryKey: "oel" }
@@ -680,13 +679,13 @@ const POOLS = {
   ],
   snack: [
     { id: "schoko_pudding", title: "Schoko-Protein-Pudding", short: "Schmeckt wie Dessert, 2 Minuten",
-      kcal: 640, protein: 53, carbs: 70, fat: 19,
+      kcal: 585, protein: 46, carbs: 69, fat: 17,
       ingredients: [
-        { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
+        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
         { name: "Kakaopulver", amount: "10g", pantryKey: "kakao" },
-        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Honig", amount: "1 EL", pantryKey: "honig" },
         { name: "Banane", amount: "1 Stück", pantryKey: "banane" },
-        { name: "Erdnussbutter", amount: "30g", pantryKey: "erdnussbutter" },
+        { name: "Erdnussbutter", amount: "25g", pantryKey: "erdnussbutter" },
         { name: "Haferflocken", amount: "30g", pantryKey: "haferflocken" }
       ],
       steps: [
@@ -697,12 +696,12 @@ const POOLS = {
   ],
   dinner: [
     { id: "potato_wedges", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Airfryer, 25 Minuten",
-      kcal: 770, protein: 50, carbs: 88, fat: 26,
+      kcal: 695, protein: 36, carbs: 93, fat: 21,
       ingredients: [
-        { name: "Kartoffeln", amount: "450g", pantryKey: "kartoffeln" },
-        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
-        { name: "Olivenöl", amount: "15g", pantryKey: "oel" },
-        { name: "Geriebener Käse", amount: "30g", pantryKey: "kaese" }
+        { name: "Kartoffeln", amount: "500g", pantryKey: "kartoffeln" },
+        { name: "Magerquark", amount: "150g", pantryKey: "magerquark" },
+        { name: "Olivenöl", amount: "12g", pantryKey: "oel" },
+        { name: "Geriebener Käse", amount: "25g", pantryKey: "kaese" }
       ],
       steps: [
         "Kartoffeln in Ecken schneiden, mit Öl, Salz und Paprikapulver mischen.",

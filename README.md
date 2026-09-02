@@ -53,13 +53,13 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Vier Mahlzeiten pro Tag, zusammen **2755 kcal · 222g Protein · 292g Carbs · 80g Fett** (26% der Kalorien aus Fett):
-  - Frühstück: Schüttel-Porridge mit Mandeln (655 kcal, 63g P)
-  - Mittag: Airfryer-Hähnchen-Bowl (690 kcal, 56g P) oder Lachs-Reis-Bowl als Omega-3-Variante (800 kcal, 46g P, 33g Fett)
-  - Snack: Schoko-Protein-Pudding (640 kcal, 53g P)
-  - Abend: Airfryer-Kartoffelecken mit Quark-Dip (770 kcal, 50g P)
+- Vier Mahlzeiten pro Tag, zusammen **2545 kcal · 168g Protein · 306g Carbs · 73g Fett** (26% der Kalorien aus Fett):
+  - Frühstück: Schüttel-Porridge mit Mandeln (630 kcal, 41g P)
+  - Mittag: Airfryer-Hähnchen-Bowl (635 kcal, 45g P) oder Lachs-Reis-Bowl als Omega-3-Variante (735 kcal, 40g P) — mit Lachs liegt der Tag bei 2645 kcal und 85g Fett
+  - Snack: Schoko-Protein-Pudding (585 kcal, 46g P)
+  - Abend: Airfryer-Kartoffelecken mit Quark-Dip (695 kcal, 36g P)
 
-Der Plan war vorher auf 270g Protein und nur 54g Fett ausgelegt — rund 18% der Kalorien, unter dem, was für Hormonhaushalt und die fettlöslichen Vitamine A/D/E/K sinnvoll ist. Protein über etwa 2g/kg bringt für den Muskelaufbau nichts mehr, deshalb ist ein Teil davon zugunsten von Fett umgeschichtet: Mandeln im Frühstück, mehr Erdnussbutter und Olivenöl, Lachs als Alternative zum Hähnchen. Aus dem TK-Brokkoli wurde TK-Mischgemüse, damit nicht jeden Tag dasselbe Gemüse auf dem Teller liegt.
+Der Plan ist auf **63 kg, 20 Jahre, ~175cm, Training 2×/Woche, Ziel Aufbau** gerechnet: Grundumsatz nach Mifflin-St-Jeor ~1630 kcal, mal Aktivitätsfaktor 1,375 ergibt ~2240 kcal Erhaltungsbedarf, plus ~300 kcal Überschuss. Protein liegt bei 2,7 g/kg, Fett bei 1,16 g/kg. Weicht die Größe ab, verschiebt sich der Bedarf um grob 60 kcal je 10cm — dann die Portionen von Hafer, Reis und Kartoffeln anpassen, die tragen die Kalorien.
 
 - Volle Rezepte mit Zutaten & Zubereitungsschritten; die Zutaten zeigen an, ob sie laut Vorrat da sind
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
