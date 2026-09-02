@@ -663,6 +663,25 @@ const POOLS = {
         "Reisbeutel und Gemüse in der Mikrowelle erwärmen.",
         "Hähnchen aufschneiden und alles zusammen anrichten."
       ] },
+    { id: "teriyaki_bowl", title: "Teriyaki-Hähnchen-Bowl", short: "Gleiche Bowl, aber mit selbstgemachter Teriyaki-Sauce",
+      kcal: 650, protein: 47, carbs: 80, fat: 15,
+      ingredients: [
+        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
+        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
+        { name: "Sojasauce", amount: "2 EL (1 zum Marinieren)", pantryKey: "sojasauce" },
+        { name: "Sesamöl", amount: "1 TL", pantryKey: "sesamoel" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Knoblauch", amount: "1 Zehe", pantryKey: "knoblauch" },
+        { name: "Sesam", amount: "1 TL", pantryKey: "sesam" }
+      ],
+      steps: [
+        "Hähnchen in Stücke schneiden und 30 Min in 1 EL Sojasauce marinieren.",
+        "Für die Sauce 1 EL Sojasauce, Sesamöl, Honig, gehackten Knoblauch und 3 EL Wasser aufkochen und 5 Min einköcheln.",
+        "Airfryer 200°C, 12-14 Minuten, nach der Hälfte wenden.",
+        "Reisbeutel und Gemüse in der Mikrowelle erwärmen.",
+        "Sauce über das Hähnchen geben, Sesam drüber."
+      ] },
     { id: "salmon_bowl", title: "Lachs-Reis-Bowl", short: "Omega-3-Variante, gleiche Zubereitung",
       kcal: 735, protein: 40, carbs: 72, fat: 29,
       ingredients: [
@@ -873,7 +892,11 @@ const DEFAULT_PANTRY = [
   { key: "kakao",          name: "Kakaopulver",          unit: "Packung",         qty: 0, low: 1 },
   { key: "honig",          name: "Honig",                unit: "Glas",            qty: 0, low: 1 },
   { key: "oel",            name: "Olivenöl",             unit: "Flasche",         qty: 0, low: 1 },
-  { key: "kaese",          name: "Geriebener Käse",      unit: "Packung (200g)",  qty: 0, low: 1 }
+  { key: "kaese",          name: "Geriebener Käse",      unit: "Packung (200g)",  qty: 0, low: 1 },
+  { key: "sojasauce",      name: "Sojasauce",            unit: "Flasche",         qty: 0, low: 1 },
+  { key: "sesamoel",       name: "Sesamöl",              unit: "Flasche",         qty: 0, low: 1 },
+  { key: "sesam",          name: "Sesam",                unit: "Packung",         qty: 0, low: 1 },
+  { key: "knoblauch",      name: "Knoblauch",            unit: "Knolle",          qty: 0, low: 1 }
 ];
 function loadPantry() {
   try {
