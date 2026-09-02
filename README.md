@@ -53,13 +53,13 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Vier Mahlzeiten pro Tag, zusammen **2565 kcal · 188g Protein · 293g Carbs · 72g Fett** (25% der Kalorien aus Fett):
-  - Frühstück: Schüttel-Porridge auf Magerquark-Basis, mit Mandeln (690 kcal, 62g P)
-  - Mittag, drei Varianten über "Andere Option": Airfryer-Hähnchen-Bowl (635 kcal, 45g P), Teriyaki-Hähnchen-Bowl mit selbstgemachter Sauce (650 kcal, 47g P) oder Lachs-Reis-Bowl als Omega-3-Variante (735 kcal, 40g P) — der Tag liegt damit bei 2565, 2580 bzw. 2665 kcal
-  - Snack: Schoko-Protein-Pudding (585 kcal, 46g P)
-  - Abend: Airfryer-Kartoffelecken mit Quark-Dip (655 kcal, 35g P)
+- Aufbau nach dem **WPF-Muster** (Wolfs Protein Fasten, Christian Wolf): 16:8, zwei feste Mahlzeiten im Essensfenster, davor und danach je eine Proteinportion. Zusammen **2575 kcal · 182g Protein · 290g Carbs · 81g Fett** (27% der Kalorien aus Fett):
+  - Shake: Protein-Shake mit Hafer, Banane, Erdnussbutter (610 kcal, 40g P)
+  - Mahlzeit 1, drei Varianten über "Andere Option": Airfryer-Hähnchen-Bowl (705 kcal), Teriyaki-Hähnchen-Bowl mit selbstgemachter Sauce (705 kcal) oder Lachs-Reis-Bowl als Omega-3-Variante (815 kcal)
+  - Mahlzeit 2: Airfryer-Kartoffelecken mit Quark-Dip (810 kcal, 45g P)
+  - Shake: Schoko-Quark-Shake (450 kcal, 41g P) oder Schüttel-Porridge, wenn gelöffelt statt getrunken werden soll (690 kcal, 62g P)
 
-Der Plan ist auf **63 kg, 20 Jahre, ~175cm, Training 2×/Woche, Ziel Aufbau** gerechnet: Grundumsatz nach Mifflin-St-Jeor ~1630 kcal, mal Aktivitätsfaktor 1,375 ergibt ~2240 kcal Erhaltungsbedarf, plus ~300 kcal Überschuss. Protein liegt bei 3,0 g/kg — mehr als nötig, aber der Magerquark ist die Basis des Frühstücks und trägt die Cremigkeit; ihn zugunsten der Protein-Rechnung zu streichen macht das Gericht kaputt. Wer die Zahl kleiner will, lässt das Whey im Porridge weg (−24g Protein). Fett liegt bei 1,14 g/kg. Weicht die Größe ab, verschiebt sich der Bedarf um grob 60 kcal je 10cm — dann die Portionen von Hafer, Reis und Kartoffeln anpassen, die tragen die Kalorien.
+**WPF ist im Original ein Abnehm-Konzept** — Fettverlust bei Muskelerhalt. Übernommen ist hier nur die Struktur, nicht das Kaloriendefizit: der Plan liegt bewusst im Überschuss für den Aufbau. Wer damit abnehmen will, braucht andere Portionen, nicht andere Gerichte.
 
 - Volle Rezepte mit Zutaten & Zubereitungsschritten; die Zutaten zeigen an, ob sie laut Vorrat da sind
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")

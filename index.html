@@ -630,29 +630,27 @@ function initGate() {
 }
 
 const POOLS = {
-  breakfast: [
-    { id: "shake_porridge", title: "Schüttel-Porridge", short: "Alles in die Schüssel, Deckel drauf, schütteln",
-      kcal: 690, protein: 62, carbs: 68, fat: 17,
+  shake_am: [
+    { id: "shake_morning", title: "Protein-Shake", short: "Erste Proteinportion, 60 Sekunden",
+      kcal: 610, protein: 40, carbs: 80, fat: 15,
       ingredients: [
-        { name: "Haferflocken", amount: "70g (zarte)", pantryKey: "haferflocken" },
-        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
-        { name: "Wasser", amount: "150-200ml" },
-        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" },
-        { name: "Mandeln", amount: "20g", pantryKey: "mandeln" }
+        { name: "Haferflocken", amount: "80g (zarte)", pantryKey: "haferflocken" },
+        { name: "Banane", amount: "1 Stück", pantryKey: "banane" },
+        { name: "Erdnussbutter", amount: "15g", pantryKey: "erdnussbutter" },
+        { name: "Wasser", amount: "350-400ml" }
       ],
       steps: [
-        "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
-        "Deckel drauf, 20-30 Sekunden kräftig schütteln.",
-        "5 Minuten quellen lassen, nochmal kurz schütteln.",
-        "Heidelbeeren und Mandeln dazu."
+        "Alles in den Shaker oder Mixer, Wasser zuletzt.",
+        "30 Sekunden schütteln, kurz stehen lassen, nochmal schütteln.",
+        "Ohne Mixer: Banane vorher zerdrücken."
       ] }
   ],
   lunch: [
     { id: "chicken_bowl", title: "Airfryer-Hähnchen-Bowl", short: "Airfryer + Fertigreis, 15 Minuten",
-      kcal: 635, protein: 45, carbs: 72, fat: 17,
+      kcal: 705, protein: 56, carbs: 72, fat: 18,
       ingredients: [
-        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
+        { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
         { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "10g", pantryKey: "oel" }
@@ -664,9 +662,9 @@ const POOLS = {
         "Hähnchen aufschneiden und alles zusammen anrichten."
       ] },
     { id: "teriyaki_bowl", title: "Teriyaki-Hähnchen-Bowl", short: "Gleiche Bowl, aber mit selbstgemachter Teriyaki-Sauce",
-      kcal: 650, protein: 47, carbs: 80, fat: 15,
+      kcal: 705, protein: 58, carbs: 79, fat: 16,
       ingredients: [
-        { name: "Hähnchenbrust", amount: "150g", pantryKey: "haehnchen" },
+        { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
         { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Sojasauce", amount: "2 EL (1 zum Marinieren)", pantryKey: "sojasauce" },
@@ -683,9 +681,9 @@ const POOLS = {
         "Sauce über das Hähnchen geben, Sesam drüber."
       ] },
     { id: "salmon_bowl", title: "Lachs-Reis-Bowl", short: "Omega-3-Variante, gleiche Zubereitung",
-      kcal: 735, protein: 40, carbs: 72, fat: 29,
+      kcal: 815, protein: 50, carbs: 72, fat: 35,
       ingredients: [
-        { name: "Lachsfilet", amount: "150g", pantryKey: "lachs" },
+        { name: "Lachsfilet", amount: "180g", pantryKey: "lachs" },
         { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "5g", pantryKey: "oel" }
@@ -697,46 +695,61 @@ const POOLS = {
         "Mit Zitrone abschmecken."
       ] }
   ],
-  snack: [
-    { id: "schoko_pudding", title: "Schoko-Protein-Pudding", short: "Schmeckt wie Dessert, 2 Minuten",
-      kcal: 585, protein: 46, carbs: 69, fat: 17,
-      ingredients: [
-        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
-        { name: "Kakaopulver", amount: "10g", pantryKey: "kakao" },
-        { name: "Honig", amount: "1 EL", pantryKey: "honig" },
-        { name: "Banane", amount: "1 Stück", pantryKey: "banane" },
-        { name: "Erdnussbutter", amount: "25g", pantryKey: "erdnussbutter" },
-        { name: "Haferflocken", amount: "30g", pantryKey: "haferflocken" }
-      ],
-      steps: [
-        "Magerquark, Kakao und Honig cremig rühren, bei Bedarf ein paar Löffel Wasser dazu.",
-        "Banane in Scheiben schneiden und untermischen.",
-        "Erdnussbutter und Haferflocken obendrauf."
-      ] }
-  ],
   dinner: [
     { id: "potato_wedges", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Airfryer, 25 Minuten",
-      kcal: 655, protein: 35, carbs: 84, fat: 21,
+      kcal: 810, protein: 45, carbs: 104, fat: 26,
       ingredients: [
-        { name: "Kartoffeln", amount: "450g", pantryKey: "kartoffeln" },
-        { name: "Magerquark", amount: "150g", pantryKey: "magerquark" },
-        { name: "Olivenöl", amount: "12g", pantryKey: "oel" },
-        { name: "Geriebener Käse", amount: "25g", pantryKey: "kaese" }
+        { name: "Kartoffeln", amount: "550g", pantryKey: "kartoffeln" },
+        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
+        { name: "Olivenöl", amount: "15g", pantryKey: "oel" },
+        { name: "Geriebener Käse", amount: "30g", pantryKey: "kaese" }
       ],
       steps: [
         "Kartoffeln in Ecken schneiden, mit Öl, Salz und Paprikapulver mischen.",
         "Airfryer 200°C, 22-25 Minuten, zwischendurch schütteln.",
-        "Quark mit Salz, Pfeffer und Kräutern verrühren.",
+        "Quark mit Salz, Pfeffer, Knoblauch und Kräutern verrühren.",
         "Käse über die heißen Ecken streuen, Dip dazu."
+      ] }
+  ],
+  shake_pm: [
+    { id: "quark_shake", title: "Schoko-Quark-Shake", short: "Zweite Proteinportion, langsames Protein für die Nacht",
+      kcal: 450, protein: 41, carbs: 34, fat: 22,
+      ingredients: [
+        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
+        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" },
+        { name: "Mandeln", amount: "30g", pantryKey: "mandeln" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Kakaopulver", amount: "10g", pantryKey: "kakao" },
+        { name: "Wasser", amount: "100ml" }
+      ],
+      steps: [
+        "Magerquark, Kakao, Honig und Wasser cremig rühren.",
+        "Heidelbeeren und Mandeln dazu."
+      ] },
+    { id: "shake_porridge", title: "Schüttel-Porridge", short: "Wenn du lieber löffelst als trinkst",
+      kcal: 690, protein: 62, carbs: 68, fat: 17,
+      ingredients: [
+        { name: "Haferflocken", amount: "70g (zarte)", pantryKey: "haferflocken" },
+        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
+        { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Wasser", amount: "150-200ml" },
+        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" },
+        { name: "Mandeln", amount: "20g", pantryKey: "mandeln" }
+      ],
+      steps: [
+        "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
+        "Deckel drauf, 20-30 Sekunden kräftig schütteln.",
+        "5 Minuten quellen lassen, nochmal kurz schütteln.",
+        "Heidelbeeren und Mandeln dazu."
       ] }
   ]
 };
 
 const SLOTS = [
-  { id: "breakfast", label: "Frühstück", pool: "breakfast" },
-  { id: "lunch", label: "Mittag", pool: "lunch" },
-  { id: "snack1", label: "Snack", pool: "snack" },
-  { id: "dinner", label: "Abend", pool: "dinner" }
+  { id: "shake1", label: "Shake",      pool: "shake_am" },
+  { id: "meal1",  label: "Mahlzeit 1", pool: "lunch" },
+  { id: "meal2",  label: "Mahlzeit 2", pool: "dinner" },
+  { id: "shake2", label: "Shake",      pool: "shake_pm" }
 ];
 
 /* Der Vorrat startet leer – Zutaten kommen ausschließlich manuell über den
