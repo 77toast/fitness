@@ -632,66 +632,83 @@ function initGate() {
 const POOLS = {
   breakfast: [
     { id: "shake_porridge", title: "Schüttel-Porridge", short: "Alles in die Schüssel, Deckel drauf, schütteln",
-      kcal: 570, protein: 70, carbs: 58, fat: 6,
+      kcal: 655, protein: 63, carbs: 62, fat: 17,
       ingredients: [
-        { name: "Haferflocken", amount: "50g (zarte)", pantryKey: "haferflocken" },
-        { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
+        { name: "Haferflocken", amount: "60g (zarte)", pantryKey: "haferflocken" },
+        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
         { name: "Wasser", amount: "150-200ml" },
-        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" }
+        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" },
+        { name: "Mandeln", amount: "20g", pantryKey: "mandeln" }
       ],
       steps: [
         "Haferflocken, Magerquark, Whey und Wasser in eine Schüssel mit Deckel geben.",
         "Deckel drauf, 20-30 Sekunden kräftig schütteln.",
         "5 Minuten quellen lassen, nochmal kurz schütteln.",
-        "Heidelbeeren dazu."
+        "Heidelbeeren und Mandeln dazu."
       ] }
   ],
   lunch: [
-    { id: "airfryer_haehnchen_brokkoli_reis", title: "Airfryer-Hähnchen-Brokkoli-Reis-Bowl", short: "Hähnchen + Brokkoli aus dem Airfryer, Reis aus der Mikrowelle",
-      kcal: 770, protein: 70, carbs: 87, fat: 15,
+    { id: "chicken_bowl", title: "Airfryer-Hähnchen-Bowl", short: "Airfryer + Fertigreis, 15 Minuten",
+      kcal: 690, protein: 56, carbs: 72, fat: 18,
       ingredients: [
-        { name: "Hähnchenbrust", amount: "250g", pantryKey: "haehnchen" },
-        { name: "Reis-Fertigbeutel (fertig gegart)", amount: "300g", pantryKey: "reis" },
-        { name: "TK-Brokkoli", amount: "200g", pantryKey: "tkgemuese" },
-        { name: "Olivenöl", amount: "8g", pantryKey: "oel" }
+        { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
+        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
+        { name: "Olivenöl", amount: "10g", pantryKey: "oel" }
       ],
       steps: [
-        "Hähnchen und Brokkoli salzen, pfeffern, mit Paprikapulver und Olivenöl vermengen.",
-        "Hähnchen allein 5 Minuten bei 180°C im Airfryer vorgaren.",
-        "Brokkoli dazugeben, zusammen 10 weitere Minuten garen, nach der Hälfte wenden/schütteln.",
-        "Reis-Fertigbeutel in der Mikrowelle nach Packungsanweisung erhitzen (ca. 2-3 Minuten).",
-        "Hähnchen in Streifen schneiden, mit Reis und Brokkoli in einer Schüssel anrichten."
+        "Hähnchen mit Öl, Salz, Pfeffer und Paprikapulver einreiben.",
+        "Airfryer 200°C, 12-14 Minuten, nach der Hälfte wenden.",
+        "Reisbeutel und Gemüse in der Mikrowelle erwärmen.",
+        "Hähnchen aufschneiden und alles zusammen anrichten."
+      ] },
+    { id: "salmon_bowl", title: "Lachs-Reis-Bowl", short: "Omega-3-Variante, gleiche Zubereitung",
+      kcal: 800, protein: 46, carbs: 72, fat: 33,
+      ingredients: [
+        { name: "Lachsfilet", amount: "180g", pantryKey: "lachs" },
+        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
+        { name: "Olivenöl", amount: "5g", pantryKey: "oel" }
+      ],
+      steps: [
+        "Lachs salzen, pfeffern, mit etwas Öl einreiben.",
+        "Airfryer 180°C, 10-12 Minuten, Haut nach unten.",
+        "Reisbeutel und Gemüse in der Mikrowelle erwärmen.",
+        "Mit Zitrone abschmecken."
       ] }
   ],
   snack: [
-    { id: "skyr_power_bowl", title: "Skyr-Power-Bowl", short: "Kein Gerät nötig – einfach mischen",
-      kcal: 630, protein: 67, carbs: 66, fat: 15,
+    { id: "schoko_pudding", title: "Schoko-Protein-Pudding", short: "Schmeckt wie Dessert, 2 Minuten",
+      kcal: 640, protein: 53, carbs: 70, fat: 19,
       ingredients: [
-        { name: "Skyr", amount: "500g", pantryKey: "skyr" },
-        { name: "Haferflocken", amount: "50g", pantryKey: "haferflocken" },
-        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
-        { name: "TK-Heidelbeeren", amount: "120g", pantryKey: "heidelbeeren" }
+        { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
+        { name: "Kakaopulver", amount: "10g", pantryKey: "kakao" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Banane", amount: "1 Stück", pantryKey: "banane" },
+        { name: "Erdnussbutter", amount: "30g", pantryKey: "erdnussbutter" },
+        { name: "Haferflocken", amount: "30g", pantryKey: "haferflocken" }
       ],
       steps: [
-        "Skyr, Haferflocken und Erdnussbutter in einer Schüssel verrühren.",
-        "Heidelbeeren obenauf verteilen, kurz antauen lassen."
+        "Magerquark, Kakao und Honig cremig rühren, bei Bedarf ein paar Löffel Wasser dazu.",
+        "Banane in Scheiben schneiden und untermischen.",
+        "Erdnussbutter und Haferflocken obendrauf."
       ] }
   ],
   dinner: [
-    { id: "airfryer_kartoffel_quark_dip", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Kartoffelecken aus dem Airfryer, Dip aus Magerquark",
-      kcal: 760, protein: 57, carbs: 92, fat: 18,
+    { id: "potato_wedges", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Airfryer, 25 Minuten",
+      kcal: 770, protein: 50, carbs: 88, fat: 26,
       ingredients: [
         { name: "Kartoffeln", amount: "450g", pantryKey: "kartoffeln" },
-        { name: "Magerquark", amount: "350g", pantryKey: "magerquark" },
-        { name: "Olivenöl", amount: "8g", pantryKey: "oel" },
+        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
+        { name: "Olivenöl", amount: "15g", pantryKey: "oel" },
         { name: "Geriebener Käse", amount: "30g", pantryKey: "kaese" }
       ],
       steps: [
-        "Kartoffeln waschen, in Ecken schneiden, mit Olivenöl und Gewürzen vermengen.",
-        "Im Airfryer bei 200°C ca. 18-20 Minuten garen, zwischendurch schütteln.",
-        "Magerquark mit Salz, Pfeffer und Kräutern nach Wahl verrühren.",
-        "Kartoffelecken mit Käse bestreuen und mit dem Dip servieren."
+        "Kartoffeln in Ecken schneiden, mit Öl, Salz und Paprikapulver mischen.",
+        "Airfryer 200°C, 22-25 Minuten, zwischendurch schütteln.",
+        "Quark mit Salz, Pfeffer und Kräutern verrühren.",
+        "Käse über die heißen Ecken streuen, Dip dazu."
       ] }
   ]
 };
@@ -844,14 +861,18 @@ const DEFAULT_PANTRY = [
   { key: "magerquark",     name: "Magerquark",           unit: "Becher (500g)",   qty: 0, low: 2 },
   { key: "whey",           name: "Whey",                 unit: "Dose",            qty: 0, low: 1 },
   { key: "haferflocken",   name: "Haferflocken",         unit: "Packung (500g)",  qty: 0, low: 1 },
-  { key: "haehnchen",      name: "Hähnchenbrust",        unit: "Packung (250g)",  qty: 0, low: 1 },
-  { key: "reis",           name: "Reis-Fertigbeutel",    unit: "Beutel",          qty: 0, low: 2 },
-  { key: "tkgemuese",      name: "TK-Brokkoli",          unit: "Beutel (450g)",   qty: 0, low: 1 },
-  { key: "oel",            name: "Olivenöl",             unit: "Flasche",         qty: 0, low: 1 },
-  { key: "skyr",           name: "Skyr",                 unit: "Becher (450g)",   qty: 0, low: 1 },
-  { key: "erdnussbutter",  name: "Erdnussbutter",        unit: "Glas",            qty: 0, low: 1 },
+  { key: "mandeln",        name: "Mandeln",              unit: "Packung (200g)",  qty: 0, low: 1 },
+  { key: "banane",         name: "Banane",               unit: "Stück",           qty: 0, low: 2 },
   { key: "heidelbeeren",   name: "TK-Heidelbeeren",      unit: "Beutel (300g)",   qty: 0, low: 1 },
+  { key: "haehnchen",      name: "Hähnchenbrust",        unit: "Packung (250g)",  qty: 0, low: 1 },
+  { key: "lachs",          name: "Lachsfilet",           unit: "Stück (180g)",    qty: 0, low: 1 },
+  { key: "reis",           name: "Reisbeutel",           unit: "Beutel",          qty: 0, low: 2 },
+  { key: "tkgemuese",      name: "TK-Mischgemüse",       unit: "Beutel (450g)",   qty: 0, low: 1 },
   { key: "kartoffeln",     name: "Kartoffeln",           unit: "kg",              qty: 0, low: 1 },
+  { key: "erdnussbutter",  name: "Erdnussbutter",        unit: "Glas",            qty: 0, low: 1 },
+  { key: "kakao",          name: "Kakaopulver",          unit: "Packung",         qty: 0, low: 1 },
+  { key: "honig",          name: "Honig",                unit: "Glas",            qty: 0, low: 1 },
+  { key: "oel",            name: "Olivenöl",             unit: "Flasche",         qty: 0, low: 1 },
   { key: "kaese",          name: "Geriebener Käse",      unit: "Packung (200g)",  qty: 0, low: 1 }
 ];
 function loadPantry() {
