@@ -22,7 +22,7 @@ Der Fitness Tracker lebt vollständig im Repo `77toast/fitness` und ist unter `7
 
 - `POOLS` – vier Kategorien (`breakfast`, `lunch`, `snack`, `dinner`); `lunch` hat zwei Optionen (Hähnchen/Lachs), die übrigen je eine, jeweils aus `id`, `title`, `short`, `kcal`, `protein`, `carbs`, `fat`, `ingredients[]` (inkl. `pantryKey` zur Verknüpfung mit dem Vorrat) und `steps[]` (Zubereitung). Mehrere Einträge pro Pool sind weiterhin möglich — dann erscheint pro Mahlzeit wieder der Knopf "Andere Option", der bei nur einer Option ausgeblendet bleibt.
 - `SLOTS` – 4 feste Tages-Slots (Frühstück, Mittag, Snack, Abend), jeder verweist auf einen Pool.
-- `DEFAULT_PANTRY` – Startliste mit den 20 Zutaten der Rezepte, **alle mit Menge 0**. Der Vorrat behauptet damit nie, du hättest etwas da: alles steht sofort auf der Einkaufsliste, du zählst hoch was du gekauft hast. Wird nur angelegt, wenn noch nie ein Vorrat gespeichert wurde — ein bestehender wird nicht überschrieben. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
+- `DEFAULT_PANTRY` – Startliste mit den 21 Zutaten der Rezepte, **alle mit Menge 0**. Der Vorrat behauptet damit nie, du hättest etwas da: alles steht sofort auf der Einkaufsliste, du zählst hoch was du gekauft hast. Wird nur angelegt, wenn noch nie ein Vorrat gespeichert wurde — ein bestehender wird nicht überschrieben. Einträge haben `key`, `name`, `unit`, `qty`, `low` (Schwellenwert für "wird knapp").
 - `pantryKeyFor(name, existing)` leitet den `key` aus dem eingegebenen Namen ab (kleingeschrieben, Umlaute transliteriert, Sonderzeichen raus): "Hähnchen" → `haehnchen`. Genau diese Slugs stehen als `pantryKey` an den Zutaten in `POOLS`, dadurch greift die "vorhanden"/"wenig da"-Anzeige in den Rezepten, sobald du die Zutat unter ihrem normalen Namen anlegst. Zutaten ohne passenden Vorratseintrag zeigen einfach kein Label.
 - `WORKOUTS` – zwei Trainingstage (`a`, `b`, beide Ganzkörper), je mit `exercises[]` aus `id`, `name`, `sets` (Ziel-Sätze), `reps` (Ziel-Wiederholungsbereich), `mg` (Muskelgruppe, Basis für die Wochenvolumen-Auswertung) und `alts[]` (alternative Übungen für denselben Slot, je mit eigener `id` und `name`).
 
@@ -53,13 +53,15 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Aufbau nach dem **WPF-Muster** (Wolfs Protein Fasten, Christian Wolf): 16:8, zwei feste Mahlzeiten im Essensfenster, davor und danach je eine Proteinportion. Zusammen **2575 kcal · 182g Protein · 290g Carbs · 81g Fett** (27% der Kalorien aus Fett):
-  - Shake: Protein-Shake mit Hafer, Banane, Erdnussbutter (610 kcal, 40g P)
-  - Mahlzeit 1, drei Varianten über "Andere Option": Airfryer-Hähnchen-Bowl (705 kcal), Teriyaki-Hähnchen-Bowl mit selbstgemachter Sauce (705 kcal) oder Lachs-Reis-Bowl als Omega-3-Variante (815 kcal)
-  - Mahlzeit 2: Airfryer-Kartoffelecken mit Quark-Dip (810 kcal, 45g P)
-  - Shake: Schoko-Quark-Shake (450 kcal, 41g P) oder Schüttel-Porridge, wenn gelöffelt statt getrunken werden soll (690 kcal, 62g P)
+- Aufbau nach dem **WPF-Muster** (Wolfs Protein Fasten, Christian Wolf): 16:8, zwei feste Mahlzeiten im Essensfenster, davor und danach je ein Shake. Zusammen **2560 kcal · 196g Protein · 276g Carbs · 72g Fett** (26% der Kalorien aus Fett):
+  - Shake: Whey + 500ml Milch (350 kcal, 41g P) — Alternative "Großer Shake" mit Hafer und Banane (610 kcal) für Tage, die mehr brauchen
+  - Mahlzeit 1, drei Varianten: Airfryer-Hähnchen-Bowl (890 kcal), Teriyaki-Hähnchen-Bowl (860 kcal) oder Lachs-Reis-Bowl (950 kcal)
+  - Mahlzeit 2: Airfryer-Kartoffelecken mit Quark-Dip (970 kcal, 55g P)
+  - Shake: nochmal Whey + Milch — Alternativen: Schoko-Quark-Shake (450 kcal) oder Schüttel-Porridge (690 kcal)
 
-**WPF ist im Original ein Abnehm-Konzept** — Fettverlust bei Muskelerhalt. Übernommen ist hier nur die Struktur, nicht das Kaloriendefizit: der Plan liegt bewusst im Überschuss für den Aufbau. Wer damit abnehmen will, braucht andere Portionen, nicht andere Gerichte.
+Die Shakes sind bewusst schlicht, deshalb tragen die zwei festen Mahlzeiten mit 890 und 970 kcal den Großteil des Tages — große Teller, 375g Reis und 650g Kartoffeln. Wem das zu viel Volumen auf einmal ist, wechselt einen Shake auf die größere Variante und nimmt die Kalorien bei den Mahlzeiten wieder raus.
+
+**WPF ist im Original ein Abnehm-Konzept** — Fettverlust bei Muskelerhalt. Übernommen ist hier nur die Struktur, nicht das Kaloriendefizit: der Plan liegt bewusst im Überschuss für den Aufbau.
 
 - Volle Rezepte mit Zutaten & Zubereitungsschritten; die Zutaten zeigen an, ob sie laut Vorrat da sind
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
@@ -88,7 +90,7 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 - **Platten- & Warm-up-Rechner** pro Übung: Zielgewicht + Stangengewicht → Scheiben pro Seite (Greedy-Algorithmus über 25/20/15/10/5/2.5/1.25kg) plus eine Warm-up-Ramp (40/60/80/90 % des Zielgewichts mit Wiederholungsvorschlag). Stangengewicht wird gemerkt (`fitnesstracker_bar_weight`) — Idee von den kostenlosen Tools der Stronger-App
 
 **Vorrat / Liste**
-- Vorrat startet als Einkaufs-Checkliste: die 20 Zutaten der Rezepte stehen mit Menge 0 drin, eigene Einträge kommen manuell dazu
+- Vorrat startet als Einkaufs-Checkliste: die 21 Zutaten der Rezepte stehen mit Menge 0 drin, eigene Einträge kommen manuell dazu
 - +/- Stepper pro Eintrag, dazu eine einstellbare Schwelle ("knapp ab"): erreicht die Menge die Schwelle, gilt der Eintrag als knapp und wandert automatisch in die Einkaufsliste. Neue Einträge starten bei Menge 2 mit Schwelle 1, warnen also bevor es leer ist
 - Einkaufsliste aus Auto-Einträgen + manuellen Einträgen, mit Badge für offene Posten und Kopieren als Text
 - Der Vorrat liegt unter `mealtracker_pantry_v2`; ein alter Eintrag unter `mealtracker_pantry` wird beim Start verworfen.

@@ -631,7 +631,17 @@ function initGate() {
 
 const POOLS = {
   shake_am: [
-    { id: "shake_morning", title: "Protein-Shake", short: "Erste Proteinportion, 60 Sekunden",
+    { id: "whey_shake_am", title: "Whey-Shake", short: "Whey + Milch, 30 Sekunden",
+      kcal: 350, protein: 41, carbs: 25, fat: 9,
+      ingredients: [
+        { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Milch", amount: "500ml", pantryKey: "milch" }
+      ],
+      steps: [
+        "Milch in den Shaker, Whey dazu.",
+        "30 Sekunden schütteln."
+      ] },
+    { id: "loaded_shake", title: "Großer Shake", short: "Mit Hafer und Banane, wenn der Tag mehr Kalorien braucht",
       kcal: 610, protein: 40, carbs: 80, fat: 15,
       ingredients: [
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
@@ -648,10 +658,10 @@ const POOLS = {
   ],
   lunch: [
     { id: "chicken_bowl", title: "Airfryer-Hähnchen-Bowl", short: "Airfryer + Fertigreis, 15 Minuten",
-      kcal: 705, protein: 56, carbs: 72, fat: 18,
+      kcal: 890, protein: 59, carbs: 103, fat: 24,
       ingredients: [
         { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
-        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "Reisbeutel", amount: "1,5 Stück (375g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "10g", pantryKey: "oel" }
       ],
@@ -662,10 +672,10 @@ const POOLS = {
         "Hähnchen aufschneiden und alles zusammen anrichten."
       ] },
     { id: "teriyaki_bowl", title: "Teriyaki-Hähnchen-Bowl", short: "Gleiche Bowl, aber mit selbstgemachter Teriyaki-Sauce",
-      kcal: 705, protein: 58, carbs: 79, fat: 16,
+      kcal: 860, protein: 61, carbs: 110, fat: 17,
       ingredients: [
         { name: "Hähnchenbrust", amount: "200g", pantryKey: "haehnchen" },
-        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "Reisbeutel", amount: "1,5 Stück (375g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Sojasauce", amount: "2 EL (1 zum Marinieren)", pantryKey: "sojasauce" },
         { name: "Sesamöl", amount: "1 TL", pantryKey: "sesamoel" },
@@ -681,10 +691,10 @@ const POOLS = {
         "Sauce über das Hähnchen geben, Sesam drüber."
       ] },
     { id: "salmon_bowl", title: "Lachs-Reis-Bowl", short: "Omega-3-Variante, gleiche Zubereitung",
-      kcal: 815, protein: 50, carbs: 72, fat: 35,
+      kcal: 950, protein: 49, carbs: 103, fat: 34,
       ingredients: [
         { name: "Lachsfilet", amount: "180g", pantryKey: "lachs" },
-        { name: "Reisbeutel", amount: "1 Stück (250g)", pantryKey: "reis" },
+        { name: "Reisbeutel", amount: "1,5 Stück (375g)", pantryKey: "reis" },
         { name: "TK-Mischgemüse", amount: "200g", pantryKey: "tkgemuese" },
         { name: "Olivenöl", amount: "5g", pantryKey: "oel" }
       ],
@@ -697,12 +707,12 @@ const POOLS = {
   ],
   dinner: [
     { id: "potato_wedges", title: "Airfryer-Kartoffelecken mit Quark-Dip", short: "Airfryer, 25 Minuten",
-      kcal: 810, protein: 45, carbs: 104, fat: 26,
+      kcal: 970, protein: 55, carbs: 123, fat: 30,
       ingredients: [
-        { name: "Kartoffeln", amount: "550g", pantryKey: "kartoffeln" },
-        { name: "Magerquark", amount: "200g", pantryKey: "magerquark" },
-        { name: "Olivenöl", amount: "15g", pantryKey: "oel" },
-        { name: "Geriebener Käse", amount: "30g", pantryKey: "kaese" }
+        { name: "Kartoffeln", amount: "650g", pantryKey: "kartoffeln" },
+        { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
+        { name: "Olivenöl", amount: "18g", pantryKey: "oel" },
+        { name: "Geriebener Käse", amount: "35g", pantryKey: "kaese" }
       ],
       steps: [
         "Kartoffeln in Ecken schneiden, mit Öl, Salz und Paprikapulver mischen.",
@@ -712,7 +722,17 @@ const POOLS = {
       ] }
   ],
   shake_pm: [
-    { id: "quark_shake", title: "Schoko-Quark-Shake", short: "Zweite Proteinportion, langsames Protein für die Nacht",
+    { id: "whey_shake_pm", title: "Whey-Shake", short: "Whey + Milch, 30 Sekunden",
+      kcal: 350, protein: 41, carbs: 25, fat: 9,
+      ingredients: [
+        { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
+        { name: "Milch", amount: "500ml", pantryKey: "milch" }
+      ],
+      steps: [
+        "Milch in den Shaker, Whey dazu.",
+        "30 Sekunden schütteln."
+      ] },
+    { id: "quark_shake", title: "Schoko-Quark-Shake", short: "Langsames Protein für die Nacht",
       kcal: 450, protein: 41, carbs: 34, fat: 22,
       ingredients: [
         { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
@@ -892,6 +912,7 @@ function cleanupOldDayKeys() {
 const DEFAULT_PANTRY = [
   { key: "magerquark",     name: "Magerquark",           unit: "Becher (500g)",   qty: 0, low: 2 },
   { key: "whey",           name: "Whey",                 unit: "Dose",            qty: 0, low: 1 },
+  { key: "milch",          name: "Milch",                unit: "Liter",           qty: 0, low: 2 },
   { key: "haferflocken",   name: "Haferflocken",         unit: "Packung (500g)",  qty: 0, low: 1 },
   { key: "mandeln",        name: "Mandeln",              unit: "Packung (200g)",  qty: 0, low: 1 },
   { key: "banane",         name: "Banane",               unit: "Stück",           qty: 0, low: 2 },
