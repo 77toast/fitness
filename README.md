@@ -4,7 +4,7 @@ Persönlicher Meal-Prep- und Trainings-Tracker als statische Single-Page-Webseit
 
 ## Zweck
 
-Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Hähnchen, Reis, Kartoffeln) mit täglicher Abhak-Funktion, Makro-Tracking (Kcal/Protein/Carbs/Fett), frei hinzufügbaren Extras mit automatischer Nährwert-Suche, einem Vorrats-System (Pantry), einer automatisch generierten Einkaufsliste und einem Push/Pull/Legs-Trainingsplan mit Satz-Tracking und Verlauf.
+Günstiger, high-protein Meal-Prep-Plan (Magerquark, Skyr, Whey, Hähnchen, Reis, Kartoffeln) mit täglicher Abhak-Funktion, Makro-Tracking (Kcal/Protein/Carbs/Fett), frei hinzufügbaren Extras mit automatischer Nährwert-Suche, einem Vorrats-System (Pantry), einer automatisch generierten Einkaufsliste und einem Ganzkörper-Trainingsplan (zwei Tage im Wechsel) mit Satz-Tracking und Verlauf.
 
 ## Tech-Stack
 
