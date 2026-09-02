@@ -53,13 +53,13 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Vier Mahlzeiten pro Tag, zusammen **2545 kcal · 168g Protein · 306g Carbs · 73g Fett** (26% der Kalorien aus Fett):
-  - Frühstück: Schüttel-Porridge mit Mandeln (630 kcal, 41g P)
+- Vier Mahlzeiten pro Tag, zusammen **2565 kcal · 188g Protein · 293g Carbs · 72g Fett** (25% der Kalorien aus Fett):
+  - Frühstück: Schüttel-Porridge auf Magerquark-Basis, mit Mandeln (690 kcal, 62g P)
   - Mittag: Airfryer-Hähnchen-Bowl (635 kcal, 45g P) oder Lachs-Reis-Bowl als Omega-3-Variante (735 kcal, 40g P) — mit Lachs liegt der Tag bei 2645 kcal und 85g Fett
   - Snack: Schoko-Protein-Pudding (585 kcal, 46g P)
-  - Abend: Airfryer-Kartoffelecken mit Quark-Dip (695 kcal, 36g P)
+  - Abend: Airfryer-Kartoffelecken mit Quark-Dip (655 kcal, 35g P)
 
-Der Plan ist auf **63 kg, 20 Jahre, ~175cm, Training 2×/Woche, Ziel Aufbau** gerechnet: Grundumsatz nach Mifflin-St-Jeor ~1630 kcal, mal Aktivitätsfaktor 1,375 ergibt ~2240 kcal Erhaltungsbedarf, plus ~300 kcal Überschuss. Protein liegt bei 2,7 g/kg, Fett bei 1,16 g/kg. Weicht die Größe ab, verschiebt sich der Bedarf um grob 60 kcal je 10cm — dann die Portionen von Hafer, Reis und Kartoffeln anpassen, die tragen die Kalorien.
+Der Plan ist auf **63 kg, 20 Jahre, ~175cm, Training 2×/Woche, Ziel Aufbau** gerechnet: Grundumsatz nach Mifflin-St-Jeor ~1630 kcal, mal Aktivitätsfaktor 1,375 ergibt ~2240 kcal Erhaltungsbedarf, plus ~300 kcal Überschuss. Protein liegt bei 3,0 g/kg — mehr als nötig, aber der Magerquark ist die Basis des Frühstücks und trägt die Cremigkeit; ihn zugunsten der Protein-Rechnung zu streichen macht das Gericht kaputt. Wer die Zahl kleiner will, lässt das Whey im Porridge weg (−24g Protein). Fett liegt bei 1,14 g/kg. Weicht die Größe ab, verschiebt sich der Bedarf um grob 60 kcal je 10cm — dann die Portionen von Hafer, Reis und Kartoffeln anpassen, die tragen die Kalorien.
 
 - Volle Rezepte mit Zutaten & Zubereitungsschritten; die Zutaten zeigen an, ob sie laut Vorrat da sind
 - Live-Makro-Balken (Kcal/Protein/Carbs/Fett): "gegessen" vs. "Tagesplan" bzw. gegen die eigenen Ziele, darunter der Rest ("Noch 735 kcal · 52g Protein")
