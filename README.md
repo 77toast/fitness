@@ -53,13 +53,13 @@ Die Trainings**historie** liegt bewusst nicht im Tages-Key – sie überlebt den
 ## Aktueller Funktionsumfang
 
 **Heute**
-- Aufbau nach dem **WPF-Muster** (Wolfs Protein Fasten, Christian Wolf): 16:8, zwei feste Mahlzeiten im Essensfenster, davor und danach je ein Shake. Zusammen **2560 kcal · 196g Protein · 276g Carbs · 72g Fett** (26% der Kalorien aus Fett):
-  - Shake morgens: Whey + 300ml Milch + 200ml Wasser + 40g Hafer (405 kcal, 45g P) — Alternative "Großer Shake" mit Banane und Erdnussbutter (610 kcal)
+- Aufbau nach dem **WPF-Muster** (Wolfs Protein Fasten, Christian Wolf): 16:8, zwei feste Mahlzeiten im Essensfenster, davor und danach je ein Shake. Zusammen **2555 kcal · 196g Protein · 270g Carbs · 80g Fett** (28% der Kalorien aus Fett):
+  - Shake morgens: Whey + 300ml Milch + 200ml Wasser + 50g Hafer (440 kcal, 47g P) — Alternative "Großer Shake" mit Banane und Erdnussbutter (610 kcal)
   - Mahlzeit 1, drei Varianten: Airfryer-Hähnchen-Bowl (890 kcal), Teriyaki-Hähnchen-Bowl (860 kcal) oder Lachs-Reis-Bowl (950 kcal)
-  - Mahlzeit 2: Airfryer-Kartoffelecken mit Quark-Dip (1010 kcal, 56g P)
+  - Mahlzeit 2: Airfryer-Kartoffelecken mit Quark-Dip (970 kcal, 56g P)
   - Shake abends: Whey + 300ml Milch + 200ml Wasser (255 kcal, 34g P) — Alternativen: Schoko-Quark-Shake (450 kcal) oder Schüttel-Porridge (690 kcal)
 
-Die Shakes sind bewusst schlicht, deshalb tragen die zwei festen Mahlzeiten mit 890 und 1010 kcal den Großteil des Tages — große Teller, 375g Reis und 700g Kartoffeln. Wem das zu viel Volumen auf einmal ist, wechselt einen Shake auf die größere Variante und nimmt die Kalorien bei den Mahlzeiten wieder raus.
+Die Shakes sind bewusst schlicht, deshalb tragen die zwei festen Mahlzeiten mit 890 und 970 kcal den Großteil des Tages — 375g Reis und 550g Kartoffeln. Kartoffeln haben nur ~77 kcal pro 100g, sind also ein schlechtes Transportmittel für Kalorien: die Portion wuchs erst auf 700g, bis Öl und Käse einen Teil übernommen haben. Wem das zu viel Volumen auf einmal ist, wechselt einen Shake auf die größere Variante und nimmt die Kalorien bei den Mahlzeiten wieder raus.
 
 Milch liegt bei **300ml pro Shake, mit Wasser aufgefüllt** — also 600ml am Tag statt einem Liter. Ein Liter wäre nicht gefährlich (Kalzium läge mit dem Quark bei ~1500mg gegen eine Obergrenze von 2500mg), bringt aber ~48g Laktose auf einmal, hemmt über das Kalzium die Eisenaufnahme und steht in der Altersgruppe in Verdacht, Akne zu begünstigen. 600ml umgehen das, ohne dass der Shake nach Wasser schmeckt.
 
