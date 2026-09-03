@@ -631,7 +631,7 @@ function initGate() {
 
 const POOLS = {
   shake_am: [
-    { id: "whey_shake_am", title: "Whey-Shake", short: "Whey, Milch, Hafer — 30 Sekunden",
+{ id: "whey_shake_am", title: "Whey-Shake", short: "Whey, Milch, Hafer — 30 Sekunden",
       kcal: 440, protein: 40, carbs: 47, fat: 10,
       ingredients: [
         { name: "Whey (Vanille oder Schoko)", amount: "1 Schaufel (~30g)", pantryKey: "whey" },
@@ -644,8 +644,17 @@ const POOLS = {
         "30 Sekunden schütteln, kurz stehen lassen, nochmal schütteln."
       ] }
   ],
-  lunch: [
-    { id: "chicken_bowl", title: "Hähnchen-Reis-Bowl", short: "Airfryer + Mikrowelle, 3 Minuten Arbeit",
+  warm: [
+    { id: "mama", title: "Warme Mahlzeit", short: "Schätzwert — Abweichung unten als Extra nachtragen",
+      kcal: 750, protein: 40, carbs: 70, fat: 30,
+      ingredients: [],
+      steps: [
+        "Platzhalter für eine warme Mahlzeit, die du nicht selbst planst.",
+        "750 kcal und 40g Protein sind der Mittelwert eines normalen Tellers Hausmannskost: Fleisch oder Fisch, Beilage, Gemüse.",
+        "War es deutlich mehr oder weniger, trag die Differenz unten als Extra ein.",
+        "An Tagen ohne warme Mahlzeit über Andere Option eins der Airfryer-Gerichte wählen."
+      ] },
+{ id: "chicken_bowl", title: "Hähnchen-Reis-Bowl", short: "Airfryer + Mikrowelle, 3 Minuten Arbeit",
       kcal: 800, protein: 49, carbs: 95, fat: 22,
       ingredients: [
         { name: "Hähnchenoberkeulen", amount: "200g (ohne Knochen)", pantryKey: "haehnchen" },
@@ -677,10 +686,8 @@ const POOLS = {
         "Sojasauce, Honig, Knoblauch, Sesamöl und 3 EL Wasser in einer Schüssel 60 Sekunden in die Mikrowelle, einmal rühren.",
         "Reis und TK-Gemüse in der Mikrowelle erwärmen.",
         "Sauce erst nach dem Garen über das Hähnchen — Honig verbrennt im Airfryer."
-      ] }
-  ],
-  dinner: [
-    { id: "potato_wedges", title: "Kartoffelecken mit Quark-Dip", short: "Airfryer, 22 Minuten",
+      ] },
+{ id: "potato_wedges", title: "Kartoffelecken mit Quark-Dip", short: "Airfryer, 22 Minuten",
       kcal: 970, protein: 56, carbs: 105, fat: 37,
       ingredients: [
         { name: "Kartoffeln", amount: "550g", pantryKey: "kartoffeln" },
@@ -712,8 +719,43 @@ const POOLS = {
         "Kein Marinieren nötig, das Gewürz zieht im Airfryer ein."
       ] }
   ],
+  kalt: [
+    { id: "quark_bowl", title: "Quark-Bowl mit Schoko-Knusperschicht", short: "Abends ansetzen, morgens fertig — nichts kochen",
+      kcal: 1045, protein: 61, carbs: 126, fat: 34,
+      ingredients: [
+        { name: "Magerquark", amount: "300g", pantryKey: "magerquark" },
+        { name: "Haferflocken", amount: "80g (zarte)", pantryKey: "haferflocken" },
+        { name: "Banane", amount: "1 Stück", pantryKey: "banane" },
+        { name: "Erdnussbutter", amount: "20g", pantryKey: "erdnussbutter" },
+        { name: "Kakaopulver", amount: "10g", pantryKey: "kakao" },
+        { name: "Honig", amount: "1 TL", pantryKey: "honig" },
+        { name: "Kekse", amount: "25g (3-4 Stück)", pantryKey: "kekse" },
+        { name: "Zartbitterschokolade", amount: "20g", pantryKey: "schokolade" },
+        { name: "Kokosöl", amount: "1 TL", pantryKey: "kokosoel" }
+      ],
+      steps: [
+        "Quark, Kakao und Honig verrühren, Schuss Wasser dazu.",
+        "Haferflocken unterrühren, Banane in Scheiben und Erdnussbutter drauf.",
+        "Schokolade mit dem Kokosöl in der Mikrowelle schmelzen: 30 Sekunden, rühren, nochmal 15 Sekunden.",
+        "Über die Bowl gießen. Die Bowl muss kalt sein, sonst wird die Schicht nicht hart — zur Not vorher 20 Minuten in den Kühlschrank.",
+        "Mindestens 2 Stunden kalt stellen, über Nacht ist besser. Die Schicht wird fest und knackt beim Reinlöffeln.",
+        "Kekse erst kurz vorm Essen drüberbröseln, sonst weichen sie durch."
+      ] },
+    { id: "brotzeit", title: "Brotzeit", short: "Nichts kochen, nur belegen",
+      kcal: 835, protein: 54, carbs: 81, fat: 31,
+      ingredients: [
+        { name: "Vollkornbrot", amount: "4 Scheiben (~200g)", pantryKey: "vollkornbrot" },
+        { name: "Butter oder Frischkäse", amount: "20g", pantryKey: "butter" },
+        { name: "Putenbrust", amount: "100g (Aufschnitt)", pantryKey: "putenbrust" },
+        { name: "Käse in Scheiben", amount: "60g", pantryKey: "scheibenkaese" }
+      ],
+      steps: [
+        "Brot belegen.",
+        "Dazu passt Gurke, Tomate oder Paprika, wenn du was Frisches willst."
+      ] }
+  ],
   late: [
-    { id: "quark_late", title: "Schoko-Quark", short: "Rühren, fertig",
+{ id: "quark_late", title: "Schoko-Quark", short: "Rühren, fertig",
       kcal: 340, protein: 36, carbs: 50, fat: 2,
       ingredients: [
         { name: "Magerquark", amount: "250g", pantryKey: "magerquark" },
@@ -743,10 +785,10 @@ const POOLS = {
 };
 
 const SLOTS = [
-  { id: "shake1", label: "Shake",  pool: "shake_am" },
-  { id: "meal1",  label: "Mittag", pool: "lunch" },
-  { id: "meal2",  label: "Abend",  pool: "dinner" },
-  { id: "late",   label: "Spät",   pool: "late" }
+  { id: "shake1", label: "Shake", pool: "shake_am" },
+  { id: "warm",   label: "Warm",  pool: "warm" },
+  { id: "kalt",   label: "Kalt",  pool: "kalt" },
+  { id: "late",   label: "Spät",  pool: "late" }
 ];
 
 /* Der Vorrat startet leer – Zutaten kommen ausschließlich manuell über den
@@ -906,7 +948,15 @@ const DEFAULT_PANTRY = [
   { key: "sesamoel",       name: "Sesamöl",              unit: "Flasche",         qty: 0, low: 1 },
   { key: "sesam",          name: "Sesam",                unit: "Packung",         qty: 0, low: 1 },
   { key: "kakao",          name: "Kakaopulver",          unit: "Packung",         qty: 0, low: 1 },
-  { key: "honig",          name: "Honig",                unit: "Glas",            qty: 0, low: 1 }
+  { key: "honig",          name: "Honig",                unit: "Glas",            qty: 0, low: 1 },
+  { key: "erdnussbutter",  name: "Erdnussbutter",        unit: "Glas",            qty: 0, low: 1 },
+  { key: "vollkornbrot",   name: "Vollkornbrot",         unit: "Packung",         qty: 0, low: 1 },
+  { key: "putenbrust",     name: "Putenbrust",           unit: "Packung",         qty: 0, low: 1 },
+  { key: "scheibenkaese",  name: "Käse in Scheiben",     unit: "Packung",         qty: 0, low: 1 },
+  { key: "butter",         name: "Butter / Frischkäse",  unit: "Stück",           qty: 0, low: 1 },
+  { key: "kekse",          name: "Kekse (Butterkeks/Oreo)", unit: "Packung",      qty: 0, low: 1 },
+  { key: "schokolade",     name: "Zartbitterschokolade", unit: "Tafel",           qty: 0, low: 1 },
+  { key: "kokosoel",       name: "Kokosöl",              unit: "Glas",            qty: 0, low: 1 }
 ];
 function loadPantry() {
   try {
